@@ -18,5 +18,5 @@
 @property (nonatomic, retain) NSString * maxTimes;
 @property (nonatomic, retain) NSString * minValue;
 @property (nonatomic, retain) NSString * detail;
-
+@property (nonatomic, retain) NSString * timesApplied;
 @end

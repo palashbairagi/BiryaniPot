@@ -20,8 +20,11 @@
 
 /* Dashboard */
 +(NSString *) TOTAL_ORDER_URL;
++(NSString *) TOTAL_ORDER_LIST_URL;
 +(NSString *) TOP_SELLERS_URL;
 +(NSString *) FEEDBACK_URL;
++(NSString *) OFFER_URL;
++(NSString *) OFFER_STATISTICS_URL;
 +(NSString *) GRAPH_URL;
 
 /* Restaurant Profile */

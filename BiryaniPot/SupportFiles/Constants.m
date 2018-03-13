@@ -74,17 +74,32 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) TOTAL_ORDER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/Provider/getTotalOrders", PROVIDER_BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/organization/totalorders", BASE_URL];
+}
+
++(NSString *) TOTAL_ORDER_LIST_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/totalorderslist", BASE_URL];
 }
 
 +(NSString *) TOP_SELLERS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/Provider/getTopSellers", PROVIDER_BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/organization/topsellers", BASE_URL];
 }
 
 +(NSString *) FEEDBACK_URL
 {
-    return [NSString stringWithFormat:@"%@rest/Provider/getFeedback", PROVIDER_BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/organization/dashboardfeedback", BASE_URL];
+}
+
++(NSString *) OFFER_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/dashboardoffers", BASE_URL];
+}
+
++(NSString *) OFFER_STATISTICS_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/dashboardofferstatistics", BASE_URL];
 }
 
 +(NSString *) GRAPH_URL

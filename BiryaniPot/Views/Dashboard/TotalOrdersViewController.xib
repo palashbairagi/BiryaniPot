@@ -22,6 +22,7 @@
             <connections>
                 <outlet property="dateFrom" destination="9e1-ly-18B" id="X0z-Uk-NPK"/>
                 <outlet property="dateTo" destination="7qS-Ya-TPu" id="Md8-sy-jC5"/>
+                <outlet property="totalOrdersLabel" destination="LC1-VB-rKZ" id="Jll-y2-Npo"/>
                 <outlet property="totalOrdersTableView" destination="Xvq-89-V9i" id="5xX-4H-N0b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

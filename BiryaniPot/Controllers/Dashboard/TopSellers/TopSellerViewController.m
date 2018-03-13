@@ -49,46 +49,30 @@
 
 -(void)topSellers
 {
-    NSError *error;
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.TOP_SELLERS_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:@"1" forKey:@"locId"];
-    [paramDict setValue:@"2018-1-03" forKey:@"fromDate"];
-    [paramDict setValue:@"2018-1-26" forKey:@"toDate"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *topSellers = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *topSellers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+
+    for(NSDictionary *topSeller in topSellers)
+    {
+        NSString *itemName = [topSeller objectForKey:@"itemName"];
+        NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
         
-        for(NSDictionary *topSeller in topSellers[@"sellers"])
-        {
-            NSString *itemName = [topSeller objectForKey:@"itemName"];
-            NSString *total = [topSeller objectForKey:@"total"];
-            
-            [_yAxisArray addObject:itemName];
-            [_xAxisArray addObject:total];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_graph setXValues:_xAxisArray];
-            [_graph setYAxisLabels:_yAxisArray];
-            [_graph setMaxXValue:10];
-            [_graph reloadInputViews];
-        });
-        
-    }];
-    [postDataTask resume];
+        [_yAxisArray addObject:itemName];
+        [_xAxisArray addObject:total];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_graph setXValues:_xAxisArray];
+        [_graph setYAxisLabels:_yAxisArray];
+        [_graph setMaxXValue:40];
+        [_graph reloadInputViews];
+    });
+    
 }
 
 @end

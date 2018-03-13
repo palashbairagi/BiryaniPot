@@ -28,11 +28,16 @@
 @property (weak, nonatomic) IBOutlet UITableView *topSellersTableView;
 @property (weak, nonatomic) IBOutlet UITableView *offersTableView;
 
+@property (weak, nonatomic) IBOutlet UILabel *activeOffersLabel;
+@property (weak, nonatomic) IBOutlet UILabel *referralsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pointsRedeemedLabel;
+
 @property (weak, nonatomic) IBOutlet UISegmentedControl *durationSegmentedControl;
 @property (weak, nonatomic) IBOutlet UIView *durationView;
 
 @property (nonatomic, retain) NSMutableArray *graphArray;
 @property (nonatomic, retain) NSMutableArray *topSellersArray;
 @property (nonatomic, retain) NSMutableArray *offersArray;
+
 
 @end

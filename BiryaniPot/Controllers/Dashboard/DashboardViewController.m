@@ -13,6 +13,7 @@
 #import "FeedbackViewController.h"
 #import "Constants.h"
 #import "Item.h"
+#import "Offer.h"
 #import "Graph.h"
 #import "CalendarViewController.h"
 
@@ -61,10 +62,12 @@
     _durationView.layer.borderWidth = 1;
     
     _topSellersArray = [[NSMutableArray alloc]init];
+    _offersArray = [[NSMutableArray alloc]init];
     
     [self totalOrders];
     [self topSellers];
     [self feedback];
+    [self offer];
     [self plotGraph];
 }
 
@@ -171,118 +174,103 @@
 
 -(void)totalOrders
 {
-    NSError *error;
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.TOTAL_ORDER_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSString *orders = [totalOrders[0] objectForKey:@"totalOrders"];
+    NSString *amount = [totalOrders[0] objectForKey:@"totalPrice"];
     
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateFrom.titleLabel.text] forKey:@"fromDate"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateTo.titleLabel.text] forKey:@"toDate"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-        NSString *orders = [totalOrders objectForKey:@"totalOrders"];
-        NSString *amount = [totalOrders objectForKey:@"totalAmount"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _totalOrdersLabel.text = [NSString stringWithFormat:@"%@ of $%@", orders, amount];
-        });
-        
-    }];
-    [postDataTask resume];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _totalOrdersLabel.text = [NSString stringWithFormat:@"%@ of $%@", orders, amount];
+    });
 }
 
 -(void)topSellers
 {
-    NSError *error;
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.TOP_SELLERS_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateFrom.titleLabel.text] forKey:@"fromDate"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateTo.titleLabel.text] forKey:@"toDate"];
-  
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *topSellers = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-        for(NSDictionary *topSeller in topSellers[@"sellers"])
-        {
-            NSString *itemName = [topSeller objectForKey:@"itemName"];
-            NSString *total = [topSeller objectForKey:@"total"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *topSellers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
 
-            Item *item = [[Item alloc]init];
-            item.name = itemName;
-            item.quantity = total;
-            
-            [_topSellersArray addObject:item];
-        }
+    for(NSDictionary *topSeller in topSellers)
+    {
+        NSString *itemName = [topSeller objectForKey:@"itemName"];
+        NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
+
+        Item *item = [[Item alloc]init];
+        item.name = itemName;
+        item.quantity = total;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_topSellersTableView reloadData];
-        });
-        
-    }];
-    [postDataTask resume];
+        [_topSellersArray addObject:item];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_topSellersTableView reloadData];
+    });
+    
 }
 
 -(void)feedback
 {
-    NSError *error;
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FEEDBACK_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
+    _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
+}
+
+-(void)offer
+{
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    [request setHTTPMethod:@"POST"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *offers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateFrom.titleLabel.text] forKey:@"fromDate"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateTo.titleLabel.text] forKey:@"toDate"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *feedback = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    for(NSDictionary *offer in offers)
+    {
+        NSString *codeName = [offer objectForKey:@"codeName"];
+        NSString *timesApplied = [NSString stringWithFormat:@"%@", [offer objectForKey:@"timesApplied"]];
         
-        NSString *positive = [feedback objectForKey:@"positivePercent"];
-        NSString *negative = [feedback objectForKey:@"negitivePercent"];
+        Offer *of = [[Offer alloc]init];
+        of.name = codeName;
+        of.timesApplied = timesApplied;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _happyValue.text = [NSString stringWithFormat:@"%@%%", positive];
-            _sadValue.text = [NSString stringWithFormat:@"%@%%", negative];
-        });
-        
-    }];
-    [postDataTask resume];
+        [_offersArray addObject:of];
+    }
+    
+    [_offersTableView reloadData];
+    [self offerStatistics];
+}
+
+-(void)offerStatistics
+{
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@&query=OFF20", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *offerStatistics = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    _activeOffersLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"activeOffers"]];
+    _pointsRedeemedLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"points"]];
+    _referralsLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"refferalCount"]];
 }
 
 -(void)plotGraph
@@ -299,8 +287,8 @@
     [request setHTTPMethod:@"POST"];
     NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateFrom.titleLabel.text] forKey:@"fromDate"];
-    [paramDict setValue:[Constants changeDateFormatForAPI:_dateTo.titleLabel.text] forKey:@"toDate"];
+    [paramDict setValue:@"2018-01-03" forKey:@"fromDate"];
+    [paramDict setValue:@"2018-01-26" forKey:@"toDate"];
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
     
@@ -383,8 +371,10 @@
     else
     {
         UITableViewCell * cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil];
-        cell.textLabel.text = @"Offer";
-        cell.detailTextLabel.text = @"1";
+        Offer *offer = _offersArray[indexPath.row];
+        cell.textLabel.text = offer.name;
+        cell.detailTextLabel.text = offer.timesApplied;
+        NSLog(@"Cell for row at index path %@",offer.name);
         return cell;
     }
 }

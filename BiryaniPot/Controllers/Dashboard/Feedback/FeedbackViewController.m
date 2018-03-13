@@ -180,69 +180,15 @@
 
 -(void)feedback
 {
-    NSError *error;
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FEEDBACK_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:@"1" forKey:@"locId"];
-    [paramDict setValue:@"2018-1-03" forKey:@"fromDate"];
-    [paramDict setValue:@"2018-1-26" forKey:@"toDate"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *feedbacks = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-        for(NSDictionary *feedback in feedbacks[@"orders"])
-        {
-            NSString *smiley = [feedback objectForKey:@"feedback"];
-            NSString *orderId = [feedback objectForKey:@"orderId"];
-            NSString *orderType = [feedback objectForKey:@"orderType"];
-            NSString *paymentType = [feedback objectForKey:@"paymentType"];
-            NSString *totalAmount = [feedback objectForKey:@"totalAmount"];
-            NSString *userEmail = [feedback objectForKey:@"userEmail"];
-            NSString *userMobile = [feedback objectForKey:@"userMobile"];
-            
-            Feedback *feedback1 = [[Feedback alloc]init];
-            feedback1.smiley = smiley;
-            feedback1.orderNo = orderId;
-            feedback1.orderType = orderType;
-            feedback1.paymentType = paymentType;
-            feedback1.amount = totalAmount;
-            feedback1.email = userEmail;
-            feedback1.contactNumber = userMobile;
-            
-            [_feedbackArray addObject:feedback1];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_feedbackTableView reloadData];
-        });
-        
-        NSString *positive = [feedbacks objectForKey:@"positivePercent"];
-        NSString *negative = [feedbacks objectForKey:@"negitivePercent"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _happyValue.text = [NSString stringWithFormat:@"%@%%", positive];
-            _sadValue.text = [NSString stringWithFormat:@"%@%%", negative];
-        });
-        
-        for(NSDictionary *feedback in feedbacks[@"positive"])
-        {
-            
-        }
-        
-    }];
-    [postDataTask resume];
+    _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
+    _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
 }
-
 @end
