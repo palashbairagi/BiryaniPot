@@ -9,13 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
 
-@interface LandingPagesViewController : BaseViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface LandingPagesViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UIImageView *image1;
-@property (weak, nonatomic) IBOutlet UIImageView *image2;
-@property (weak, nonatomic) IBOutlet UIImageView *image3;
-@property (nonatomic, retain) UIImagePickerController *pickerController1;
-@property (nonatomic, retain) UIImagePickerController *pickerController2;
-@property (nonatomic, retain) UIImagePickerController *pickerController3;
+@property (weak, nonatomic) IBOutlet UICollectionView *landingPageCollectionView;
+
+@property (nonatomic, retain) NSMutableArray *landingImageArray;
+
+@property (nonatomic, retain) NSOperationQueue *imageQueue ;
 
 @end
