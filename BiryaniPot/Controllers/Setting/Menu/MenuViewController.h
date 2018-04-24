@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *recommendedItemCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *deleteItemButton;
 @property (weak, nonatomic) IBOutlet UIButton *addCategoryButton;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, retain) NSMutableArray *categoryArray;
 @property (nonatomic, retain) NSMutableArray *itemArray;
@@ -28,5 +30,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *discount;
 @property (weak, nonatomic) IBOutlet UITextView *detail;
 @property (weak, nonatomic) IBOutlet UIImageView *image;
+@property (weak, nonatomic) IBOutlet UIButton *isVegButton;
+@property (weak, nonatomic) IBOutlet UIButton *spiceSupportButton;
 
+@property BOOL spice, veg;
+
+-(void)getCategory;
 @end

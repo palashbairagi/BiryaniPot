@@ -92,6 +92,7 @@
                 <outlet property="amount" destination="sLG-1r-Ukq" id="29a-LI-RJh"/>
                 <outlet property="contactNumber" destination="8Qi-6h-5jh" id="ENM-Ug-hYT"/>
                 <outlet property="email" destination="Fuk-bD-y11" id="mxG-VX-NCb"/>
+                <outlet property="invoiceButton" destination="cK8-V1-dMq" id="3fG-o9-ha6"/>
                 <outlet property="isPaid" destination="ZX7-Wd-pg2" id="luy-09-6cy"/>
                 <outlet property="orderNo" destination="n7U-GT-DQJ" id="wTH-e8-5p3"/>
                 <outlet property="type" destination="fgZ-kk-PaA" id="gP7-vB-9sy"/>

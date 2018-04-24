@@ -14,4 +14,10 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *offerCollectionView;
 
 @property (nonatomic, retain) NSMutableArray * offerArray;
+
+@property (nonatomic, retain) NSOperationQueue *offerQueue ;
+
+-(void)getOffers;
+-(NSString *)changeDateFormat: (NSString *) currentDate;
+
 @end

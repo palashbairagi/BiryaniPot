@@ -23,6 +23,9 @@
 +(NSString *) TOTAL_ORDER_LIST_URL;
 +(NSString *) TOP_SELLERS_URL;
 +(NSString *) FEEDBACK_URL;
++(NSString *) FEEDBACK_TAG_URL;
++(NSString *) FEEDBACK_BY_USER_URL;
++(NSString *) FEEDBACK_REPLY_URL;
 +(NSString *) OFFER_URL;
 +(NSString *) OFFER_STATISTICS_URL;
 +(NSString *) GRAPH_URL;
@@ -33,17 +36,20 @@
 +(NSString *) GET_RESTAURANT_TIME_URL;
 +(NSString *) UPDATE_RESTAURANT_TIME_URL;
 
-/* My Profile */
-+(NSString *) GET_MY_PROFILE_URL;
 
 /* User Management */
 +(NSString *) GET_DELIVERY_PERSON_URL;
 +(NSString *) GET_MANAGER_URL;
 +(NSString *) DELETE_DELIVERY_PERSON_URL;
 +(NSString *) DELETE_MANAGER_URL;
++(NSString *) INSERT_DELIVERY_PERSON_URL;
++(NSString *) INSERT_MANAGER_URL;
 
 /* Promo Code */
 +(NSString *) GET_OFFERS_URL;
++(NSString *) INSERT_OFFER_URL;
++(NSString *) UPDATE_OFFER_URL;
+
 
 /* Menu */
 +(NSString *) GET_CATEGORY_ON_SETTING_URL;
@@ -56,9 +62,19 @@
 +(NSString *) GET_ALL_ORDERS_URL;
 +(NSString *) GET_ITEMS_BY_ORDER_URL;
 +(NSString *) UPDATE_ORDER_STATUS_URL;
++(NSString *) UPDATE_ESTIMATED_TIME_URL;
++(NSString *) ASSIGN_DELIVERY_PERSON_URL;
 
 /* Menu */
 +(NSString *) GET_CATEGORIES_URL;
 +(NSString *) GET_ITEMS_BY_CATEGORY_URL;
++(NSString *) INSERT_CATEGORY_URL;
++(NSString *) DELETE_CATEGORY_URL;
++(NSString *) INSERT_ITEM_URL;
++(NSString *) UPDATE_ITEM_URL;
+
+/* My Profile */
++(NSString *) CHANGE_PASSWORD;
++(NSString *) UPDATE_PROFILE;
 
 @end

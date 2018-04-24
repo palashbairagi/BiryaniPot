@@ -7,6 +7,8 @@
 //
 
 #import "OffersAvailedViewController.h"
+#import "OfferStatistics.h"
+#import "Constants.h"
 
 @interface OffersAvailedViewController ()
 
@@ -23,11 +25,35 @@
     [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
     [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
     
+    _offersArray = [[NSMutableArray alloc]init];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self offer];
     [self createLineGraph];
+}
+
+-(void)offer
+{
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-09-01";
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *offers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    for(NSDictionary *offer in offers)
+    {
+        NSString *codeName = [offer objectForKey:@"codeName"];
+        
+        OfferStatistics *os = [[OfferStatistics alloc]init];
+        os.codeName = codeName;
+        os.timesApplied = [offer objectForKey:@"times"];
+       
+        [_offersArray addObject:os];
+    }
 }
 
 - (void)createLineGraph{
@@ -60,7 +86,7 @@
 
 - (NSInteger)numberOfLinesToBePlotted
 {
-    return 3;
+    return _offersArray.count;
 }
 
 - (LineDrawingType)typeOfLineToBeDrawnWithLineNumber:(NSInteger)lineNumber
@@ -84,7 +110,9 @@
 
 - (NSString *)nameForTheLineWithLineNumber:(NSInteger)lineNumber
 {
-    return [NSString stringWithFormat:@"Offer %ld",(long)lineNumber];
+    //return [NSString stringWithFormat:@"Offer %ld",(long)lineNumber];
+    OfferStatistics *os = _offersArray[lineNumber];
+    return [NSString stringWithFormat:@"%@", os.codeName];
 }
 
 - (BOOL)shouldFillGraphWithLineNumber:(NSInteger)lineNumber{
@@ -92,7 +120,7 @@
 }
 
 - (BOOL)shouldDrawPointsWithLineNumber:(NSInteger)lineNumber{
-    return true;
+    return false;
 }
 
 - (UIView *)customViewForLineChartTouchWithXValue:(NSNumber *)xValue andYValue:(NSNumber *)yValue{
@@ -117,70 +145,108 @@
 }
 
 - (NSMutableArray *)dataForXAxisWithLineNumber:(NSInteger)lineNumber {
-    switch (lineNumber) {
-        case 0:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 21; i <= 30; i++) {
-                [array addObject:[NSString stringWithFormat:@"%d Jan", i]];
-            }
-            return array;
-        }
-            break;
-        case 1:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 1; i <= 30; i++) {
-                [array addObject:[NSString stringWithFormat:@"%d Jan", i]];
-            }
-            return array;
-        }
-            break;
-        case 2:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 1; i <= 30; i++) {
-                [array addObject:[NSString stringWithFormat:@"%d Jan", i]];
-            }
-            return array;
-        }
-            break;
+    
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-09-01";
+    
+    NSDate *startDate = [self changeStringToDate:fromDate];
+    NSDate *endDate = [self changeStringToDate:toDate];
+    
+    NSMutableArray *dateList = [[NSMutableArray alloc]init];
+    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    [comps setDay:1];
+    
+    [dateList addObject: [self changeDateToString: startDate]];
+    
+    NSDate *currentDate = startDate;
+    // add one the first time through, so that we can use NSOrderedAscending (prevents millisecond infinite loop)
+    currentDate = [currentCalendar dateByAddingComponents:comps toDate:currentDate  options:0];
+    
+    while ( [endDate compare: currentDate] != NSOrderedAscending)
+    {
+        [dateList addObject: [self changeDateToString: currentDate]];
+        currentDate = [currentCalendar dateByAddingComponents:comps toDate:currentDate  options:0];
     }
-    return [[NSMutableArray alloc] init];
-}
 
+    return dateList;
+}
 
 - (NSMutableArray *)dataForYAxisWithLineNumber:(NSInteger)lineNumber {
-    switch (lineNumber) {
-        case 0:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 20; i < 30; i++) {
-                [array addObject:[NSNumber numberWithLong:random()%100]];
-            }
-            return array;
-        }
-            break;
-        case 1:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 0; i < 10; i++) {
-                [array addObject:[NSNumber numberWithLong:random()%100]];
-            }
-            return array;
-        }
-            break;
-        case 2:
-        {
-            NSMutableArray *array = [[NSMutableArray alloc] init];
-            for (int i = 0; i < 30; i++) {
-                [array addObject:[NSNumber numberWithLong:random()%100]];
-            }
-            return array;
-        }
-            break;
+    
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-09-01";
+    
+    NSDate *startDate = [self changeStringToDate:fromDate];
+    NSDate *endDate = [self changeStringToDate:toDate];
+    
+    OfferStatistics *os = _offersArray[lineNumber];
+    
+    NSMutableArray *timesAppliedArray = os.timesApplied;
+    NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+    
+    NSMutableArray *dateList = [[NSMutableArray alloc]init];
+    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    [comps setDay:1];
+    
+    [dateList addObject: [self changeDateToString: startDate]];
+    
+    NSDate *currentDate = startDate;
+    // add one the first time through, so that we can use NSOrderedAscending (prevents millisecond infinite loop)
+    currentDate = [currentCalendar dateByAddingComponents:comps toDate:currentDate  options:0];
+    
+    while ( [endDate compare: currentDate] != NSOrderedAscending)
+    {
+        [dateList addObject: [self changeDateToString: currentDate]];
+        currentDate = [currentCalendar dateByAddingComponents:comps toDate:currentDate  options:0];
     }
-    return [[NSMutableArray alloc] init];
+    
+    
+    
+    for (int j = 0; j < dateList.count; j++)
+    {
+        BOOL found = FALSE;
+        
+        for (int i = 0; i < timesAppliedArray.count; i++)
+        {
+            NSString *appliedDate = [ self changeDateToString:[self changeStringToDate:[timesAppliedArray[i] objectForKey:@"appliedDate"]]];
+            
+            if ([dateList[j] isEqualToString:appliedDate])
+            {
+                NSString *timesApplied = [timesAppliedArray[i] objectForKey:@"timesApplied"];
+                [resultArray addObject: [NSString stringWithFormat:@"%@", timesApplied]];
+                found = TRUE;
+                break;
+            }
+        }
+        
+        if (!found)
+        {
+            [resultArray addObject:@"0"];
+        }
+    }
+    
+    return resultArray;
 }
+
+-(NSDate *) changeStringToDate: (NSString *)str
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    
+    NSDate *date = [formatter dateFromString:str];
+    
+    return date;
+}
+
+-(NSString *) changeDateToString: (NSDate *) date
+{
+    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+    [dateformate setDateFormat:@"MMM dd"];
+    return [dateformate stringFromDate:date];
+}
+
+
 
 @end

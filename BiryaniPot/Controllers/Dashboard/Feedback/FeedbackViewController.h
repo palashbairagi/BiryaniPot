@@ -28,4 +28,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *dateFrom;
 @property (weak, nonatomic) IBOutlet UIButton *dateTo;
 
+@property (nonatomic, retain) NSNumber *positiveQuantity, *positiveQuality, *positiveTaste, *positiveDelivery, *negativeQuantity, *negativeQuality, *negativeTaste, *negativeDelivery;
+
 @end

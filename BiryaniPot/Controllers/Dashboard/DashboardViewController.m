@@ -263,7 +263,7 @@
     NSString *fromDate = @"2018-01-03";
     NSString *toDate = @"2018-01-26";
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@&query=OFF20", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
     NSArray *offerStatistics = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -374,7 +374,6 @@
         Offer *offer = _offersArray[indexPath.row];
         cell.textLabel.text = offer.name;
         cell.detailTextLabel.text = offer.timesApplied;
-        NSLog(@"Cell for row at index path %@",offer.name);
         return cell;
     }
 }

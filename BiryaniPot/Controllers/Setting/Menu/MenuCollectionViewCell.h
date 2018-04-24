@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MenuViewController.h"
 
-@interface MenuCollectionViewCell : UICollectionViewCell
+@interface MenuCollectionViewCell : UICollectionViewCell <NSURLSessionDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel *label;
-@end
+@property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+@property (nonatomic, retain) MenuViewController *delegate;
+
+@end 

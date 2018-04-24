@@ -168,7 +168,18 @@
 
 - (IBAction)saveButtonClicked:(id)sender
 {
-    [self isValidate];
+    if(([self isValidate]))
+    {
+        if ([_roleLabel.text isEqualToString:@"Delivery Person"])
+        {
+            [self saveDeliveryPerson];
+        } else
+        {
+            [self saveManager];
+        }
+        
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
 }
 
 
@@ -256,6 +267,80 @@
     }
     
     return true;
+}
+
+-(void)saveDeliveryPerson
+{
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text],  [Validation trim: _lastName.text]];
+    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
+    NSString *imgURL = @"xyz.jpeg";
+    NSString *license = [NSString stringWithFormat:@"%@", [Validation trim:_licenceNo.text]];
+    
+    NSString *post = [NSString stringWithFormat:@"dboymobile=%@&dboy_img_url=%@&dboy_email=%@&licensenumber=%@&dboyname=%@&loc_id=%@", mobile, imgURL, email, license, name, Constants.LOCATION_ID];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_DELIVERY_PERSON_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate.userArray removeAllObjects];
+            [_delegate getManagers];
+            [_delegate getDeliveryPersons];
+            [_delegate.userTableView reloadData];
+        });
+        
+    }];
+    [postDataTask resume];
+}
+
+-(void)saveManager
+{
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text], [Validation trim:_lastName.text]];
+    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
+    NSString *role = [NSString stringWithFormat:@"%@", [Validation trim:_roleLabel.text]];
+    
+    if ([role isEqualToString:@"Manager"]) role = @"3";
+    else role = @"175";
+    
+    NSString *imgURL = @"xyz.jpeg";
+    NSString *superUser = [_appDelegate.userDefaults objectForKey:@"userId"];
+    NSString *password = @"12345";
+    
+    NSString *post = [NSString stringWithFormat:@"managername=%@&email=%@&mobile=%@&manager_pw=%@&superUser=%@&role=%@&imgurl=%@&locationId=%@", name, email, mobile, password, superUser, role, imgURL, Constants.LOCATION_ID];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_MANAGER_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate.userArray removeAllObjects];
+            [_delegate getManagers];
+            [_delegate getDeliveryPersons];
+            [_delegate.userTableView reloadData];
+        });
+        
+    }];
+    [postDataTask resume];
 }
 
 @end

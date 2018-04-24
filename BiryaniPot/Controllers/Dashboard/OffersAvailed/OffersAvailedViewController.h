@@ -15,4 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *dateFrom;
 @property (weak, nonatomic) IBOutlet UIButton *dateTo;
 
+@property (nonatomic, retain) NSMutableArray *offersArray;
+
 @end

@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "SSMaterialCalendarPicker.h"
+#import "Constants.h"
+#import "OfferViewController.h"
+#import "Offer.h"
 
 @interface EditOfferViewController : UIViewController
-<SSMaterialCalendarPickerDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+<SSMaterialCalendarPickerDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate, NSURLSessionDelegate>
+
+@property OfferViewController *delegate;
+
 @property (weak, nonatomic) IBOutlet UIView *headerView;
 @property (weak, nonatomic) IBOutlet UIView *footerView;
 
@@ -28,5 +34,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, retain) SSMaterialCalendarPicker *datePicker;
-
+@property (nonatomic, retain) Offer *offer;
+ 
 @end

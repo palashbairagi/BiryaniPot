@@ -46,6 +46,7 @@
     TotalOrdersTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"totalOrdersCell"];
     Feedback *totalOrders = _totalOrderArray[indexPath.row];
     cell.delegate = self;
+    cell.invoiceButton.tag = indexPath.row;
     [cell setCellData:totalOrders];
     return cell;
 }
@@ -62,7 +63,6 @@
     
     for(NSDictionary *totalOrder in totalOrders)
     {
-        NSString *smiley = [totalOrder objectForKey:@"feedbackType"];
         NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
         NSString *orderType = [totalOrder objectForKey:@"orderType"];
         NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
@@ -71,7 +71,6 @@
         NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
         
         Feedback *feedback = [[Feedback alloc]init];
-        feedback.smiley = smiley;
         feedback.orderNo = orderId;
         feedback.orderType = orderType;
         feedback.paymentType = paymentType;

@@ -44,41 +44,174 @@
     [_password setEnabled:false];
     [_confirmPassword setEnabled:false];
     
-    [self getProfile];
+    [self getManagers];
 }
 
-- (IBAction)updateButtonClicked:(id)sender {
-    [self isValidate];
-}
-
-- (IBAction)cancelButtonClicked:(id)sender {
-    [self getProfile];
-}
-
--(void)getProfile
+- (IBAction)updateButtonClicked:(id)sender
 {
-    NSURL *profileURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?access_token=abcdpop" ,Constants.GET_MY_PROFILE_URL]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:profileURL];
-    NSError *error = nil;
-    NSDictionary *profileDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    if([self isValidate])
+    {
+        [self updateUser];
+        
+        if([_checkButtonStatus isEqualToString:@"Checked"])
+        {
+            [self changePassword];
+        }
+    }
+}
+
+- (IBAction)cancelButtonClicked:(id)sender
+{
+    [self getManagers];
+    _password.text = @"";
+    _confirmPassword.text = @"";
+    _currentPassword.text = @"";
+}
+
+-(void)getManagers
+{
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
-    @try
+    NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
+    NSError *error = nil;
+    NSDictionary *managersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    for (NSDictionary *managerDictionary in managersDictionary)
     {
-        _name.text = [profileDictionary objectForKey:@"name"];
-        _email.text = [profileDictionary objectForKey:@"email"];
-        _mobile.text = [profileDictionary objectForKey:@"phone"];
+        @try
+        {
+            
+            _user = [[User alloc]init];
+            _user.userId = [NSString stringWithFormat:@"%@", [managerDictionary objectForKey:@"managerId"]];
+            NSString *userId = [NSString stringWithFormat:@"%@", [_appDelegate.userDefaults objectForKey:@"userId"]];
+            
+            if([_user.userId isEqualToString:userId])
+            {
+                _user.name = [managerDictionary objectForKey:@"managerName"];
+                _user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
+                _user.mobile = [managerDictionary objectForKey:@"managerMobile"];
+                _user.phone = @"";
+                _user.email = [managerDictionary objectForKey:@"managerEmail"];
+                _user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
+                
+                [self setData];
+                break;
+            }
+            
+        }
+        @catch(NSException *ex)
+        {
+            NSLog(@"%@ %@", ex.name, ex.reason);
+        }
     }
-    @catch(NSException *ex)
+}
+
+-(void)setData
+{
+    _name.text = _user.name;
+    _role.text = _user.role;
+    _mobile.text = _user.mobile;
+    _email.text = _user.email;
+    
+    _profilePictureQueue = [[NSOperationQueue alloc] init];
+    
+    if (_user.profilePicture == nil )
     {
-        NSLog(@"%@ %@", ex.name, ex.reason);
+        NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
+            
+            UIImage * image = [UIImage imageNamed:@"dp"];
+            NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_user.profilePictureURL]];
+            
+            if (imgData != NULL)
+            {
+                image = [UIImage imageWithData:imgData];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_profilePicture setImage:image];
+            });
+            
+        }];
+        
+        [_profilePictureQueue addOperation:op];
     }
+    else
+    {
+        _profilePicture.image = _user.profilePicture;
+    }
+}
+
+-(void)updateUser
+{
+    NSString *post = [NSString stringWithFormat:@"manager_id=%@&mobile=%@", _user.userId, _mobile.text];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_PROFILE]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        //NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+        });
+        
+    }];
+    
+    [postDataTask resume];
+}
+
+-(void)changePassword
+{
+    NSString *post = [NSString stringWithFormat:@"managerEmail=%@&oldpassword=%@&newpassword=%@", _user.email, _currentPassword.text, _password.text];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.CHANGE_PASSWORD]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        
+        NSDictionary *message = [result objectForKey:@"error"];
+        
+        if ([[message objectForKey:@"message"] isEqualToString:@"Successfully changed."])
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Password Change"];
+        }
+        else
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Incorrect Current Password"];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _currentPassword.text = @"";
+            _password.text = @"";
+            _confirmPassword.text = @"";
+        });
+        
+    }];
+    
+    [postDataTask resume];
 }
 
 - (IBAction)checkButtonClicked:(id)sender
 {
     if ([_checkButtonStatus isEqualToString:@"UnChecked"])
     {
-        _checkButton.backgroundColor = [UIColor colorWithRed:0.0 green:100/256 blue:1.0 alpha:1.0];
+        _checkButton.backgroundColor = [UIColor colorWithRed:0.0 green:100.0/256 blue:1.0 alpha:1.0];
         _checkButtonStatus = @"Checked";
         [_currentPassword setEnabled:true];
         [_password setEnabled:true];
@@ -100,7 +233,6 @@
 -(BOOL)isValidate{
     
     [_mobile resignFirstResponder];
-    [_phone resignFirstResponder];
     [_email resignFirstResponder];
     
     if([Validation isEmpty:_mobile])
@@ -116,43 +248,6 @@
     if ([Validation isNumber:_mobile])
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Mobile Field should contain numeric value"];
-        return false;
-    }
-    
-    if([Validation isEmpty:_phone])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Phone Field should not be empty"];
-        return false;
-    }
-    if ([Validation isLess:_phone thanMinLength:10] || [Validation isMore:_phone thanMaxLength:10])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Phone Field should exactly equals to 10 digits"];
-        return false;
-    }
-    if ([Validation isNumber:_phone])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Phone Field should contain numeric value"];
-        return false;
-    }
-    
-    if([Validation isEmpty:_email])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Email Field should not be empty"];
-        return false;
-    }
-    if ([Validation isLess:_email thanMinLength:10])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Email Field should not be less than 10 characters"];
-        return false;
-    }
-    if ([Validation isMore:_email thanMaxLength:50])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Email Field should not exceed 50 characters"];
-        return false;
-    }
-    if ([Validation isEmail:_email])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Invalid Email"];
         return false;
     }
     

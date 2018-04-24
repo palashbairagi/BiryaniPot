@@ -47,7 +47,35 @@
 
 - (IBAction)saveButtonClicked:(id)sender
 {
-    [self isValidate];
+    if([self isValidate])
+    {
+        NSString *imgURL = @"xyz.jpeg";
+        NSString *categoryName = _name.text;
+        
+        NSString *post = [NSString stringWithFormat:@"category_name=%@&img_url=%@&menu_id=1&is_nonveg_supported=0", categoryName, imgURL];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_CATEGORY_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"PUT"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate.categoryArray removeAllObjects];
+                [_delegate getCategory];
+                [_delegate.menuCollectionView reloadData];
+            });
+            
+        }];
+        [postDataTask resume];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (IBAction)uploadPhotoTapped:(id)sender

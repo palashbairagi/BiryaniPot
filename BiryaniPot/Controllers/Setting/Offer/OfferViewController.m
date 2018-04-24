@@ -41,6 +41,7 @@
     [_offerCollectionView registerNib:[UINib nibWithNibName:@"OfferCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"offerCell"];
     
     self.offerArray = [[NSMutableArray alloc]init];
+    _offerQueue = [[NSOperationQueue alloc] init];
 }
 
 - (IBAction)newOfferButtonClicked:(id)sender
@@ -48,7 +49,8 @@
     AddOfferViewController * addOfferViewController = [[AddOfferViewController alloc]init];
     addOfferViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     addOfferViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    addOfferViewController.preferredContentSize = CGSizeMake(540, 680);
+    addOfferViewController.preferredContentSize = CGSizeMake(1000 , 566);
+    addOfferViewController.delegate = self;
     
     [self presentViewController:addOfferViewController animated:YES completion:nil];
 }
@@ -63,7 +65,37 @@
     OfferCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"offerCell" forIndexPath:indexPath];
     
     Offer *offer = _offerArray[indexPath.row];
-    cell.offerImage.image = [UIImage imageNamed:@"biryanipotusa"];
+    
+    if(offer.image == NULL)
+    {
+        NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
+            
+            NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:offer.imageURL]];
+            
+            if (imgData == NULL)
+            {
+                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
+                offer.image = image;
+            }
+            else
+            {
+                UIImage * image = [UIImage imageWithData:imgData];
+                offer.image = image;
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.offerCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+            });
+            
+        }];
+        
+        [_offerQueue addOperation:op];
+    }
+    else
+    {
+        cell.offerImage.image = offer.image;
+    }
+    
     cell.promoCode.text = offer.name;
     cell.offerDescription.text = offer.detail;
     cell.startsFrom.text = [self changeDateFormat: offer.startFrom];
@@ -71,6 +103,15 @@
     cell.editButton.tag = indexPath.row;
     cell.deleteButton.tag = indexPath.row;
     cell.delegate = self;
+    
+    if (cell.selected)
+    {
+        [cell.disableView setHidden:NO];
+    }
+    else
+    {
+        [cell.disableView setHidden:YES];
+    }
     
     return cell;
 }
@@ -97,7 +138,7 @@
 
 -(void)getOffers
 {
-    NSURL *offerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=1",Constants.GET_OFFERS_URL]];
+    NSURL *offerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_OFFERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:offerURL];
     NSError *error = nil;
     NSDictionary *offersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -109,10 +150,14 @@
             Offer *offer = [[Offer alloc]init];
             offer.offerId = [offerDictionary objectForKey:@"codeId"];
             offer.name = [offerDictionary objectForKey:@"codeName"];
+            offer.offerValue = [offerDictionary objectForKey:@"couponPercent"];
             offer.imageURL = [offerDictionary objectForKey:@"couponImgURL"];
             offer.startFrom = [offerDictionary objectForKey:@"validFrom"];
             offer.endAt = [offerDictionary objectForKey:@"validTill"];
             offer.detail = [offerDictionary objectForKey:@"codeDescription"];
+            offer.maxDisc = [offerDictionary objectForKey:@"maxDisc"];
+            offer.maxTimes = [offerDictionary objectForKey:@"maxTimes"];
+            offer.minValue = [offerDictionary objectForKey:@"minValue"];
             
             [_offerArray addObject:offer];
         }

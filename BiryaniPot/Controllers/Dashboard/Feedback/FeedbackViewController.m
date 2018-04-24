@@ -20,13 +20,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    _positiveTaste = 0;
+//    _positiveQuality = 0;
+//    _positiveQuantity = 0;
+//    _positiveDelivery = 0;
+//
+//    _negativeTaste = 0;
+//    _negativeQuality = 0;
+//    _negativeQuantity = 0;
+//    _negativeDelivery = 0;
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self feedbackTags];
     [self initComponents];
-    [self createPieChart];
     [self feedback];
+    [self totalOrdersList];
 }
 
 -(void)initComponents
@@ -36,6 +48,7 @@
     
     [self.feedbackTableView registerNib:[UINib nibWithNibName:@"FeedbackTableViewCell" bundle:nil] forCellReuseIdentifier:@"feedbackCell"];
     _feedbackArray = [[NSMutableArray alloc]init];
+    
     _positiveDictionary = [[NSMutableDictionary alloc]init];
     _negativeDictionary = [[NSMutableDictionary alloc]init];
     
@@ -44,7 +57,6 @@
              forState:UIControlStateNormal];
     [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
     [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
-    
 }
 
 - (void)createPieChart{
@@ -61,7 +73,7 @@
     [_positiveChart setShowValueOnPieSlice:TRUE];
     [_positiveChart setShowCustomMarkerView:TRUE];
     
-    [_positiveChart drawPieChart];
+    [_positiveChart drawPieChart:_positiveChart];
     [self.positiveFeedbackView addSubview:_positiveChart];
     
     _negativeChart = [[PieChart alloc] initWithFrame:CGRectMake(100, 10, self.negativeFeedbackView.bounds.size.width-80, self.negativeFeedbackView.bounds.size.height-20)];
@@ -77,7 +89,7 @@
     [_negativeChart setShowValueOnPieSlice:TRUE];
     [_negativeChart setShowCustomMarkerView:TRUE];
     
-    [_negativeChart drawPieChart];
+    [_negativeChart drawPieChart:_negativeChart];
     [self.negativeFeedbackView addSubview:_negativeChart];
 }
 
@@ -108,6 +120,7 @@
 }
 
 - (NSString *)titleForValueInPieChartWithIndex:(NSInteger)index{
+    
     switch (index) {
         case 0:
             return [NSString stringWithFormat:@"Ontime Delivery"];
@@ -129,8 +142,49 @@
     return [NSString stringWithFormat:@""];
 }
 
-- (NSNumber *)valueInPieChartWithIndex:(NSInteger)index{
-    return [NSNumber numberWithLong:random() % 100];
+- (NSNumber *)valueInPieChartWithIndex:(NSInteger)index inPieChart:(PieChart *) pieChart{
+    
+    if (pieChart == _positiveChart)
+    {
+        switch (index) {
+            case 0:
+                return _positiveDelivery;
+                break;
+                
+            case 1:
+                return _positiveTaste;
+                break;
+                
+            case 2:
+                return _positiveQuantity;
+                break;
+                
+            case 3:
+                return _positiveQuality;
+                break;
+        }
+    }
+    else
+    {
+        switch (index) {
+            case 0:
+                return _negativeDelivery;
+                break;
+                
+            case 1:
+                return _negativeTaste;
+                break;
+                
+            case 2:
+                return _negativeQuantity;
+                break;
+                
+            case 3:
+                return _negativeQuality;
+                break;
+        }
+    }
+    return [NSNumber numberWithLong:0];
 }
 
 - (UIView *)customViewForPieChartTouchWithValue:(NSNumber *)value{
@@ -146,7 +200,7 @@
     UILabel *label = [[UILabel alloc] init];
     [label setFont:[UIFont systemFontOfSize:12]];
     [label setTextAlignment:NSTextAlignmentCenter];
-    [label setText:[NSString stringWithFormat:@"Pie Data: %@", value]];
+    [label setText:[NSString stringWithFormat:@"%@", value]];
     [label setFrame:CGRectMake(0, 0, 100, 30)];
     [view addSubview:label];
     
@@ -169,13 +223,123 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"DId select row");
+    Feedback *feedback = _feedbackArray[indexPath.row];
+    
+    if (feedback.smiley == nil || [feedback.smiley isEqualToString:@""])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Ratings"];
+        return;
+    }
+    
     FeedbackDetailViewController *feedbackDetailVC = [[FeedbackDetailViewController alloc]init];
     feedbackDetailVC.modalPresentationStyle = UIModalPresentationFormSheet;
     feedbackDetailVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     feedbackDetailVC.preferredContentSize = CGSizeMake(800, 500);
+    feedbackDetailVC.delegate = _feedbackArray[indexPath.row];
     
     [self presentViewController:feedbackDetailVC animated:YES completion:nil];
+}
+
+-(void)totalOrdersList
+{
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    for(NSDictionary *totalOrder in totalOrders)
+    {
+        NSString *smiley = [totalOrder objectForKey:@"feedbackType"];
+        NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
+        NSString *orderType = [totalOrder objectForKey:@"orderType"];
+        NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
+        NSString *totalAmount = [NSString stringWithFormat:@"%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
+        NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
+        NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
+        
+        Feedback *feedback = [[Feedback alloc]init];
+        feedback.smiley = smiley;
+        feedback.orderNo = orderId;
+        feedback.orderType = orderType;
+        feedback.paymentType = paymentType;
+        feedback.amount = totalAmount;
+        feedback.email = userEmail;
+        feedback.contactNumber = userMobile;
+        
+        [_feedbackArray addObject:feedback];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_feedbackTableView reloadData];
+    });
+}
+
+-(void)feedbackTags
+{
+    NSString *fromDate = @"2018-01-03";
+    NSString *toDate = @"2018-01-26";
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_TAG_URL, Constants.LOCATION_ID, fromDate, toDate]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *feedbackTags = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    for(NSDictionary *feedbackTag in feedbackTags)
+    {
+        NSString *tagName = [feedbackTag objectForKey:@"tagName"];
+        NSString *tagType = [feedbackTag objectForKey:@"tagType"];
+        NSNumber *tagCount = [NSNumber numberWithFloat:[[feedbackTag objectForKey:@"tagCount"] floatValue]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ([tagType isEqualToString:@"Good"])
+            {
+                if ([tagName isEqualToString:@"Food Quality"])
+                {
+                    _positiveQuality = tagCount;
+                }
+                else if ([tagName isEqualToString:@"Food Quantity"])
+                {
+                    _positiveQuantity = tagCount;
+                }
+                else if ([tagName isEqualToString:@"Taste"])
+                {
+                    _positiveTaste = tagCount;
+                }
+                else
+                {
+                    _positiveDelivery = tagCount;
+                }
+            }
+            else
+            {
+                if ([tagName isEqualToString:@"Food Quality"])
+                {
+                    _negativeQuality = tagCount;
+                }
+                else if ([tagName isEqualToString:@"Food Quantity"])
+                {
+                    _negativeQuantity = tagCount;
+                }
+                else if ([tagName isEqualToString:@"Taste"])
+                {
+                    _negativeTaste = tagCount;
+                }
+                else
+                {
+                    _negativeDelivery = tagCount;
+                }
+            }
+            
+        });
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self createPieChart];
+    });
 }
 
 -(void)feedback

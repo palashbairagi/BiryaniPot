@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString *timeRemain;
 @property (nonatomic, retain) NSString *outTime;
 @property (nonatomic, retain) NSString *deliveryPerson;
+@property (nonatomic, retain) NSString *deliveryPersonURL;
 @property (nonatomic, retain) NSString *deliveryType;
 @property (nonatomic, retain) NSString *status;
 

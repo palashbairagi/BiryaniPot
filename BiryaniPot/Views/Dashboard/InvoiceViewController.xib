@@ -17,6 +17,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InvoiceViewController">
             <connections>
+                <outlet property="customerName" destination="vy7-yb-InU" id="mdA-JL-m60"/>
+                <outlet property="customerPhone" destination="ave-2Z-dJJ" id="1z3-ih-Pka"/>
+                <outlet property="deliveryFee" destination="rYe-ah-VjD" id="JCM-95-65q"/>
+                <outlet property="deliveryType" destination="xwb-5K-dYC" id="NXg-bd-dzm"/>
+                <outlet property="itemTableView" destination="n2v-ye-p2p" id="wSL-bR-7rj"/>
+                <outlet property="orderDate" destination="PSz-cu-XU8" id="1Kj-64-eTC"/>
+                <outlet property="orderNo" destination="ddN-J6-QGO" id="VEL-Tw-l6u"/>
+                <outlet property="subTotal" destination="2DB-fA-WfR" id="Sim-lJ-jJI"/>
+                <outlet property="tax" destination="uiP-kO-diE" id="4jw-eY-KZ5"/>
+                <outlet property="total" destination="tTs-r7-xrl" id="Gth-ux-7Gr"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -107,7 +117,7 @@
                             </subviews>
                             <color key="backgroundColor" red="1" green="0.98431372549019602" blue="0.78431372549019607" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="n2v-ye-p2p">
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="30" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="n2v-ye-p2p">
                             <rect key="frame" x="-1" y="70" width="482" height="280"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -120,6 +130,10 @@
                                     <color key="value" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="wdD-hV-K1g"/>
+                                <outlet property="delegate" destination="-1" id="ycS-r0-xl3"/>
+                            </connections>
                         </tableView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SUB TOTAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="18q-M1-EzS">
                             <rect key="frame" x="230" y="370" width="100" height="21"/>
@@ -165,13 +179,6 @@
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSz-cu-XU8">
                             <rect key="frame" x="16" y="25" width="120" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xdh-gx-wqo">
-                            <rect key="frame" x="337" y="25" width="120" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                             <nil key="textColor"/>

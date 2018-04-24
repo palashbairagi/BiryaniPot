@@ -16,6 +16,8 @@
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *type;
 @property (nonatomic, retain) NSString *price;
+@property (nonatomic) BOOL isVeg;
+@property (nonatomic) BOOL isSpiceSupported;
 @property (nonatomic, retain) NSString *discount;
 @property (nonatomic, retain) NSString *imageURL;
 @property (nonatomic, retain) UIImage *image;
@@ -23,6 +25,8 @@
 @property (nonatomic, retain) NSString *quantity;
 @property (nonatomic, retain) NSString *spiceLevel;
 @property (nonatomic, retain) NSString *taxName;
-@property (nonatomic, retain) NSString *taxPercent;
+@property (nonatomic, retain) NSString *tax;
+@property (nonatomic, retain) NSString *subTotal;
 @property (nonatomic, retain) NSString *total;
+@property (nonatomic, retain) NSString *deliveryFee;
 @end

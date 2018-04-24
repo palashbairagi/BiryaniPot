@@ -33,7 +33,7 @@
     
     for (int i=1; i<25; i++)
     {
-        [_timeArray addObject:[NSString stringWithFormat:@"%d min", i*5]];
+        [_timeArray addObject:[NSString stringWithFormat:@"%d", i*5]];
     }
 }
 
@@ -44,11 +44,25 @@
 
 - (IBAction)yesButtonClicked:(id)sender
 {
-    [_delegate.timeRequired setTitle:[_timeArray objectAtIndex:[_timePicker selectedRowInComponent:0]] forState:UIControlStateNormal];
+    NSString *estimatedTime = [NSString stringWithFormat:@"%@",_timeArray[[_timePicker selectedRowInComponent:0]]];
     
-    [_delegate.timeRequired setTitle:[_timeArray objectAtIndex:[_timePicker selectedRowInComponent:0]] forState:UIControlStateHighlighted];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?order_id=%@&order_type_id=%@&est_time=%@", Constants.UPDATE_ESTIMATED_TIME_URL, _order.orderNo, _order.deliveryType, estimatedTime]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate getAllOrders];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            [_delegate.queueTableView reloadData];
+            [_delegate.preparingTableView reloadData];
+        });
+    }];
+    [postDataTask resume];
 }
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView

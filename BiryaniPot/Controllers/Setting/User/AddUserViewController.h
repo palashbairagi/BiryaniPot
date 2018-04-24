@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "MKDropDownMenu.h"
+#import "Constants.h"
+#import "UserManagementViewController.h"
+#import "AppDelegate.h"
 
-@interface AddUserViewController : UIViewController <UINavigationControllerDelegate,UIImagePickerControllerDelegate, MKDropdownMenuDataSource, MKDropdownMenuDelegate>
+@interface AddUserViewController : UIViewController <UINavigationControllerDelegate,UIImagePickerControllerDelegate, MKDropdownMenuDataSource, MKDropdownMenuDelegate, NSURLSessionDelegate>
+
+@property (nonatomic, retain) AppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIView *headerView;
 @property (weak, nonatomic) IBOutlet UIView *footerView;
+
+@property (nonatomic, retain) UserManagementViewController *delegate;
 
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicture;
 @property (weak, nonatomic) IBOutlet UITextField *firstName;

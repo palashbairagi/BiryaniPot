@@ -274,6 +274,20 @@
     [self.searchTableView registerNib:[UINib nibWithNibName:@"SearchTableViewCell" bundle:nil] forCellReuseIdentifier:@"searchOrderCell"];
     
     [self getAllOrders];
+    [self getFooterStatistics];
+}
+
+-(void)getFooterStatistics
+{
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@&date=2018-02-10", Constants.FOOTER_STATISTICS_URL, Constants.LOCATION_ID]];
+    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+    NSError *error = nil;
+    NSArray *result = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+    _pickedUp.text = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"pickedup"]];
+    _delivered.text  = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"delivered"]];
+    _outForDeliveryLabel.text = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"delivering"]];
+    _totalOrders.text = [NSString stringWithFormat:@"%@ of $%@", [result[0] objectForKey:@"totalOrders"], [result[0] objectForKey:@"totalPrice"]];
 }
 
 -(void)getAllOrders
@@ -283,7 +297,7 @@
     [_outForDeliveryArray removeAllObjects];
     [_preparingArray removeAllObjects];
     
-    NSURL *queueURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=1&loc_id=1",Constants.GET_ALL_ORDERS_URL]];
+    NSURL *queueURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=1&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:queueURL];
     NSError *error = nil;
     NSDictionary *queuesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -291,9 +305,10 @@
     for (NSDictionary *queueDictionary in queuesDictionary)
     {
         NSString *orderId = [queueDictionary objectForKey:@"orderId"];
-        NSString *orderDate = [queueDictionary objectForKey:@"orderDate"];
+        NSString *orderDate = [self convertDate:[queueDictionary objectForKey:@"orderDate"]];
         NSString *orderTypeId = [[queueDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
         NSString *quantity = [queueDictionary objectForKey:@"quantity"];
+        NSString *estimatedTime = [queueDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [queueDictionary objectForKey:@"customerName"];
         NSString *customerPhone = [queueDictionary objectForKey:@"mobile"];
         
@@ -302,7 +317,7 @@
         order.customerName = customerName;
         order.contactNumber = customerPhone;
         order.orderTime = orderDate;
-        order.timeRemain = [NSString stringWithFormat: @"60 min"];
+        order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
         order.status = @"Queue";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
@@ -310,16 +325,17 @@
         [_queueArray addObject:order];
     }
     
-    NSURL *preparingURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=2&loc_id=1",Constants.GET_ALL_ORDERS_URL]];
+    NSURL *preparingURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=2&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData1 = [NSData dataWithContentsOfURL:preparingURL];
     NSDictionary *preparingsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData1 options:0 error:&error];
     
     for (NSDictionary *preparingDictionary in preparingsDictionary)
     {
         NSString *orderId = [preparingDictionary objectForKey:@"orderId"];
-        NSString *orderDate = [preparingDictionary objectForKey:@"orderDate"];
+        NSString *orderDate = [self convertDate: [preparingDictionary objectForKey:@"orderDate"]];
         NSString *orderTypeId = [[preparingDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
         NSString *quantity = [preparingDictionary objectForKey:@"quantity"];
+        NSString *estimatedTime = [preparingDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [preparingDictionary objectForKey:@"customerName"];
         NSString *customerPhone = [preparingDictionary objectForKey:@"mobile"];
         
@@ -328,7 +344,7 @@
         order.customerName = customerName;
         order.contactNumber = customerPhone;
         order.orderTime = orderDate;
-        order.timeRemain = [NSString stringWithFormat: @"60 min"];
+        order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
         order.status = @"Preparing";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
@@ -336,7 +352,7 @@
         [_preparingArray addObject:order];
     }
     
-    NSURL *outForDeliveryURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=3&loc_id=1",Constants.GET_ALL_ORDERS_URL]];
+    NSURL *outForDeliveryURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=3&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData2 = [NSData dataWithContentsOfURL:outForDeliveryURL];
     NSDictionary *oFDsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData2 options:0 error:&error];
     
@@ -346,25 +362,28 @@
         NSString *orderDate = [oFDDictionary objectForKey:@"orderDate"];
         NSString *orderTypeId = [[oFDDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
         NSString *quantity = [oFDDictionary objectForKey:@"quantity"];
+        NSString *estimatedTime = [oFDDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [oFDDictionary objectForKey:@"customerName"];
         NSString *customerPhone = [oFDDictionary objectForKey:@"mobile"];
         NSString *dBoyName = [oFDDictionary objectForKey:@"deliveryboyName"];
+        NSString *dBoyImage = [oFDDictionary objectForKey:@"deliveryboyImagURL"];
         
         Order * order = [[Order alloc]init];
         order.orderNo =  [NSString stringWithFormat: @"%@", orderId];
         order.customerName = customerName;
         order.contactNumber = customerPhone;
         order.orderTime = orderDate;
-        order.timeRemain = [NSString stringWithFormat: @"60 min"];
+        order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
         order.status = @"OutForDelivery";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
         order.deliveryPerson = dBoyName;
+        order.deliveryPersonURL = dBoyImage;
         
         [_outForDeliveryArray addObject:order];
     }
     
-    NSURL *readyToPickUpURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=4&loc_id=1",Constants.GET_ALL_ORDERS_URL]];
+    NSURL *readyToPickUpURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=4&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData3 = [NSData dataWithContentsOfURL:readyToPickUpURL];
     NSDictionary *rTPsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData3 options:0 error:&error];
     
@@ -374,15 +393,16 @@
         NSString *orderDate = [rTPDictionary objectForKey:@"orderDate"];
         NSString *orderTypeId = [[rTPDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
         NSString *quantity = [rTPDictionary objectForKey:@"quantity"];
+        NSString *estimatedTime = [rTPDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [rTPDictionary objectForKey:@"customerName"];
-        //    NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
+        NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
         
         Order * order = [[Order alloc]init];
         order.orderNo =  [NSString stringWithFormat: @"%@", orderId];
         order.customerName = customerName;
-        //    order.contactNumber = customerPhone;
+        order.contactNumber = customerPhone;
         order.orderTime = orderDate;
-        order.timeRemain = [NSString stringWithFormat: @"60 min"];
+        order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
         order.status = @"ReadyToPickUp";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
@@ -390,7 +410,7 @@
         [_readyToPickUpArray addObject:order];
     }
     
-    NSURL *completedURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=6&loc_id=1",Constants.GET_ALL_ORDERS_URL]];
+    NSURL *completedURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=6&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData4 = [NSData dataWithContentsOfURL:completedURL];
     NSDictionary *completedDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData4 options:0 error:&error];
     
@@ -400,15 +420,16 @@
         NSString *orderDate = [cDictionary objectForKey:@"orderDate"];
         NSString *orderTypeId = [[cDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
         NSString *quantity = [cDictionary objectForKey:@"quantity"];
+        NSString *estimatedTime = [cDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [cDictionary objectForKey:@"customerName"];
-        //    NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
+        NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
         
         Order * order = [[Order alloc]init];
         order.orderNo =  [NSString stringWithFormat: @"%@", orderId];
         order.customerName = customerName;
-        //    order.contactNumber = customerPhone;
+        order.contactNumber = customerPhone;
         order.orderTime = orderDate;
-        order.timeRemain = [NSString stringWithFormat: @"60 min"];
+        order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
         order.status = @"ReadyToPickUp";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
@@ -454,6 +475,18 @@
         _searchTableView.frame = CGRectMake(currentVerticalOffset + (width*0.125), 0, width*0.75, 300);
     }
     
+}
+
+-(NSString *)convertDate:(NSString *) dateString
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss.SS"];
+    
+    NSDate *dateFromString = [dateFormatter dateFromString:dateString];
+    
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    [dateFormatter1 setDateFormat:@"MMM dd, HH:mm"];
+    return [dateFormatter1 stringFromDate:dateFromString];
 }
 
 @end

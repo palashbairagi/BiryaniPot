@@ -29,7 +29,7 @@
 -(void)setCellData:(Order *)order
 {
     _orderNo.text = order.orderNo;
-    _itemCount.text = order.itemCount;
+    _itemCount.text = [NSString stringWithFormat:@"%@ Items", order.itemCount];
     _customerName.text = order.customerName;
 }
 

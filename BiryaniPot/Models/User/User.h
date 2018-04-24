@@ -18,4 +18,5 @@
 @property (nonatomic, retain) NSString * mobile;
 @property (nonatomic, retain) NSString * phone;
 @property (nonatomic, retain) NSString * email;
+@property (nonatomic, retain) NSString * licenseNumber;
 @end

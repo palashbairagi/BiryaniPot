@@ -34,7 +34,6 @@
     
     if (totalOrders.amount != (id)[NSNull null])self.amount.text = totalOrders.amount;
     else self.amount.text = @"";
-    
 }
 
 - (IBAction)invoiceButtonClicked:(id)sender {
@@ -42,6 +41,7 @@
     invoiceViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     invoiceViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     invoiceViewController.preferredContentSize = CGSizeMake(520, 650);
+    invoiceViewController.delegate = _delegate.totalOrderArray[_invoiceButton.tag];
     
     [self.delegate presentViewController:invoiceViewController animated:YES completion:nil];
 }

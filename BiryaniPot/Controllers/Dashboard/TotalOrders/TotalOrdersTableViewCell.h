@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Feedback.h"
+#import "TotalOrdersViewController.h"
 
 @interface TotalOrdersTableViewCell : UITableViewCell
 
@@ -17,8 +18,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *amount;
 @property (weak, nonatomic) IBOutlet UILabel *type;
 @property (weak, nonatomic) IBOutlet UILabel *isPaid;
+@property (weak, nonatomic) IBOutlet UIButton *invoiceButton;
 
-@property (nonatomic, retain) id delegate;
+@property (nonatomic, retain) TotalOrdersViewController *delegate;
 
 - (void)setCellData:(Feedback *)totalOrders;
 

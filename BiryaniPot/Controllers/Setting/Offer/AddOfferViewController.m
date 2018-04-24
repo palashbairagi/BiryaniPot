@@ -8,6 +8,7 @@
 
 #import "AddOfferViewController.h"
 #import "Validation.h"
+#import "Constants.h"
 #import <SSMaterialCalendarPicker/NSDate+SSDateAdditions.h>
 
 @interface AddOfferViewController ()
@@ -59,6 +60,30 @@
     [self.minimumOrder.layer addSublayer:borderMO];
     self.minimumOrder.layer.masksToBounds = YES;
     
+    CALayer *borderMD = [CALayer layer];
+    borderMD.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderMD.frame = CGRectMake(0, self.maxDiscount.frame.size.height - borderWidth, self.maxDiscount.frame.size.width, self.maxDiscount.frame.size.height);
+    borderMD.borderWidth = borderWidth;
+    self.maxDiscount.borderStyle = UITextBorderStyleNone;
+    [self.maxDiscount.layer addSublayer:borderMD];
+    self.maxDiscount.layer.masksToBounds = YES;
+    
+    CALayer *borderLPC = [CALayer layer];
+    borderLPC.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderLPC.frame = CGRectMake(0, self.limitPerCustomer.frame.size.height - borderWidth, self.limitPerCustomer.frame.size.width, self.limitPerCustomer.frame.size.height);
+    borderLPC.borderWidth = borderWidth;
+    self.limitPerCustomer.borderStyle = UITextBorderStyleNone;
+    [self.limitPerCustomer.layer addSublayer:borderLPC];
+    self.limitPerCustomer.layer.masksToBounds = YES;
+    
+    CALayer *borderMUL = [CALayer layer];
+    borderMUL.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderMUL.frame = CGRectMake(0, self.maxUsageLimit.frame.size.height - borderWidth, self.maxUsageLimit.frame.size.width, self.maxUsageLimit.frame.size.height);
+    borderMUL.borderWidth = borderWidth;
+    self.maxUsageLimit.borderStyle = UITextBorderStyleNone;
+    [self.maxUsageLimit.layer addSublayer:borderMUL];
+    self.maxUsageLimit.layer.masksToBounds = YES;
+    
     CALayer *borderD = [CALayer layer];
     borderD.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
     borderD.frame = CGRectMake(0, self.offerDescription.frame.size.height - borderWidth, self.offerDescription.frame.size.width, self.offerDescription.frame.size.height);
@@ -88,12 +113,62 @@
     self.cancelButton.layer.cornerRadius = 5;
     self.cancelButton.layer.borderWidth = 1;
     self.cancelButton.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-
 }
 
 - (IBAction)saveButtonClicked:(id)sender
 {
-    [self isValidate];
+    if([self isValidate])
+    {
+        NSString *promoCode = [NSString stringWithFormat:@"%@", _offerName.text];
+        NSString *offerDescription = [NSString stringWithFormat:@"%@", _offerDescription.text];
+        NSString *validFrom = [Constants changeDateFormatForAPI:_fromButton.titleLabel.text];
+        NSString *validTill = [Constants changeDateFormatForAPI:_toButton.titleLabel.text];
+        NSString *minValue = [NSString stringWithFormat:@"%@", _minimumOrder.text];
+        NSString *maxDiscount = [NSString stringWithFormat:@"%@", _maxDiscount.text];
+        NSString *maxTimes = [NSString stringWithFormat:@"%@", _limitPerCustomer.text];
+        NSString *usageLimit = [NSString stringWithFormat:@"%@", _maxUsageLimit.text];
+        NSString *promoPercent = [NSString stringWithFormat:@"%@", _offerValue.text];
+        NSString *imgURL = @"xyz.jpeg";
+        
+        
+        NSString *post = [NSString stringWithFormat:@"codename=%@&code_description=%@&validfrom=%@&validtill=%@&minvalue=%@&maxdisc=%@&maxtimes=%@&usage_limit=%@&coupon_percent=%@&coupon_imgurl=%@&loc_id=%@", promoCode, offerDescription, validFrom, validTill, minValue, maxDiscount, maxTimes, usageLimit, promoPercent, imgURL, Constants.LOCATION_ID];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_OFFER_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSString *boundary = @"-----Upload---Image-----";
+        
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate.offerArray removeAllObjects];
+                [_delegate getOffers];
+                [_delegate.offerCollectionView reloadData];
+            });
+            
+        }];
+        [postDataTask resume];
+        
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
+}
+
+-(void) imageUpload
+{
+    
 }
 
 - (IBAction)cancelButtonClicked:(id)sender
@@ -165,15 +240,9 @@
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not be empty"];
         return false;
     }
-    if([Validation isMore:_offerValue thanMaxLength:5])
+    if([Validation isMore:_offerValue thanMaxLength:2])
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not exceed 5 characters"];
-        return false;
-    }
-    
-    if([Validation isMore:_minimumOrder thanMaxLength:5])
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not exceed 5 characters"];
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not exceed 99%"];
         return false;
     }
     
@@ -185,6 +254,46 @@
     if([Validation isMore:_offerDescription thanMaxLength:100])
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Description Field should not exceed 100 characters"];
+        return false;
+    }
+    
+    if ([Validation isNumber:_minimumOrder])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should contain numbers only"];
+    }
+    if([Validation isMore:_minimumOrder thanMaxLength:3])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not be more than 999"];
+        return false;
+    }
+    
+    if ([Validation isNumber:_maxDiscount])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Discount Field should contain numbers only"];
+    }
+    if([Validation isMore:_maxDiscount thanMaxLength:2])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Discount Field should not be more than 99"];
+        return false;
+    }
+    
+    if ([Validation isNumber:_limitPerCustomer])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Limit Per Customer Field should contain numbers only"];
+    }
+    if([Validation isMore:_limitPerCustomer thanMaxLength:4])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Limit Per Customer Field should not be more than 9999"];
+        return false;
+    }
+    
+    if ([Validation isNumber:_maxUsageLimit])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Usage Limit Field should contain numbers only"];
+    }
+    if([Validation isMore:_maxUsageLimit thanMaxLength:4])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Usage Limit Field should not be more than 9999"];
         return false;
     }
     

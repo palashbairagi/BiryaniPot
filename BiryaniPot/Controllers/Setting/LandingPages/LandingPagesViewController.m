@@ -7,6 +7,8 @@
 //
 
 #import "LandingPagesViewController.h"
+#import "LandingPageCollectionViewCell.h"
+#import "LandingImage.h"
 #import "Constants.h"
 
 @interface LandingPagesViewController ()
@@ -18,12 +20,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initComponents];
+}
+
+-(void)initComponents
+{
+    _imageQueue = [[NSOperationQueue alloc]init];
+    _landingImageArray = [[NSMutableArray alloc]init];
+    
     [self getImages];
+    
+    [self.landingPageCollectionView registerNib:[UINib nibWithNibName:@"LandingPageCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"landingImageCell"];
 }
 
 -(void)getImages
 {
-    NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=101",Constants.GET_LANDING_PAGES_URL]];
+    NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=102",Constants.GET_LANDING_PAGES_URL]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:pagesURL];
     NSError *error = nil;
     NSDictionary *pagesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -31,85 +42,61 @@
     for (NSDictionary *pageDictionary in pagesDictionary)
     {
         NSString *imageURLString = [pageDictionary objectForKey:@"imageUrl"];
+        LandingImage *landingImage = [[LandingImage alloc]init];
+        landingImage.imageURL = imageURLString;
+        [_landingImageArray addObject:landingImage];
+    }
+}
+
+- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    LandingPageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"landingImageCell" forIndexPath:indexPath];
+    cell.delegate = self;
+    LandingImage * landingImage = [_landingImageArray objectAtIndex:indexPath.row];
+    
+    if (landingImage.image == nil )
+    {
+        NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
+            
+            NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:landingImage.imageURL]];
+            
+            if (imgData == NULL)
+            {
+                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    landingImage.image = image;
+                });
+            }
+            else
+            {
+                UIImage * image = [UIImage imageWithData:imgData];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    landingImage.image = image;
+                });
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.landingPageCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+            });
+            
+        }];
         
-        [NSThread detachNewThreadSelector:@selector(loadImageByURL:) toTarget:self withObject:imageURLString];
-    }
-}
-
--(void)loadImageByURL: (NSString *)imageURLString
-{
-    NSData *imgData=[NSData dataWithContentsOfURL:[NSURL URLWithString:imageURLString]];
-    
-    UIImage *img=[UIImage imageWithData:imgData];
-    
-    [self performSelectorOnMainThread:@selector(setImage:) withObject:img waitUntilDone:NO];
-}
-
--(void)setImage: (UIImage *) image
-{
-    if (_image1.image == NULL)
-    {
-        _image1.image = image;
-    }
-    else if (_image2.image == NULL)
-    {
-        _image2.image = image;
-    }
-    else if(_image3.image == NULL)
-    {
-        _image3.image = image;
-    }
-}
-
--(void)initComponents
-{
-    
-    _pickerController1 = [[UIImagePickerController alloc] init];
-    _pickerController2 = [[UIImagePickerController alloc] init];
-    _pickerController3 = [[UIImagePickerController alloc] init];
-    
-    _pickerController1.delegate = self;
-    _pickerController2.delegate = self;
-    _pickerController3.delegate = self;
-    
-}
-
-- (IBAction)image1Tapped:(id)sender
-{
-    [self presentViewController:_pickerController1 animated:YES completion:nil];
-}
-
-- (IBAction)image2Tapped:(id)sender
-{
-    [self presentViewController:_pickerController2 animated:YES completion:nil];
-}
-
-- (IBAction)image3Tapped:(id)sender
-{
-    [self presentViewController:_pickerController3 animated:YES completion:nil];
-}
-
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-{
-    if (picker == _pickerController1)
-    {
-        _image1.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-    }
-    else if(picker == _pickerController2)
-    {
-        _image2.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        [_imageQueue addOperation:op];
     }
     else
     {
-        _image3.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        cell.image.image = landingImage.image;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    return cell;
+}
+
+- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return _landingImageArray.count;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(((CGRectGetWidth(collectionView.frame)/3)-7), CGRectGetHeight(collectionView.frame));
 }
 
 @end

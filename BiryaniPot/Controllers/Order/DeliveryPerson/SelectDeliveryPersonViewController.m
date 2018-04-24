@@ -39,7 +39,7 @@
 
 -(void)getDeliveryPersons
 {
-    NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=1",Constants.GET_DELIVERY_PERSON_URL]];
+    NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_DELIVERY_PERSON_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:deliveryPersonURL];
     NSError *error = nil;
     NSDictionary *deliveryPersonsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -72,6 +72,7 @@
 {
     User *user = [_nameArray objectAtIndex:[_pickerView selectedRowInComponent:0]];
     
+    // Code similar to select time
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -26,11 +26,12 @@
 {
     @try
     {
-    _orderNo.text = order.orderNo;
-    _orderTime.text = order.orderTime;
-    [_timeRequired setTitle:order.timeRemain forState:UIControlStateNormal];
-    _itemCount.text = order.itemCount;
-    _customerName.text = order.customerName;
+        _order = order;
+        _orderNo.text = order.orderNo;
+        _orderTime.text = order.orderTime;
+        [_timeRequired setTitle:order.timeRemain forState:UIControlStateNormal];
+        _itemCount.text = [NSString stringWithFormat:@"%@ Items", order.itemCount];
+        _customerName.text = order.customerName;
     }@catch(NSException *e)
     {
         NSLog(@"Exception %@ %@", e.name, e.reason);
@@ -65,7 +66,8 @@
     selectTime.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     selectTime.preferredContentSize = CGSizeMake(300, 270);
     
-    selectTime.delegate = self;
+    selectTime.delegate = _delegate;
+    selectTime.order = _order;
     [self.delegate presentViewController:selectTime animated:YES completion:nil];
 }
 

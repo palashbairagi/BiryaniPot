@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *customerName;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (nonatomic, retain) Order *order;
 
 - (void)setCellData:(Order *)order;
 @end

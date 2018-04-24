@@ -7,9 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "LoginViewController.h"
 #import "DashboardViewController.h"
 #import "OrderViewController.h"
+
 
 @interface AppDelegate ()
 
@@ -17,12 +17,13 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    self.userDefaults = [NSUserDefaults standardUserDefaults];
     
     self.window = [[UIWindow alloc]initWithFrame:UIScreen.mainScreen.bounds];
     
-    LoginViewController *loginViewController = [[LoginViewController alloc]init];
+     _loginViewController = [[LoginViewController alloc]init];
     
     DashboardViewController *dashboardViewController = [[DashboardViewController alloc]init];
     OrderViewController *orderViewController = [[OrderViewController alloc]init];
@@ -51,7 +52,7 @@
     UITabBarItem* second = [[self.tabBarController.tabBar items] objectAtIndex:1];
     second.titlePositionAdjustment = UIOffsetMake(-110.0, 0.0);
     
-    self.window.rootViewController = loginViewController;
+    self.window.rootViewController = _loginViewController;
     [self.window makeKeyAndVisible];
     
     return YES;

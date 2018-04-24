@@ -16,7 +16,8 @@
 
 @implementation ProfileViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self initComponents];
 }
@@ -210,7 +211,7 @@
 
 -(void)getProfile
 {
-    NSURL *profileURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=1",Constants.GET_RESTAURANT_PROFILE_URL]];
+    NSURL *profileURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_RESTAURANT_PROFILE_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:profileURL];
     NSError *error = nil;
     NSArray *profileDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -238,11 +239,12 @@
     NSString *address1 = [NSString stringWithFormat:@"%@", _addressLine1.text];
     NSString *address2 = [NSString stringWithFormat:@"%@", _addressLine2.text];
     NSString *city = [NSString stringWithFormat:@"%@", _city.text];
+    NSString *state = [NSString stringWithFormat:@"%@", _state.text];
     NSString *zip = [NSString stringWithFormat:@"%@", _zip.text];
     NSString *phone1 = [NSString stringWithFormat:@"%@", _phone1.text];
     NSString *phone2 = [NSString stringWithFormat:@"%@", _phone2.text];
     
-    NSString *post = [NSString stringWithFormat:@"loc_id=1&loc_name=%@&address_lane1=%@&address_lane2=%@&zipcode=%@&city=%@&state_id=2&phone1=%@&phone2=%@&is_active=1", location, address1, address2, zip, city, phone1, phone2];
+    NSString *post = [NSString stringWithFormat:@"loc_id=%@&loc_name=%@&address_lane1=%@&address_lane2=%@&zipcode=%@&city=%@&state_name=%@&phone1=%@&phone2=%@&is_active=1", Constants.LOCATION_ID, location, address1, address2, zip, city, state ,phone1, phone2];
     NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -261,7 +263,7 @@
 
 -(void)getTime
 {
-    NSURL *timeURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=1",Constants.GET_RESTAURANT_TIME_URL]];
+    NSURL *timeURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@", Constants.GET_RESTAURANT_TIME_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:timeURL];
     NSError *error = nil;
     NSArray *timesArray = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -400,8 +402,23 @@
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"State Field should not be empty"];
         return false;
     }
-    if([Validation isMore:_state thanMaxLength:40]) {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"State Field should not be more than 40 characters"];
+    
+    NSArray *states = @[@"California", @"Alabama", @"Arkansas", @"Arizona", @"Alaska", @"Colorado", @"Connecticut", @"Delaware", @"Florida", @"Georgia", @"Hawaii", @"Idaho", @"Illinois", @"Indiana", @"Iowa", @"Kansas", @"Kentucky", @"Louisiana", @"Maine", @"Maryland", @"Massachusetts", @"Michigan", @"Minnesota", @"Mississippi", @"Missouri", @"Montana", @"Nebraska", @"Nevada", @"New Hampshire", @"New Jersey", @"New Mexico", @"New York", @"North Carolina", @"North Dakota", @"Ohio", @"Oklahoma", @"Oregon", @"Pennsylvania", @"Rhode Island", @"South Carolina", @"South Dakota", @"Tennessee", @"Texas", @"Utah", @"Vermont", @"Virginia", @"Washington", @"West Virginia", @"Wisconsin", @"Wyoming"];
+    
+    BOOL isState = false;
+    
+    for(NSString *state in states)
+    {
+        if([[Validation trim:_state.text] caseInsensitiveCompare:state] == NSOrderedSame)
+        {
+            isState = true;
+            break;
+        }
+    }
+    
+    if (!isState)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Invalid State"];
         return false;
     }
     

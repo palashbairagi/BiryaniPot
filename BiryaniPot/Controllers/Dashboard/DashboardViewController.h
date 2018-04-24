@@ -11,6 +11,7 @@
 #import "BaseViewController.h"
 
 @interface DashboardViewController : BaseViewController <BarChartDataSource, UITableViewDelegate, UITableViewDataSource, NSURLSessionDelegate>
+
 @property (weak, nonatomic) IBOutlet UIView *statisticsView;
 
 @property (weak, nonatomic) IBOutlet UILabel *totalOrdersLabel;
@@ -38,6 +39,5 @@
 @property (nonatomic, retain) NSMutableArray *graphArray;
 @property (nonatomic, retain) NSMutableArray *topSellersArray;
 @property (nonatomic, retain) NSMutableArray *offersArray;
-
 
 @end

@@ -28,7 +28,7 @@
     _name.text = user.name;
     _role.text = user.role;
     _mobile.text = user.mobile;
-    _licenceNo.text = user.phone;
+    _licenceNo.text = user.licenseNumber;
     _email.text = user.email;
     _deleteButton.titleLabel.text = [NSString stringWithFormat:@"%C", 0xf1f8];
     
@@ -79,35 +79,20 @@
 
 -(void)deleteDeliveryPerson:(User *)user
 {
-    NSLog(@"%@\n %@\n %@\n %@\n %@\n", user.userId, user.name, user.mobile, user.profilePictureURL, user.email);
     
-    NSError *error;
+    NSString *post = [NSString stringWithFormat:@"dboy_id=%@&dboy_name=%@&mobile=%@&img_url=%@&email=%@&is_active=0&loc_id=%@", user.userId, user.name, user.mobile, user.profilePictureURL, user.email, Constants.LOCATION_ID];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.DELETE_DELIVERY_PERSON_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
-    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    
     [request setHTTPMethod:@"POST"];
-    
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:user.userId forKey:@"dboy_id"];
-    [paramDict setValue:user.name forKey:@"dboy_name"];
-    [paramDict setValue:user.mobile forKey:@"mobile"];
-    [paramDict setValue:user.profilePictureURL forKey:@"img_url"];
-    //[paramDict setValue:user.email forKey:@"email"];
-    [paramDict setValue:@"0" forKey:@"is_active"];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"loc_id"];
-    
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
     
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate.userArray removeObject:user];

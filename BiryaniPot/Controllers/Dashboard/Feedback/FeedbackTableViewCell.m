@@ -25,8 +25,9 @@
 {
     self.orderNo.text = feedback.orderNo;
     self.contactNumber.text = feedback.contactNumber;
+    self.type.text = feedback.orderType;
     
-    if (feedback.email != (id)[NSNull null])self.email.text = feedback.email;
+    if(feedback.email != (id)[NSNull null])self.email.text = feedback.email;
     else self.email.text = @"";
     
     self.isPaid.text = feedback.paymentType;
@@ -43,13 +44,16 @@
         self.smiley.text = [NSString stringWithFormat:@"%C", 0xf118];
         [_smiley setTextColor:[UIColor greenColor]];
     }
-    else
+    else if ([feedback.smiley isEqualToString:@"Bad"])
     {
         self.smiley.text = [NSString stringWithFormat:@"%C", 0xf119];
         [_smiley setTextColor:[UIColor orangeColor]];
     }
-    
-    
+    else
+    {
+        _smiley.text = @"-";
+        [_smiley setTextColor:[UIColor blackColor]];
+    }
     
 }
 

@@ -10,8 +10,13 @@
 #import "ForgotPasswordViewController.h"
 #import "DashboardViewController.h"
 #import "Constants.h"
+#import "Validation.h"
+#import "AppDelegate.h"
+
 
 @interface LoginViewController ()
+
+@property (nonatomic) AppDelegate *appDelegate;
 
 @end
 
@@ -23,12 +28,12 @@ NSMutableData *mutableData;
 {
     [super viewDidLoad];
     [self initComponents];
-    self.userDefaults = [NSUserDefaults standardUserDefaults];
     
-    if ([self.userDefaults objectForKey:@"login_status"] != NULL && [[self.userDefaults objectForKey:@"login_status"] intValue] == 1)
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    if ([_appDelegate.userDefaults objectForKey:@"loginStatus"] != NULL && [[_appDelegate.userDefaults objectForKey:@"loginStatus"] intValue] == 1)
     {
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelegate.window.rootViewController = appDelegate.tabBarController;
+        _appDelegate.window.rootViewController = _appDelegate.tabBarController;
     }
 }
 
@@ -71,72 +76,45 @@ NSMutableData *mutableData;
 
 -(void)authenticate
 {
-    NSURL *url = nil;
-    NSMutableURLRequest *request = nil;
     
-    NSString *parameter = [NSString stringWithFormat:@"username=%@&password=%@",_username.text, _password.text];
-    NSData *parameterData = [parameter dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString *post = [NSString stringWithFormat:@"username=%@&password=%@", _username.text, _password.text];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     
-    url = [NSURL URLWithString:Constants.LOGIN_URL];
-    request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPBody:parameterData];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.LOGIN_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request setHTTPMethod:@"POST"];
-    [request addValue: @"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
     
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    
-    if( connection )
-    {
-        mutableData = [NSMutableData new];
-    }
-    else
-    {
-        NSLog(@"Unable to make connection");
-    }
-    
-}
-
-#pragma mark NSURLConnection delegates
-
--(void) connection:(NSURLConnection *) connection didReceiveResponse:(NSURLResponse *)response
-{
-    [mutableData setLength:0];
-}
-
--(void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [mutableData appendData:data];
-}
-
--(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"Connection Failed with %@", error);
-    return;
-}
-
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSDictionary * loginDictionary = [NSJSONSerialization JSONObjectWithData:mutableData options:0 error:nil];
-    
-    NSString *isLoginValid = [loginDictionary objectForKey:@"isLoginValid"];
-    
-    if ([isLoginValid intValue] == 1)
-    {
-        [self.userDefaults setObject:[loginDictionary objectForKey:@"userName"] forKey:@"user_name"];
-        [self.userDefaults setBool:YES forKey:@"login_status"];
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelegate.window.rootViewController = appDelegate.tabBarController;
-    }
-    else
-    {
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Unauthorized Access" message:@"Incorrect Username or Password" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    
+        NSDictionary * loginDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        NSString *isLoginValid = [loginDictionary objectForKey:@"isLoginValid"];
+        
+        if ([isLoginValid intValue] == 1)
+        {
+            [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"locationId"] forKey:@"locationId"];
+            [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userId"] forKey:@"userId"];
+            [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userName"] forKey:@"userName"];
+            [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userRole"] forKey:@"userRole"];
+            [_appDelegate.userDefaults setBool:YES forKey:@"loginStatus"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _appDelegate.window.rootViewController = _appDelegate.tabBarController;
+            });
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Unable to Login" andMessage:@"Incorrect Username or Password"];
+            });
+        }
+    }];
+    [postDataTask resume];
 }
 
 - (IBAction)forgotPasswordButtonClicked:(id)sender

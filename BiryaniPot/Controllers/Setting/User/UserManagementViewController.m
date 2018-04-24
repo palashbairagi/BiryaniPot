@@ -45,7 +45,6 @@
     
     [self getManagers];
     [self getDeliveryPersons];
-    
 }
 
 -(void)getManagers
@@ -92,8 +91,9 @@
         user.role = @"Delivery Person";
         user.mobile = [deliveryPersonDictionary objectForKey:@"dboyMobile"];
         user.phone = @"";
-        user.email = [deliveryPersonDictionary objectForKey:@"email"];
+        user.email = [deliveryPersonDictionary objectForKey:@"dboyEmail"];
         user.profilePictureURL = [deliveryPersonDictionary objectForKey:@"dboyImgUrl"];
+        user.licenseNumber = [deliveryPersonDictionary objectForKey:@"licenseNumber"];
         
         [_userArray addObject:user];
     }
@@ -104,7 +104,7 @@
     AddUserViewController * addUserViewController = [[AddUserViewController alloc]init];
     addUserViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     addUserViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    
+    addUserViewController.delegate = self;
     [self presentViewController:addUserViewController animated:YES completion:nil];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LoginViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -14,6 +15,8 @@
 @property (strong, nonatomic) UITabBarController *tabBarController;
 @property (strong, nonatomic) UINavigationController *orderNavigationController;
 @property (strong, nonatomic) UINavigationController *dashboardNavigationController;
+@property (nonatomic, retain) NSUserDefaults *userDefaults;
+@property (nonatomic, retain) LoginViewController *loginViewController;
 
 @end
 

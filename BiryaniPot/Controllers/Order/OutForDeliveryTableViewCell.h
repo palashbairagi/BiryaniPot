@@ -20,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *outTime;
 @property (weak, nonatomic) IBOutlet UIButton *checkIconButton;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryPerson;
+@property (weak, nonatomic) IBOutlet UIImageView *dboyImage;
+@property (nonatomic, retain) NSOperationQueue *dboyQueue ;
 
 - (void)setCellData:(Order *)order;
 

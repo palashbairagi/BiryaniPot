@@ -64,6 +64,7 @@
     _contactNumber.text = _order.contactNumber;
     
     [self getItemsList];
+    [self setOrderDetails];
 }
 
 -(void)getItemsList
@@ -78,27 +79,36 @@
         NSString *grandTotal = [itemDictionary objectForKey:@"grandTotal"];
         NSString *itemName = [itemDictionary objectForKey:@"itemName"];
         NSString *itemType = [itemDictionary objectForKey:@"itemType"];
-      //  NSString *orderId = [itemDictionary objectForKey:@"orderId"];
         NSString *price = [itemDictionary objectForKey:@"price"];
-        NSString *quantity = [itemDictionary objectForKey:@"quantity"];
+        NSString *quantity = [itemDictionary objectForKey:@"itemQuantity"];
         NSString *spiceLevel = [itemDictionary objectForKey:@"spiceLevel"];
         NSString *taxName = [itemDictionary objectForKey:@"taxName"];
-        NSString *taxPercentage = [itemDictionary objectForKey:@"taxPercentage"];
+        NSString *subTotal = [itemDictionary objectForKey:@"subTotal"];
+        NSString *tax = [itemDictionary objectForKey:@"tax"];
         NSString *total = [itemDictionary objectForKey:@"total"];
         
         Item *item = [[Item alloc]init];
         item.grandTotal = grandTotal;
+        item.subTotal = subTotal;
         item.name = itemName;
         item.type = itemType;
         item.price = price;
         item.quantity = [NSString stringWithFormat:@"%@", quantity];
         item.spiceLevel = spiceLevel;
         item.taxName = taxName;
-        item.taxPercent = taxPercentage;
+        item.tax = tax;
         item.total = total;
         
         [_itemArray addObject:item];
     }
+}
+
+-(void)setOrderDetails
+{
+    Item *item = _itemArray[_itemArray.count-1];
+    _grandTotal.text = [NSString stringWithFormat:@"%@", item.grandTotal];
+    _itemCount.text = [NSString stringWithFormat:@"%lu", _itemArray.count-1];
+    
 }
 
 - (IBAction)addItemButtonClicked:(id)sender

@@ -13,4 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *addNewMemberButton;
 @property (weak, nonatomic) IBOutlet UITableView *userTableView;
 @property (nonatomic, retain) NSMutableArray * userArray;
+
+-(void)getDeliveryPersons;
+-(void)getManagers;
 @end

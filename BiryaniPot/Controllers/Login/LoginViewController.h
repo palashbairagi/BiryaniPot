@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
 
-@interface LoginViewController : UIViewController 
+@interface LoginViewController : UIViewController <NSURLSessionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *username;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
-@property (nonatomic, retain) NSUserDefaults *userDefaults;
+
 @end

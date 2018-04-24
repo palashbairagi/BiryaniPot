@@ -25,7 +25,6 @@
              forState:UIControlStateNormal];
     [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
     [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -43,7 +42,7 @@
     _graph.barBackgroundColor = RGB(255,255,255);
     _graph.labelTextAttributes = @{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:15.0f]};
     _graph.countTextAttributes = _graph.labelTextAttributes;
-    //_graph.showCount = YES;
+    _graph.showCount = YES;
     [self.topSellersView addSubview:_graph];
 }
 
@@ -60,7 +59,7 @@
     for(NSDictionary *topSeller in topSellers)
     {
         NSString *itemName = [topSeller objectForKey:@"itemName"];
-        NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
+        NSNumber *total = [NSNumber numberWithInt:[[topSeller objectForKey:@"timesSold"] intValue]];
         
         [_yAxisArray addObject:itemName];
         [_xAxisArray addObject:total];

@@ -11,6 +11,9 @@
 
 @interface OrderDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *orderNo;
+@property (weak, nonatomic) IBOutlet UILabel *grandTotal;
+@property (weak, nonatomic) IBOutlet UILabel *itemCount;
+
 @property (weak, nonatomic) IBOutlet UILabel *address;
 @property (weak, nonatomic) IBOutlet UILabel *contactNumber;
 @property (weak, nonatomic) IBOutlet UILabel *customerName;

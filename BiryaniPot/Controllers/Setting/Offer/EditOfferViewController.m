@@ -87,11 +87,55 @@
     self.cancelButton.layer.borderWidth = 1;
     self.cancelButton.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
+    _offerName.text = _offer.name;
+    _offerDescription.text = _offer.detail;
+    _fromButton.titleLabel.text = [_delegate changeDateFormat:_offer.startFrom];
+    _toButton.titleLabel.text = [_delegate changeDateFormat:_offer.endAt];
+    _minimumOrder.text = [NSString stringWithFormat:@"%@", _offer.minValue];
+    _offerValue.text = [NSString stringWithFormat:@"%@", _offer.offerValue];
 }
 
 - (IBAction)updateButtonClicked:(id)sender
 {
-    
+    if([self isValidate])
+    {
+        NSString *codeId = _offer.offerId;
+        NSString *promoCode = [NSString stringWithFormat:@"%@", _offerName.text];
+        NSString *offerDescription = [NSString stringWithFormat:@"%@", _offerDescription.text];
+        NSString *validFrom = [Constants changeDateFormatForAPI:_fromButton.titleLabel.text];
+        NSString *validTill = [Constants changeDateFormatForAPI:_toButton.titleLabel.text];
+        NSString *minValue = [NSString stringWithFormat:@"%@", _minimumOrder.text];
+        NSString *maxDiscount = @"20";
+        NSString *maxTimes = @"2";
+        NSString *usageLimit = @"2";
+        NSString *promoPercent = [NSString stringWithFormat:@"%@", _offerValue.text];
+        NSString *imgURL = @"xyz.jpeg";
+        
+        NSString *post = [NSString stringWithFormat:@"code_id=%@&codename=%@&code_description=%@&validfrom=%@&validtill=%@&minvalue=%@&maxdisc=%@&maxtimes=%@&usage_limit=%@&coupon_percent=%@&coupon_imgurl=%@&loc_id=%@", codeId, promoCode, offerDescription, validFrom, validTill, minValue, maxDiscount, maxTimes, usageLimit, promoPercent, imgURL, Constants.LOCATION_ID];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_OFFER_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate.offerArray removeAllObjects];
+                [_delegate getOffers];
+                [_delegate.offerCollectionView reloadData];
+            });
+            
+        }];
+        [postDataTask resume];
+        
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
 }
 
 - (IBAction)cancelButtonClicked:(id)sender
@@ -139,4 +183,60 @@
     _uploadPhotoLabel.text = @"";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+-(BOOL)isValidate
+{
+    [_offerName resignFirstResponder];
+    [_offerValue resignFirstResponder];
+    [_minimumOrder resignFirstResponder];
+    [_offerDescription resignFirstResponder];
+    
+    if([Validation isEmpty:_offerName])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Code Field should not be empty"];
+        return false;
+    }
+    if([Validation isMore:_offerName thanMaxLength:20])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Code Field should not exceed 20 characters"];
+        return false;
+    }
+    
+    if([Validation isEmpty:_offerValue])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not be empty"];
+        return false;
+    }
+    if([Validation isMore:_offerValue thanMaxLength:5])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not exceed 5 characters"];
+        return false;
+    }
+    
+    if([Validation isMore:_minimumOrder thanMaxLength:5])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not exceed 5 characters"];
+        return false;
+    }
+    
+    if([Validation isEmpty:_offerDescription])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Description Field should not be empty"];
+        return false;
+    }
+    if([Validation isMore:_offerDescription thanMaxLength:100])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Description Field should not exceed 100 characters"];
+        return false;
+    }
+    
+    if([_fromButton.titleLabel.text isEqualToString:@"Select"] || [_toButton.titleLabel.text isEqualToString:@"Select"])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Date range should not be empty"];
+        return false;
+    }
+    
+    return true;
+}
+
 @end
