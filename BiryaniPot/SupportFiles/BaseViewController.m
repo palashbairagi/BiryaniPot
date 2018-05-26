@@ -36,11 +36,17 @@
 
 -(void)logoutButtonClicked:(UIButton *)sender
 {
+    [self logout];
+}
+
+-(void)logout
+{
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     [appDelegate.userDefaults removeObjectForKey:@"locationId"];
     [appDelegate.userDefaults removeObjectForKey:@"userId"];
     [appDelegate.userDefaults removeObjectForKey:@"userName"];
+    [appDelegate.userDefaults removeObjectForKey:@"Password"];
     [appDelegate.userDefaults removeObjectForKey:@"userRole"];
     [appDelegate.userDefaults removeObjectForKey:@"loginStatus"];
     [appDelegate.userDefaults synchronize];

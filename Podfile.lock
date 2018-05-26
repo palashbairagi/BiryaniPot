@@ -1,14 +1,16 @@
 PODS:
   - drCharts (1.4)
+  - FSCalendar (2.7.9)
+  - IQKeyboardManager (5.0.7)
   - MKDropdownMenu (1.4)
   - SCRSidewaysBarGraph (0.0.4)
-  - SSMaterialCalendarPicker (1.2.11)
 
 DEPENDENCIES:
   - drCharts (from `https://github.com/Zomato/DR-charts.git`)
+  - FSCalendar
+  - IQKeyboardManager
   - MKDropdownMenu
   - SCRSidewaysBarGraph
-  - SSMaterialCalendarPicker
 
 EXTERNAL SOURCES:
   drCharts:
@@ -21,10 +23,11 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   drCharts: fd568784a514819ea7af12aabdd67e00ac359370
+  FSCalendar: a04b09f16f811bc92e82f3cf852a15225233b9d5
+  IQKeyboardManager: 0bfa4607d39924116b5c0c8b55b5d789288b5cba
   MKDropdownMenu: 269df4a41d21a1db684ce8bc709befe419fc5bae
   SCRSidewaysBarGraph: fa680ce0dfece0949bcd0dfd95d57134958fd8e4
-  SSMaterialCalendarPicker: c276fea48318cd073705bbb49492cf9129f7d739
 
-PODFILE CHECKSUM: ce8ab8aabeb12c8cf8621bee2d7b4b9a1f9797a9
+PODFILE CHECKSUM: c1c174951223c5f23315b37f4591bc86ffb76832
 
 COCOAPODS: 1.3.1

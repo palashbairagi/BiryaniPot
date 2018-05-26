@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		19DCE977F5319C2955DCCCA0 /* libPods-BiryaniPot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45DC9172B41F940F5C3505E1 /* libPods-BiryaniPot.a */; };
-		1E4F08B456C7A9A53E535F09 /* libPods-BiryaniPotUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFE9DFBB2D731DA0ED31AB02 /* libPods-BiryaniPotUITests.a */; };
+		6FE0D955F06CA87698C5C6CB /* libPods-BiryaniPotUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */; };
+		9812951444C8E936B3B8F9BB /* libPods-BiryaniPot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */; };
+		B684B215079974EA3A338769 /* libPods-BiryaniPotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */; };
 		E50227B62030F93C00A51792 /* Validation.m in Sources */ = {isa = PBXBuildFile; fileRef = E50227B52030F93C00A51792 /* Validation.m */; };
+		E511A09720B10DCA001E579A /* TaxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E511A09520B10DCA001E579A /* TaxViewController.m */; };
+		E511A09820B10DCA001E579A /* TaxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E511A09620B10DCA001E579A /* TaxViewController.xib */; };
 		E54204CA202F73990032FB88 /* FeedbackDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E54204C8202F73990032FB88 /* FeedbackDetailViewController.m */; };
 		E54204CB202F73990032FB88 /* FeedbackDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E54204C9202F73990032FB88 /* FeedbackDetailViewController.xib */; };
 		E54204CF202F91CA0032FB88 /* AddCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E54204CD202F91CA0032FB88 /* AddCategoryViewController.m */; };
@@ -68,8 +71,8 @@
 		E5C0C0CF202DFC2F00674498 /* CalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C0C0CD202DFC2F00674498 /* CalendarViewController.xib */; };
 		E5C0C0D3202E611300674498 /* InvoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C0C0D1202E611300674498 /* InvoiceViewController.m */; };
 		E5C0C0D4202E611300674498 /* InvoiceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C0C0D2202E611300674498 /* InvoiceViewController.xib */; };
-		E5C341061FF7150F00FFFEC0 /* CancelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C341041FF7150F00FFFEC0 /* CancelViewController.m */; };
-		E5C341071FF7150F00FFFEC0 /* CancelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C341051FF7150F00FFFEC0 /* CancelViewController.xib */; };
+		E5C0C88720B4807400807905 /* AddRecommendedItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */; };
+		E5C0C88820B4807400807905 /* AddRecommendedItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C0C88620B4807400807905 /* AddRecommendedItemViewController.xib */; };
 		E5C3410C1FF7235E00FFFEC0 /* OrderDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C3410A1FF7235E00FFFEC0 /* OrderDetailViewController.m */; };
 		E5C3410D1FF7235E00FFFEC0 /* OrderDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C3410B1FF7235E00FFFEC0 /* OrderDetailViewController.xib */; };
 		E5C903CD205F42C8002A6A69 /* LandingPageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C903CB205F42C8002A6A69 /* LandingPageCollectionViewCell.m */; };
@@ -82,6 +85,9 @@
 		E5D425A01FEF48FE002003D2 /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D4259F1FEF48FE002003D2 /* fontawesome-webfont.ttf */; };
 		E5D425A31FEF9403002003D2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D425A21FEF9403002003D2 /* Roboto-Medium.ttf */; };
 		E5D425A51FEF9421002003D2 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D425A41FEF9421002003D2 /* Roboto-Regular.ttf */; };
+		E5D5C81E20AEA965000E0DEE /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D5C81D20AEA965000E0DEE /* Photos.framework */; };
+		E5D5C82020AEAB92000E0DEE /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D5C81F20AEAB92000E0DEE /* AssetsLibrary.framework */; };
+		E5DA7D8320A93EA20051B279 /* RangePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5DA7D8220A93EA20051B279 /* RangePickerCell.m */; };
 		E5E628CB20001B0F00ADC67C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E628CA20001B0F00ADC67C /* Constants.m */; };
 		E5E628CF2000702400ADC67C /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E628CE2000702400ADC67C /* Graph.m */; };
 		E5E6EE212016A24B001E6018 /* SelectDeliveryPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E6EE1F2016A24B001E6018 /* SelectDeliveryPersonViewController.m */; };
@@ -119,7 +125,6 @@
 		E5FB0B6E1FF0759C00771B40 /* AddUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5FB0B6C1FF0759C00771B40 /* AddUserViewController.xib */; };
 		E5FFB75D206153E5001C75E3 /* InvoiceDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5FFB75B206153E5001C75E3 /* InvoiceDetailTableViewCell.m */; };
 		E5FFB75E206153E5001C75E3 /* InvoiceDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5FFB75C206153E5001C75E3 /* InvoiceDetailTableViewCell.xib */; };
-		F12CB88D5CD8FBCB0411E346 /* libPods-BiryaniPotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CF79AEA483C6EEE6E800687 /* libPods-BiryaniPotTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,17 +145,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		45DC9172B41F940F5C3505E1 /* libPods-BiryaniPot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A2D750FF30B58F4DC4E0B4 /* Pods-BiryaniPotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		52E282B6E0C7C09177DDCE37 /* Pods-BiryaniPot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPot.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot.release.xcconfig"; sourceTree = "<group>"; };
-		6CF79AEA483C6EEE6E800687 /* libPods-BiryaniPotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785E7FA2BADF820F6BF58AE7 /* Pods-BiryaniPotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		829953D56D5899FF0095148F /* Pods-BiryaniPotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		96977D5B06ECB734EB6E26B1 /* Pods-BiryaniPotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests.release.xcconfig"; sourceTree = "<group>"; };
-		BFE9DFBB2D731DA0ED31AB02 /* libPods-BiryaniPotUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot.debug.xcconfig"; sourceTree = "<group>"; };
 		E50227B42030F93C00A51792 /* Validation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Validation.h; sourceTree = "<group>"; };
 		E50227B52030F93C00A51792 /* Validation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Validation.m; sourceTree = "<group>"; };
+		E511A09420B10DCA001E579A /* TaxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaxViewController.h; sourceTree = "<group>"; };
+		E511A09520B10DCA001E579A /* TaxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaxViewController.m; sourceTree = "<group>"; };
+		E511A09620B10DCA001E579A /* TaxViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaxViewController.xib; sourceTree = "<group>"; };
 		E54204C7202F73990032FB88 /* FeedbackDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeedbackDetailViewController.h; sourceTree = "<group>"; };
 		E54204C8202F73990032FB88 /* FeedbackDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FeedbackDetailViewController.m; sourceTree = "<group>"; };
 		E54204C9202F73990032FB88 /* FeedbackDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedbackDetailViewController.xib; sourceTree = "<group>"; };
@@ -242,9 +250,9 @@
 		E5C0C0D0202E611300674498 /* InvoiceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvoiceViewController.h; sourceTree = "<group>"; };
 		E5C0C0D1202E611300674498 /* InvoiceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvoiceViewController.m; sourceTree = "<group>"; };
 		E5C0C0D2202E611300674498 /* InvoiceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvoiceViewController.xib; sourceTree = "<group>"; };
-		E5C341031FF7150F00FFFEC0 /* CancelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CancelViewController.h; sourceTree = "<group>"; };
-		E5C341041FF7150F00FFFEC0 /* CancelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CancelViewController.m; sourceTree = "<group>"; };
-		E5C341051FF7150F00FFFEC0 /* CancelViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CancelViewController.xib; sourceTree = "<group>"; };
+		E5C0C88420B4807400807905 /* AddRecommendedItemViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddRecommendedItemViewController.h; sourceTree = "<group>"; };
+		E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddRecommendedItemViewController.m; sourceTree = "<group>"; };
+		E5C0C88620B4807400807905 /* AddRecommendedItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddRecommendedItemViewController.xib; sourceTree = "<group>"; };
 		E5C341091FF7235E00FFFEC0 /* OrderDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderDetailViewController.h; sourceTree = "<group>"; };
 		E5C3410A1FF7235E00FFFEC0 /* OrderDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderDetailViewController.m; sourceTree = "<group>"; };
 		E5C3410B1FF7235E00FFFEC0 /* OrderDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderDetailViewController.xib; sourceTree = "<group>"; };
@@ -263,6 +271,10 @@
 		E5D4259F1FEF48FE002003D2 /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		E5D425A21FEF9403002003D2 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Medium.ttf"; path = "../../../../Downloads/Roboto/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		E5D425A41FEF9421002003D2 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../../../Downloads/Roboto/Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		E5D5C81D20AEA965000E0DEE /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		E5D5C81F20AEAB92000E0DEE /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		E5DA7D8120A93EA20051B279 /* RangePickerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangePickerCell.h; sourceTree = "<group>"; };
+		E5DA7D8220A93EA20051B279 /* RangePickerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RangePickerCell.m; sourceTree = "<group>"; };
 		E5E628C920001B0F00ADC67C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		E5E628CA20001B0F00ADC67C /* Constants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		E5E628CD2000702400ADC67C /* Graph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
@@ -331,7 +343,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19DCE977F5319C2955DCCCA0 /* libPods-BiryaniPot.a in Frameworks */,
+				E5D5C82020AEAB92000E0DEE /* AssetsLibrary.framework in Frameworks */,
+				E5D5C81E20AEA965000E0DEE /* Photos.framework in Frameworks */,
+				9812951444C8E936B3B8F9BB /* libPods-BiryaniPot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +353,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F12CB88D5CD8FBCB0411E346 /* libPods-BiryaniPotTests.a in Frameworks */,
+				B684B215079974EA3A338769 /* libPods-BiryaniPotTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +361,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E4F08B456C7A9A53E535F09 /* libPods-BiryaniPotUITests.a in Frameworks */,
+				6FE0D955F06CA87698C5C6CB /* libPods-BiryaniPotUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,11 +384,25 @@
 		CAB7CFF63208160BBA05AA98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				45DC9172B41F940F5C3505E1 /* libPods-BiryaniPot.a */,
-				6CF79AEA483C6EEE6E800687 /* libPods-BiryaniPotTests.a */,
-				BFE9DFBB2D731DA0ED31AB02 /* libPods-BiryaniPotUITests.a */,
+				E5D5C81F20AEAB92000E0DEE /* AssetsLibrary.framework */,
+				E5D5C81D20AEA965000E0DEE /* Photos.framework */,
+				7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */,
+				26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */,
+				5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E57BE9F120AA91AB0060F079 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				E5C0C0CD202DFC2F00674498 /* CalendarViewController.xib */,
+				E5C0C0CB202DFC2F00674498 /* CalendarViewController.h */,
+				E5C0C0CC202DFC2F00674498 /* CalendarViewController.m */,
+				E5DA7D8120A93EA20051B279 /* RangePickerCell.h */,
+				E5DA7D8220A93EA20051B279 /* RangePickerCell.m */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 		E59730891FF729E400CF8F98 /* Detail */ = {
@@ -444,7 +472,6 @@
 				E5E9D2272003769500B25E19 /* FeedbackViewController.xib */,
 				E5ADF29C20048AC300347BA2 /* FeedbackTableViewCell.xib */,
 				E54204C9202F73990032FB88 /* FeedbackDetailViewController.xib */,
-				E5C0C0CD202DFC2F00674498 /* CalendarViewController.xib */,
 				E5C0C0D2202E611300674498 /* InvoiceViewController.xib */,
 				E5FFB75C206153E5001C75E3 /* InvoiceDetailTableViewCell.xib */,
 			);
@@ -455,7 +482,6 @@
 			isa = PBXGroup;
 			children = (
 				E59730891FF729E400CF8F98 /* Detail */,
-				E5C341021FF714D500FFFEC0 /* Cancel */,
 				E5E6EE1B2016A19B001E6018 /* DeliveryPerson */,
 				E5E6EE1C2016A1C9001E6018 /* Time */,
 				E5F359361FEDEE5200470842 /* OrderViewController.xib */,
@@ -473,6 +499,7 @@
 			isa = PBXGroup;
 			children = (
 				E5F3592C1FEDEDEE00470842 /* ProfileViewController.xib */,
+				E511A09620B10DCA001E579A /* TaxViewController.xib */,
 				E5BCA9981FF5CC5F00D28878 /* TimePickerViewController.xib */,
 			);
 			path = Profile;
@@ -505,6 +532,8 @@
 				E5F3592B1FEDEDEE00470842 /* ProfileViewController.m */,
 				E5BCA9961FF5CC5F00D28878 /* TimePickerViewController.h */,
 				E5BCA9971FF5CC5F00D28878 /* TimePickerViewController.m */,
+				E511A09420B10DCA001E579A /* TaxViewController.h */,
+				E511A09520B10DCA001E579A /* TaxViewController.m */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -518,8 +547,6 @@
 				E5A7973B20042AFE007931A2 /* OffersAvailed */,
 				E5F3592F1FEDEE2C00470842 /* DashboardViewController.h */,
 				E5F359301FEDEE2C00470842 /* DashboardViewController.m */,
-				E5C0C0CB202DFC2F00674498 /* CalendarViewController.h */,
-				E5C0C0CC202DFC2F00674498 /* CalendarViewController.m */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -529,7 +556,6 @@
 			children = (
 				E5E6EE1D2016A1EA001E6018 /* Time */,
 				E5C341081FF7233300FFFEC0 /* Detail */,
-				E5C341011FF714BE00FFFEC0 /* Cancel */,
 				E5E6EE1A2016A185001E6018 /* DeliveryPerson */,
 				E5F359341FEDEE5200470842 /* OrderViewController.h */,
 				E5F359351FEDEE5200470842 /* OrderViewController.m */,
@@ -631,6 +657,7 @@
 				E5B1CEA12006016A003B816C /* MenuCollectionViewCell.xib */,
 				E5768AD3200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.xib */,
 				E54204CE202F91CA0032FB88 /* AddCategoryViewController.xib */,
+				E5C0C88620B4807400807905 /* AddRecommendedItemViewController.xib */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -646,6 +673,8 @@
 				E5768AD2200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.m */,
 				E54204CC202F91CA0032FB88 /* AddCategoryViewController.h */,
 				E54204CD202F91CA0032FB88 /* AddCategoryViewController.m */,
+				E5C0C88420B4807400807905 /* AddRecommendedItemViewController.h */,
+				E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -679,23 +708,6 @@
 				E5A725C3207C716B009E9AEF /* OfferStatistics.m */,
 			);
 			path = Offer;
-			sourceTree = "<group>";
-		};
-		E5C341011FF714BE00FFFEC0 /* Cancel */ = {
-			isa = PBXGroup;
-			children = (
-				E5C341031FF7150F00FFFEC0 /* CancelViewController.h */,
-				E5C341041FF7150F00FFFEC0 /* CancelViewController.m */,
-			);
-			path = Cancel;
-			sourceTree = "<group>";
-		};
-		E5C341021FF714D500FFFEC0 /* Cancel */ = {
-			isa = PBXGroup;
-			children = (
-				E5C341051FF7150F00FFFEC0 /* CancelViewController.xib */,
-			);
-			path = Cancel;
 			sourceTree = "<group>";
 		};
 		E5C341081FF7233300FFFEC0 /* Detail */ = {
@@ -909,6 +921,7 @@
 		E5F359211FEDD9DA00470842 /* SupportFiles */ = {
 			isa = PBXGroup;
 			children = (
+				E57BE9F120AA91AB0060F079 /* Calendar */,
 				E5F358EC1FEDCEC700470842 /* AppDelegate.h */,
 				E5F358ED1FEDCEC700470842 /* AppDelegate.m */,
 				E5F358F51FEDCEC700470842 /* Assets.xcassets */,
@@ -1077,6 +1090,7 @@
 			files = (
 				E5E9D21A2002D21000B25E19 /* ForgotPasswordViewController.xib in Resources */,
 				E5C0C0CF202DFC2F00674498 /* CalendarViewController.xib in Resources */,
+				E511A09820B10DCA001E579A /* TaxViewController.xib in Resources */,
 				E5FFB75E206153E5001C75E3 /* InvoiceDetailTableViewCell.xib in Resources */,
 				E5CE99341FF74CC2006E6F7F /* OrderDetailTableViewCell.xib in Resources */,
 				E5D425A31FEF9403002003D2 /* Roboto-Medium.ttf in Resources */,
@@ -1109,11 +1123,11 @@
 				E5A3BB19201544CB00840BF8 /* EditOfferViewController.xib in Resources */,
 				E5E9D21F2003704B00B25E19 /* TopSellerViewController.xib in Resources */,
 				E5F359331FEDEE2C00470842 /* DashboardViewController.xib in Resources */,
+				E5C0C88820B4807400807905 /* AddRecommendedItemViewController.xib in Resources */,
 				E5BF891B1FF37DAA007209A2 /* CompleteTableViewCell.xib in Resources */,
 				E5ADF2A82004ADCF00347BA2 /* TotalOrdersViewController.xib in Resources */,
 				E5A69EB91FF1D07000B746E1 /* AddOfferViewController.xib in Resources */,
 				E5E9D2242003765C00B25E19 /* OffersAvailedViewController.xib in Resources */,
-				E5C341071FF7150F00FFFEC0 /* CancelViewController.xib in Resources */,
 				E5BCA9831FF4A7D500D28878 /* UserTableViewCell.xib in Resources */,
 				E5C3410D1FF7235E00FFFEC0 /* OrderDetailViewController.xib in Resources */,
 				E5BCA99A1FF5CC5F00D28878 /* TimePickerViewController.xib in Resources */,
@@ -1167,9 +1181,24 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
+				"${BUILT_PRODUCTS_DIR}/MDCalendarSelector/MDCalendarSelector.framework",
+				"${BUILT_PRODUCTS_DIR}/MKDropdownMenu/MKDropdownMenu.framework",
+				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
+				"${BUILT_PRODUCTS_DIR}/SCRSidewaysBarGraph/SCRSidewaysBarGraph.framework",
+				"${BUILT_PRODUCTS_DIR}/SSMaterialCalendarPicker/SSMaterialCalendarPicker.framework",
+				"${BUILT_PRODUCTS_DIR}/drCharts/drCharts.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDCalendarSelector.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MKDropdownMenu.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCRSidewaysBarGraph.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSMaterialCalendarPicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/drCharts.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1198,7 +1227,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-resources.sh",
-				$PODS_CONFIGURATION_BUILD_DIR/SSMaterialCalendarPicker/CalendarViews.bundle,
+				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1299,7 +1328,6 @@
 			files = (
 				E5ADF2A220048D8C00347BA2 /* Feedback.m in Sources */,
 				E5C903D2205F55CA002A6A69 /* LandingImage.m in Sources */,
-				E5C341061FF7150F00FFFEC0 /* CancelViewController.m in Sources */,
 				E50227B62030F93C00A51792 /* Validation.m in Sources */,
 				E5C903CD205F42C8002A6A69 /* LandingPageCollectionViewCell.m in Sources */,
 				E5EFC031201C3DF20017128A /* MyProfileViewController.m in Sources */,
@@ -1342,13 +1370,16 @@
 				E5A3BB1320152C0100840BF8 /* OfferCollectionViewCell.m in Sources */,
 				E5D4259E1FEF181C002003D2 /* RadialGradientView.m in Sources */,
 				E5BCA9821FF4A7D500D28878 /* UserTableViewCell.m in Sources */,
+				E511A09720B10DCA001E579A /* TaxViewController.m in Sources */,
 				E5BCA9941FF5679000D28878 /* Offer.m in Sources */,
 				E5B1CE9D2005F9DF003B816C /* MenuViewController.m in Sources */,
 				E5F358EE1FEDCEC700470842 /* AppDelegate.m in Sources */,
 				E5ADF29D20048AC300347BA2 /* FeedbackTableViewCell.m in Sources */,
 				E5A725C4207C716B009E9AEF /* OfferStatistics.m in Sources */,
+				E5DA7D8320A93EA20051B279 /* RangePickerCell.m in Sources */,
 				E5BF891A1FF37DAA007209A2 /* CompleteTableViewCell.m in Sources */,
 				E5E9D2192002D21000B25E19 /* ForgotPasswordViewController.m in Sources */,
+				E5C0C88720B4807400807905 /* AddRecommendedItemViewController.m in Sources */,
 				E5768AD4200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.m in Sources */,
 				E5768ADB200769E100A60EC7 /* CALayer+UIColor.m in Sources */,
 				E5BCA9991FF5CC5F00D28878 /* TimePickerViewController.m in Sources */,

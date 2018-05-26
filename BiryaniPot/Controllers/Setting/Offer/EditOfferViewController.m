@@ -7,6 +7,7 @@
 //
 
 #import "EditOfferViewController.h"
+#import "CalendarViewController.h"
 
 @interface EditOfferViewController ()
 
@@ -57,6 +58,30 @@
     [self.minimumOrder.layer addSublayer:borderMO];
     self.minimumOrder.layer.masksToBounds = YES;
     
+    CALayer *borderMD = [CALayer layer];
+    borderMD.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderMD.frame = CGRectMake(0, self.maxDiscount.frame.size.height - borderWidth, self.maxDiscount.frame.size.width, self.maxDiscount.frame.size.height);
+    borderMD.borderWidth = borderWidth;
+    self.maxDiscount.borderStyle = UITextBorderStyleNone;
+    [self.maxDiscount.layer addSublayer:borderMD];
+    self.maxDiscount.layer.masksToBounds = YES;
+    
+    CALayer *borderLPC = [CALayer layer];
+    borderLPC.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderLPC.frame = CGRectMake(0, self.limitPerCustomer.frame.size.height - borderWidth, self.limitPerCustomer.frame.size.width, self.limitPerCustomer.frame.size.height);
+    borderLPC.borderWidth = borderWidth;
+    self.limitPerCustomer.borderStyle = UITextBorderStyleNone;
+    [self.limitPerCustomer.layer addSublayer:borderLPC];
+    self.limitPerCustomer.layer.masksToBounds = YES;
+    
+    CALayer *borderMUL = [CALayer layer];
+    borderMUL.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderMUL.frame = CGRectMake(0, self.maxUsageLimit.frame.size.height - borderWidth, self.maxUsageLimit.frame.size.width, self.maxUsageLimit.frame.size.height);
+    borderMUL.borderWidth = borderWidth;
+    self.maxUsageLimit.borderStyle = UITextBorderStyleNone;
+    [self.maxUsageLimit.layer addSublayer:borderMUL];
+    self.maxUsageLimit.layer.masksToBounds = YES;
+    
     CALayer *borderD = [CALayer layer];
     borderD.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
     borderD.frame = CGRectMake(0, self.offerDescription.frame.size.height - borderWidth, self.offerDescription.frame.size.width, self.offerDescription.frame.size.height);
@@ -64,12 +89,6 @@
     self.offerDescription.borderStyle = UITextBorderStyleNone;
     [self.offerDescription.layer addSublayer:borderD];
     self.offerDescription.layer.masksToBounds = YES;
-    
-    self.datePicker = _datePicker = [SSMaterialCalendarPicker initCalendarOn:self.view withDelegate:self];
-    
-    // Set a primary and a secondary color
-    self.datePicker.primaryColor = [UIColor colorWithRed:0.87 green:0.39 blue:0.08 alpha:1];
-    self.datePicker.secondaryColor = [UIColor colorWithRed:0.87 green:0.39 blue:0.08 alpha:1];
     
     self.updateButton.layer.cornerRadius = 5;
     self.updateButton.layer.borderWidth = 1;
@@ -87,54 +106,128 @@
     self.cancelButton.layer.borderWidth = 1;
     self.cancelButton.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
+    _offerQueue = [[NSOperationQueue alloc] init];
+    
     _offerName.text = _offer.name;
     _offerDescription.text = _offer.detail;
-    _fromButton.titleLabel.text = [_delegate changeDateFormat:_offer.startFrom];
-    _toButton.titleLabel.text = [_delegate changeDateFormat:_offer.endAt];
+    [_fromButton setTitle:[self changeDateFormat:_offer.startFrom] forState:UIControlStateNormal];
+    [_toButton setTitle:[self changeDateFormat:_offer.endAt] forState:UIControlStateNormal];
     _minimumOrder.text = [NSString stringWithFormat:@"%@", _offer.minValue];
     _offerValue.text = [NSString stringWithFormat:@"%@", _offer.offerValue];
+    _maxDiscount.text = [NSString stringWithFormat:@"%@", _offer.maxDisc];
+    _limitPerCustomer.text = [NSString stringWithFormat:@"%@", _offer.maxTimes];
+    _maxUsageLimit.text = [NSString stringWithFormat:@"%@", _offer.maxUsageLimit];
+    
+    if(_offer.image == NULL)
+    {
+        NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
+            
+            NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_offer.imageURL]];
+            
+            if (imgData == NULL)
+            {
+                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
+                _offer.image = image;
+            }
+            else
+            {
+                UIImage * image = [UIImage imageWithData:imgData];
+                _offer.image = image;
+            }
+            
+        }];
+        
+        [_offerQueue addOperation:op];
+    }
+    else
+    {
+        _offerImageView.image = _offer.image;
+    }
+    
+    _uploadPhotoLabel.text = @"";
+    
 }
 
 - (IBAction)updateButtonClicked:(id)sender
 {
     if([self isValidate])
     {
-        NSString *codeId = _offer.offerId;
         NSString *promoCode = [NSString stringWithFormat:@"%@", _offerName.text];
         NSString *offerDescription = [NSString stringWithFormat:@"%@", _offerDescription.text];
         NSString *validFrom = [Constants changeDateFormatForAPI:_fromButton.titleLabel.text];
         NSString *validTill = [Constants changeDateFormatForAPI:_toButton.titleLabel.text];
         NSString *minValue = [NSString stringWithFormat:@"%@", _minimumOrder.text];
-        NSString *maxDiscount = @"20";
-        NSString *maxTimes = @"2";
-        NSString *usageLimit = @"2";
+        NSString *maxDiscount = [NSString stringWithFormat:@"%@", _maxDiscount.text];
+        NSString *maxTimes = [NSString stringWithFormat:@"%@", _limitPerCustomer.text];
+        NSString *usageLimit = [NSString stringWithFormat:@"%@", _maxUsageLimit.text];
         NSString *promoPercent = [NSString stringWithFormat:@"%@", _offerValue.text];
-        NSString *imgURL = @"xyz.jpeg";
         
-        NSString *post = [NSString stringWithFormat:@"code_id=%@&codename=%@&code_description=%@&validfrom=%@&validtill=%@&minvalue=%@&maxdisc=%@&maxtimes=%@&usage_limit=%@&coupon_percent=%@&coupon_imgurl=%@&loc_id=%@", codeId, promoCode, offerDescription, validFrom, validTill, minValue, maxDiscount, maxTimes, usageLimit, promoPercent, imgURL, Constants.LOCATION_ID];
-        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
+        if(_extension == NULL) _extension = @"jpg";
+        NSString *imgName = [NSString stringWithFormat:@"%@.%@", promoCode, _extension];
         
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_OFFER_URL]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         
-        [request setHTTPMethod:@"POST"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
+        NSMutableData *body = [NSMutableData data];
         
-        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSDictionary *params = @{@"codename" : promoCode,
+                                 @"code_description" : offerDescription,
+                                 @"validfrom" : validFrom,
+                                 @"validtill" : validTill,
+                                 @"minvalue"  : minValue,
+                                 @"maxdisc"   : maxDiscount,
+                                 @"maxtimes"  : maxTimes,
+                                 @"usage_limit" : usageLimit,
+                                 @"coupon_percent" : promoPercent,
+                                 @"file_name" : imgName,
+                                 @"loc_id"    : Constants.LOCATION_ID
+                                 };
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_offerImageView.image, 1.0);
+        NSString *fieldName = @"coupon_image";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/%@", _extension];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                NSLog(@"error = %@", error);
+                return;
+            }
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"result = %@", result);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [_delegate.offerArray removeAllObjects];
                 [_delegate getOffers];
                 [_delegate.offerCollectionView reloadData];
+                [self dismissViewControllerAnimated:NO completion:nil];
             });
             
         }];
-        [postDataTask resume];
-        
-        [self dismissViewControllerAnimated:NO completion:nil];
+        [task resume];
     }
 }
 
@@ -145,7 +238,14 @@
 
 - (IBAction)dateDuration:(id)sender
 {
-    [_datePicker showAnimated];
+    CalendarViewController * calendarVC = [[CalendarViewController alloc]init];
+    calendarVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    calendarVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    calendarVC.preferredContentSize = CGSizeMake(400, 450);
+    calendarVC.toDateDelegate = _toButton;
+    calendarVC.fromDateDelegate = _fromButton;
+    
+    [self presentViewController:calendarVC animated:YES completion:nil];
 }
 
 - (void)rangeSelectedWithStartDate:(NSDate *)startDate andEndDate:(NSDate *)endDate
@@ -181,6 +281,13 @@
 {
     _offerImageView.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     _uploadPhotoLabel.text = @"";
+    
+    NSURL *imageURL = [info valueForKey:UIImagePickerControllerReferenceURL];
+    PHAsset *phAsset = [[PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil] lastObject];
+    NSString *imageName = [phAsset valueForKey:@"filename"];
+    
+    _extension = [imageName pathExtension];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -237,6 +344,27 @@
     }
     
     return true;
+}
+
+-(NSString *)changeDateFormat: (NSString *) currentDate
+{
+    NSString *convertedDate = @"";
+    @try
+    {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSDate *date = [dateFormatter dateFromString:currentDate];
+        
+        NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc]init];
+        [dateFormatter1 setDateFormat:@"MMM dd yyyy"];
+        
+        convertedDate = [dateFormatter1 stringFromDate:date];
+    }
+    @catch(NSException *e)
+    {
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    return convertedDate;
 }
 
 @end

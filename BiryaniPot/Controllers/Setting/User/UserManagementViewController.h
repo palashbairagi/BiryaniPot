@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
+#import "AppDelegate.h"
 
 @interface UserManagementViewController : BaseViewController <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UIButton *addNewMemberButton;
 @property (weak, nonatomic) IBOutlet UITableView *userTableView;
 @property (nonatomic, retain) NSMutableArray * userArray;
+@property (nonatomic, retain) AppDelegate *appDelegate;
 
 -(void)getDeliveryPersons;
 -(void)getManagers;

@@ -12,6 +12,7 @@
 #import "AddCategoryViewController.h"
 #import "Category.h"
 #import "Item.h"
+#import "AddRecommendedItemViewController.h"
 
 @interface MenuViewController ()
 
@@ -69,6 +70,8 @@
     _itemArray = [[NSMutableArray alloc]init];
     _categoryArray = [[NSMutableArray alloc]init];
     _recommendedItemArray = [[NSMutableArray alloc]init];
+    _categorySearchArray = [[NSMutableArray alloc]init];
+    _itemSearchArray = [[NSMutableArray alloc]init];
     _categoryQueue = [[NSOperationQueue alloc] init];
     
     for (int i = 0; i<10; i++) {
@@ -102,7 +105,7 @@
         cell.delegate = self;
         cell.deleteButton.tag = indexPath.row;
         
-        Category *category = _categoryArray[indexPath.row];
+        Category *category = _categorySearchArray[indexPath.row];
         
         if (category.image == nil )
         {
@@ -153,7 +156,7 @@
 {
     if (collectionView == _menuCollectionView)
     {
-        return _categoryArray.count;
+        return _categorySearchArray.count;
     }
     else
     {
@@ -167,7 +170,7 @@
     {
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
         cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:0.2];
-        Category *category = _categoryArray[indexPath.row];
+        Category *category = _categorySearchArray[indexPath.row];
         [self getItem:category.categoryId];
     }
     else
@@ -201,7 +204,13 @@
         }
         else
         {
+            AddRecommendedItemViewController *ari = [[AddRecommendedItemViewController alloc]init];
+            ari.modalPresentationStyle = UIModalPresentationFormSheet;
+            ari.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            ari.preferredContentSize = CGSizeMake(720, 438);
+            ari.delegate = self; 
             
+            [self presentViewController:ari animated:YES completion:nil];
         }
     }
 }
@@ -232,20 +241,23 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _itemArray.count;
+    return _itemSearchArray.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil];
-    Item *item = _itemArray[indexPath.row];
+    Item *item = _itemSearchArray[indexPath.row];
     cell.textLabel.text = item.name;
+    cell.textLabel.adjustsFontSizeToFitWidth=YES;
+    cell.textLabel.minimumScaleFactor=0.5;
+    
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Item *item = _itemArray[indexPath.row];
+    Item *item = _itemSearchArray[indexPath.row];
     
     if (item.name == NULL)item.name = @"";
     else _name.text = item.name;
@@ -313,7 +325,6 @@
     [self presentViewController:addCategoryVC animated:YES completion:nil];
 }
 
-
 -(void)getCategory
 {
     [_categoryArray removeAllObjects];
@@ -349,6 +360,7 @@
             category.menuId = [categoryDictionary objectForKey:@"menuId"];
             
             [_categoryArray addObject:category];
+            [_categorySearchArray addObject:category];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -424,6 +436,7 @@
             else item.isSpiceSupported = FALSE;
             
             [_itemArray addObject:item];
+            [_itemSearchArray addObject:item];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -661,5 +674,61 @@
     [self deleteItem];
 }
 
+- (IBAction)categorySearchStringChanged:(id)sender
+{
+    [_categorySearchArray removeAllObjects];
+    NSString *searchString = [Validation trim:_categorySearchTextField.text];
+    
+    if([searchString length] == 0)
+    {
+        if ([_categorySearchTextField.text isEqualToString:@" "])
+        {
+            _categorySearchTextField.text = @"";
+        }
+        
+        [self getCategory];
+    }
+    else
+    {
+        for(Category *category in _categoryArray)
+        {
+            if(category.categoryName && [category.categoryName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_categorySearchArray addObject:category];
+            }
+        }
+    }
+    
+    [_menuCollectionView reloadData];
+}
+
+- (IBAction)itemSearchStringChanged:(id)sender
+{
+    [_itemSearchArray removeAllObjects];
+    NSString *searchString = [Validation trim:_itemSearchTextField.text];
+    
+    if([searchString length] == 0)
+    {
+        if ([_itemSearchTextField.text isEqualToString:@" "])
+        {
+            _itemSearchTextField.text = @"";
+        }
+        
+        Category *cat = _categoryArray[0];
+        [self getItem:cat.categoryId];
+    }
+    else
+    {
+        for(Item *item in _itemArray)
+        {
+            if(item.name && [item.name rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_itemSearchArray addObject:item];
+            }
+        }
+    }
+    
+    [_itemTableView reloadData];
+}
 
 @end

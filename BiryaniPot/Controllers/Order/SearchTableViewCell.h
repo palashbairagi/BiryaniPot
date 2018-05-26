@@ -10,10 +10,11 @@
 #import "Order.h"
 #import "OrderViewController.h"
 
-@interface SearchTableViewCell : UITableViewCell
+@interface SearchTableViewCell : UITableViewCell <NSURLSessionDelegate>
 
 @property (nonatomic, retain) OrderViewController *delegate;
 
+@property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) IBOutlet UILabel *orderNo;
 @property (weak, nonatomic) IBOutlet UILabel *customerName;
 @property (weak, nonatomic) IBOutlet UILabel *itemCount;

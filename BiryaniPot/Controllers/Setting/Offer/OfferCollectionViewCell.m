@@ -24,7 +24,7 @@
     EditOfferViewController * editOfferViewController = [[EditOfferViewController alloc]init];
     editOfferViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     editOfferViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    editOfferViewController.preferredContentSize = CGSizeMake(540, 680);
+    editOfferViewController.preferredContentSize = CGSizeMake(1000, 566);
     editOfferViewController.delegate = _delegate;
     editOfferViewController.offer = _delegate.offerArray[_editButton.tag];
     

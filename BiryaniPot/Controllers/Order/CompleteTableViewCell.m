@@ -14,7 +14,6 @@
     [super awakeFromNib];
     
     [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf058] forState:UIControlStateNormal];
-
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

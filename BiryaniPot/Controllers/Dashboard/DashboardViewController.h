@@ -12,9 +12,13 @@
 
 @interface DashboardViewController : BaseViewController <BarChartDataSource, UITableViewDelegate, UITableViewDataSource, NSURLSessionDelegate>
 
+@property (weak, nonatomic) IBOutlet UIView *waitView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (weak, nonatomic) IBOutlet UIView *statisticsView;
 
 @property (weak, nonatomic) IBOutlet UILabel *totalOrdersLabel;
+@property (weak, nonatomic) IBOutlet UILabel *orderTrendLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *topSellerView;
 
@@ -32,9 +36,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *activeOffersLabel;
 @property (weak, nonatomic) IBOutlet UILabel *referralsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *pointsRedeemedLabel;
-
-@property (weak, nonatomic) IBOutlet UISegmentedControl *durationSegmentedControl;
-@property (weak, nonatomic) IBOutlet UIView *durationView;
 
 @property (nonatomic, retain) NSMutableArray *graphArray;
 @property (nonatomic, retain) NSMutableArray *topSellersArray;

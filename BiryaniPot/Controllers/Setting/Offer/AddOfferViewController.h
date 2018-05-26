@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSMaterialCalendarPicker.h"
 #import "OfferViewController.h"
 
-@interface AddOfferViewController : UIViewController <SSMaterialCalendarPickerDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate, NSURLSessionDelegate>
+@interface AddOfferViewController : UIViewController <UINavigationControllerDelegate,UIImagePickerControllerDelegate, NSURLSessionDelegate>
 
 @property OfferViewController *delegate;
 
@@ -24,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *maxDiscount;
 @property (weak, nonatomic) IBOutlet UITextField *limitPerCustomer;
 @property (weak, nonatomic) IBOutlet UITextField *maxUsageLimit;
-
+@property (nonatomic, retain) NSString *extension;
 
 @property (weak, nonatomic) IBOutlet UIButton *fromButton;
 @property (weak, nonatomic) IBOutlet UIButton *toButton;
@@ -34,5 +33,4 @@
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
-@property (nonatomic, retain) SSMaterialCalendarPicker *datePicker;
 @end

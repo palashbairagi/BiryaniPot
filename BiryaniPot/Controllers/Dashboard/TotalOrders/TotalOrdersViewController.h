@@ -10,6 +10,10 @@
 #import "BaseViewController.h"
 
 @interface TotalOrdersViewController : BaseViewController <UITableViewDataSource, UITableViewDelegate, NSURLSessionDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *waitView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (weak, nonatomic) IBOutlet UITableView *totalOrdersTableView;
 @property (weak, nonatomic) IBOutlet UILabel *totalOrdersLabel;
 
@@ -17,6 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *dateFrom;
 @property (weak, nonatomic) IBOutlet UIButton *dateTo;
-
+@property (weak, nonatomic) IBOutlet UIButton *searchButton;
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 
 @end

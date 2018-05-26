@@ -10,6 +10,8 @@
 #import "AppDelegate.h"
 
 @implementation Constants
+static NSString * fromDate;
+static NSString * toDate;
 
 static NSString *BASE_URL = @"http://74.208.161.174/BiryaniPotAPI/";
 static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
@@ -62,21 +64,58 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return fifteenDaysAgoDate;
 }
 
++(NSString *)GET_FIFTEEN_DAYS_FROM_NOW_DATE
+{
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd yyyy"];
+    
+    NSDate *now = [NSDate date];
+    NSDate *fifteenDaysFromNow = [now dateByAddingTimeInterval:15*24*60*60];
+    
+    NSString *fifteenDaysFromNowDate = [dateFormatter stringFromDate:fifteenDaysFromNow];
+    return fifteenDaysFromNowDate;
+}
+
++(NSString *) GET_DASHBOARD_FROM_DATE
+{
+    return fromDate;
+}
+
++(NSString *) GET_DASHBOARD_TO_DATE
+{
+    return toDate;
+}
+
++(void) SET_DASHBOARD_FROM_DATE:(NSString *)dashboardDate
+{
+    fromDate = dashboardDate;
+}
+
++(void) SET_DASHBOARD_TO_DATE:(NSString *)dashboardDate
+{
+    toDate = dashboardDate;
+}
+
 +(NSString *)LOGIN_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/authentication/superusermanager",BASE_URL];
 }
 
++(NSString *)FORGOT_PASSWORD_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/forgetpassword",BASE_URL];
+}
+
 +(NSString *) FOOTER_STATISTICS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/footerstatistics",BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/dashboard/footerstatistics",BASE_URL];
 }
 
 /* Dashboard */
 
 +(NSString *) TOTAL_ORDER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/totalorders", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/orders/totalorders", BASE_URL];
 }
 
 +(NSString *) TOTAL_ORDER_LIST_URL
@@ -86,7 +125,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) TOP_SELLERS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/topsellers", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/dashboard/topsellers", BASE_URL];
 }
 
 +(NSString *) FEEDBACK_URL
@@ -145,6 +184,16 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/organization/updaterestauranttimings", BASE_URL];
 }
 
++(NSString *) GET_TAX_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/additionalpayments", BASE_URL];
+}
+
++(NSString *) UPDATE_TAX_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/updateadditionalpayments", BASE_URL];
+}
+
 /* User Management */
 
 +(NSString *) GET_DELIVERY_PERSON_URL
@@ -154,12 +203,12 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) GET_MANAGER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/managers", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/manager/managers", BASE_URL];
 }
 
 +(NSString *) DELETE_MANAGER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/deletemanager", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/manager/deletemanager", BASE_URL];
 }
 
 +(NSString *) DELETE_DELIVERY_PERSON_URL
@@ -174,7 +223,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) INSERT_MANAGER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/insertmanager", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/manager/insertmanager", BASE_URL];
 }
 
 /* Offer */
@@ -186,7 +235,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) INSERT_OFFER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/insertpromocodes", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/discounts/insertpromocode", BASE_URL];
 }
 
 +(NSString *) UPDATE_OFFER_URL
@@ -249,27 +298,32 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) GET_ALL_ORDERS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/orders", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/orders/getorders", BASE_URL];
 }
 
 +(NSString *) GET_ITEMS_BY_ORDER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/dashboardorderdetails", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/dashboard/dashboardorderdetails", BASE_URL];
 }
 
 +(NSString *) UPDATE_ORDER_STATUS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/processorder", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/orders/processorder", BASE_URL];
 }
 
 +(NSString *) UPDATE_ESTIMATED_TIME_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/updateorder", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/orders/updateorder", BASE_URL];
 }
 
 +(NSString *) ASSIGN_DELIVERY_PERSON_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/assigndelivery", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/orders/assigndelivery", BASE_URL];
+}
+
++(NSString *) CANCEL_ORDER_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/orders/cancelorder", BASE_URL];
 }
 
 /* PROFILE*/

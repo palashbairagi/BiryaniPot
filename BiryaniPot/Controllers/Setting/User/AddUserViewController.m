@@ -104,6 +104,7 @@
     self.cancelButton.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     _roleArray = [NSArray arrayWithObjects:@"Partner", @"Manager", @"Delivery Person", nil ];
+    
 }
 
 - (IBAction)profilePictureTapped:(id)sender
@@ -141,9 +142,7 @@
 }
 
 - (NSAttributedString *)dropdownMenu:(MKDropdownMenu *)dropdownMenu attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [[NSAttributedString alloc] initWithString:_roleArray[row]
-                                           attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Roboto" size:16.0],
-                                                        NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+    return [[NSAttributedString alloc] initWithString:_roleArray[row] attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Roboto" size:16.0], NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
 
 }
 

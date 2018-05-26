@@ -10,7 +10,10 @@
 #import "BaseViewController.h"
 
 @interface OrderViewController : BaseViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+
+@property (weak, nonatomic) IBOutlet UIView *waitView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (weak, nonatomic) IBOutlet UITextField *search;
 
 @property (weak, nonatomic) IBOutlet UILabel *totalOrders;
@@ -37,4 +40,7 @@
 @property (nonatomic, retain) NSMutableArray * completeArray;
 
 -(void)getAllOrders;
+-(void)loadData;
+
+- (IBAction)searchTextChanged:(id)sender;
 @end

@@ -41,7 +41,7 @@
     invoiceViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     invoiceViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     invoiceViewController.preferredContentSize = CGSizeMake(520, 650);
-    invoiceViewController.delegate = _delegate.totalOrderArray[_invoiceButton.tag];
+    invoiceViewController.delegate = _delegate.totalOrderArray[_invoiceButton.tag]; 
     
     [self.delegate presentViewController:invoiceViewController animated:YES completion:nil];
 }

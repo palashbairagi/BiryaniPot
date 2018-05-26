@@ -12,4 +12,5 @@
 
 @interface BaseViewController : UIViewController
 
+-(void)logout;
 @end

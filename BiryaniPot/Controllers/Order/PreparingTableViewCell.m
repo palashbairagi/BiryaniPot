@@ -44,6 +44,7 @@
         
         Order *order = _delegate.preparingArray[sender.tag];
         sdp.order = order;
+        sdp.delegate = _delegate;
         
         [_delegate presentViewController:sdp animated:YES completion:nil];
     }

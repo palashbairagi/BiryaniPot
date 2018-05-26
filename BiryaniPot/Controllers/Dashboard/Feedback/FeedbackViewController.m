@@ -11,38 +11,77 @@
 #import "Feedback.h"
 #import "Constants.h"
 #import "FeedbackDetailViewController.h"
+#import "CalendarViewController.h"
 
 @interface FeedbackViewController ()
-
+@property (nonatomic, retain) NSString *searchString;
+@property (nonatomic, retain) NSMutableArray *searchResultArray;
 @end
 
 @implementation FeedbackViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    _positiveTaste = 0;
-//    _positiveQuality = 0;
-//    _positiveQuantity = 0;
-//    _positiveDelivery = 0;
-//
-//    _negativeTaste = 0;
-//    _negativeQuality = 0;
-//    _negativeQuantity = 0;
-//    _negativeDelivery = 0;
-    
+    _searchResultArray = [[NSMutableArray alloc]init];
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateNormal];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE
+             forState:UIControlStateNormal];
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateSelected];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self feedbackTags];
-    [self initComponents];
-    [self feedback];
-    [self totalOrdersList];
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        [self initComponents];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Initialize Components"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self feedbackTags];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback Tags"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self feedback];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self totalOrdersList];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get orders with feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 -(void)initComponents
 {
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateNormal];
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateSelected];
+    
     _happySmiley.text = [NSString stringWithFormat:@"%C", 0xf118];
     _sadSmiley.text = [NSString stringWithFormat:@"%C", 0xf119];
     
@@ -51,12 +90,6 @@
     
     _positiveDictionary = [[NSMutableDictionary alloc]init];
     _negativeDictionary = [[NSMutableDictionary alloc]init];
-    
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateNormal];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE
-             forState:UIControlStateNormal];
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
 }
 
 - (void)createPieChart{
@@ -104,15 +137,15 @@
             break;
             
         case 1:
-            return [UIColor colorWithRed:74.0/256.0 green:144/256.0 blue:226.0/256.0 alpha:1];
+            return [UIColor colorWithRed:0.0/256.0 green:0.0/256.0 blue:256.0/256.0 alpha:1];
             break;
             
         case 2:
-            return [UIColor colorWithRed:80.0/256.0 green:227/256.0 blue:194.0/256.0 alpha:1];
+            return [UIColor colorWithRed:0.0/256.0 green:230.0/256.0 blue:0.0/256.0 alpha:1];
             break;
             
         case 3:
-            return [UIColor colorWithRed:180.0/256.0 green:180.0/256.0 blue:180.0/256.0 alpha:180.0/256.0];
+            return [UIColor colorWithRed:256.0/256.0 green:0.0/256.0 blue:0.0/256.0 alpha:1];
             break;
             
     }
@@ -242,8 +275,10 @@
 
 -(void)totalOrdersList
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    [_feedbackArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -256,9 +291,10 @@
         NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
         NSString *orderType = [totalOrder objectForKey:@"orderType"];
         NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-        NSString *totalAmount = [NSString stringWithFormat:@"%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
+        NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
         NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
         NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
+        NSString *orderDate = [self convertDate:[totalOrder objectForKey:@"orderDate"]];
         
         Feedback *feedback = [[Feedback alloc]init];
         feedback.smiley = smiley;
@@ -268,6 +304,7 @@
         feedback.amount = totalAmount;
         feedback.email = userEmail;
         feedback.contactNumber = userMobile;
+        feedback.orderDate = orderDate;
         
         [_feedbackArray addObject:feedback];
     }
@@ -279,8 +316,18 @@
 
 -(void)feedbackTags
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    _positiveTaste = 0;
+    _positiveQuality = 0;
+    _positiveQuantity = 0;
+    _positiveDelivery = 0;
+    
+    _negativeTaste = 0;
+    _negativeQuality = 0;
+    _negativeQuantity = 0;
+    _negativeTaste = 0;
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_TAG_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -344,8 +391,8 @@
 
 -(void)feedback
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -355,4 +402,133 @@
     _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
     _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
 }
+
+- (IBAction)dateButtonClicked:(id)sender
+{
+    CalendarViewController * calendarVC = [[CalendarViewController alloc]init];
+    calendarVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    calendarVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    calendarVC.preferredContentSize = CGSizeMake(400, 450);
+    calendarVC.toDateDelegate = _dateTo;
+    calendarVC.fromDateDelegate = _dateFrom;
+    calendarVC.disableFutureDates = true;
+    calendarVC.didDismiss = ^(void){
+        
+        [self datesUpdated];
+
+    };
+    
+    [self presentViewController:calendarVC animated:YES completion:nil];
+}
+
+-(void)datesUpdated
+{
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        _searchTextField.text = @"";
+        [_positiveFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        [_positiveFeedbackView addSubview: _happySmiley];
+        [_positiveFeedbackView addSubview: _happyValue];
+        
+        [_negativeFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        [_negativeFeedbackView addSubview: _sadSmiley];
+        [_negativeFeedbackView addSubview: _sadValue];
+        
+        [self feedbackTags];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback Tags"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self feedback];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self totalOrdersList];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get orders with feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
+}
+
+- (IBAction)searchButtonClicked:(id)sender
+{
+    if ([Validation isEmpty:_searchTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Search field must not be empty"];
+        return;
+    }
+    
+    [self.view endEditing:YES];
+    
+    if ( ([[Validation trim:_searchTextField.text] caseInsensitiveCompare:_searchString] == NSOrderedSame) && _searchResultArray.count != 0)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[_searchResultArray objectAtIndex:0]intValue] inSection:0];
+        [_feedbackTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+        
+        NSNumber *temp = [NSNumber numberWithInt:[[_searchResultArray objectAtIndex:0]intValue]];
+        [_searchResultArray removeObjectAtIndex:0];
+        [_searchResultArray addObject:temp];
+    }
+    else
+    {
+        _searchString = [Validation trim:_searchTextField.text];
+        [_searchResultArray removeAllObjects];
+        
+        for (int i = 0; i<_feedbackArray.count; i++)
+        {
+            Feedback *feedback = _feedbackArray[i];
+            
+            if([feedback.orderNo isEqualToString:_searchString] || [feedback.contactNumber isEqualToString:_searchString] || (feedback.email && [feedback.email caseInsensitiveCompare:_searchString] == NSOrderedSame))
+            {
+                [_searchResultArray addObject:[NSNumber numberWithInt:i]];
+            }
+        }
+        
+        if (_searchResultArray.count == 0)
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No record found"];
+        }
+        else
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[_searchResultArray objectAtIndex:0]intValue] inSection:0];
+            [_feedbackTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+            
+            NSNumber *temp = [NSNumber numberWithInt:[[_searchResultArray objectAtIndex:0]intValue]];
+            [_searchResultArray removeObjectAtIndex:0];
+            [_searchResultArray addObject:temp];
+        }
+    }
+    
+}
+
+-(NSString *)convertDate:(NSString *) dateString
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss.SS"];
+    
+    NSDate *dateFromString = [dateFormatter dateFromString:dateString];
+    
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    [dateFormatter1 setDateFormat:@"MMM dd, HH:mm"];
+    return [dateFormatter1 stringFromDate:dateFromString];
+}
+
 @end

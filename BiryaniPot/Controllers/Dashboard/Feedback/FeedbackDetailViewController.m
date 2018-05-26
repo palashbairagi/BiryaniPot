@@ -19,6 +19,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
     if (_delegate.smiley == (id)[NSNull null])
     {
         self.feedbackIcon.text = @"-";
@@ -46,6 +50,7 @@
     
     _orderNumber.text = [NSString stringWithFormat:@"Order No %@", _delegate.orderNo];
     _customerName.text = [NSString stringWithFormat:@"TO    %@", _delegate.email];
+    _orderDate.text = _delegate.orderDate;
     _subject.text = @"Sorry for Inconvenience";
     
     self.sendButton.layer.cornerRadius = 5;
@@ -60,7 +65,18 @@
     gradient1.cornerRadius = 5;
     [[self.sendButton layer] addSublayer:gradient1];
     
-    [self userFeedback];
+    @try
+    {
+        [self userFeedback];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 -(void)userFeedback
@@ -85,29 +101,54 @@
         return;
     }
     
-    NSString *email = _delegate.email;
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
     
-    NSString *post = [NSString stringWithFormat:@"comments=%@&email=%@&subject=%@", _message.text, email ,_subject.text];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FEEDBACK_REPLY_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    @try
+    {
+        NSString *email = _delegate.email;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Email Sent"];
-        });
+        NSString *post = [NSString stringWithFormat:@"comments=%@&email=%@&subject=%@", _message.text, email ,_subject.text];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
         
-    }];
-    
-    [postDataTask resume];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FEEDBACK_REPLY_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(error != NULL)
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Email Sent"];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to send Email"];
+                }
+            });
+            
+        }];
+        
+        [postDataTask resume];
+    }
+    @catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to send response"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    @finally
+    {
+        [_activityIndicator stopAnimating];
+        [_activityIndicator setHidden:TRUE];
+        [_waitView setHidden:TRUE];
+    }
 }
 
 - (IBAction)closeButtonClicked:(id)sender {

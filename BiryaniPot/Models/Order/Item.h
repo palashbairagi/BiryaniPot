@@ -10,11 +10,9 @@
 #import <UIKit/UIKit.h>
 
 @interface Item : NSObject
-@property (nonatomic, retain) NSString *grandTotal;
 @property (nonatomic, retain) NSString *itemId;
 @property (nonatomic, retain) NSString *categoryId;
 @property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *type;
 @property (nonatomic, retain) NSString *price;
 @property (nonatomic) BOOL isVeg;
 @property (nonatomic) BOOL isSpiceSupported;
@@ -24,9 +22,4 @@
 @property (nonatomic, retain) NSString *detail;
 @property (nonatomic, retain) NSString *quantity;
 @property (nonatomic, retain) NSString *spiceLevel;
-@property (nonatomic, retain) NSString *taxName;
-@property (nonatomic, retain) NSString *tax;
-@property (nonatomic, retain) NSString *subTotal;
-@property (nonatomic, retain) NSString *total;
-@property (nonatomic, retain) NSString *deliveryFee;
 @end

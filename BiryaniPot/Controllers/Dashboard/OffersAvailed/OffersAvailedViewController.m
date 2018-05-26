@@ -9,6 +9,7 @@
 #import "OffersAvailedViewController.h"
 #import "OfferStatistics.h"
 #import "Constants.h"
+#import "CalendarViewController.h"
 
 @interface OffersAvailedViewController ()
 
@@ -19,25 +20,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateNormal];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateNormal];
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateSelected];
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateNormal];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE
              forState:UIControlStateNormal];
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateSelected];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE forState:UIControlStateSelected];
     
     _offersArray = [[NSMutableArray alloc]init];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self offer];
-    [self createLineGraph];
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        [self offer];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to load graph"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 -(void)offer
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-09-01";
+    [_offersAvailedView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    [_offersArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -53,6 +73,15 @@
         os.timesApplied = [offer objectForKey:@"times"];
        
         [_offersArray addObject:os];
+    }
+    
+    if(_offersArray.count == 0)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Data"];
+    }
+    else
+    {
+        [self createLineGraph];
     }
 }
 
@@ -78,7 +107,6 @@
     [graph setMarkerTextColor:[UIColor whiteColor]];
     [graph setMarkerWidth:0.4];
     [graph setShowMarker:TRUE];
-   // [graph showCustomMarkerView:TRUE];
     
     [graph drawGraph];
     [self.offersAvailedView addSubview:graph];
@@ -110,7 +138,6 @@
 
 - (NSString *)nameForTheLineWithLineNumber:(NSInteger)lineNumber
 {
-    //return [NSString stringWithFormat:@"Offer %ld",(long)lineNumber];
     OfferStatistics *os = _offersArray[lineNumber];
     return [NSString stringWithFormat:@"%@", os.codeName];
 }
@@ -146,8 +173,8 @@
 
 - (NSMutableArray *)dataForXAxisWithLineNumber:(NSInteger)lineNumber {
     
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-09-01";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSDate *startDate = [self changeStringToDate:fromDate];
     NSDate *endDate = [self changeStringToDate:toDate];
@@ -174,8 +201,8 @@
 
 - (NSMutableArray *)dataForYAxisWithLineNumber:(NSInteger)lineNumber {
     
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-09-01";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSDate *startDate = [self changeStringToDate:fromDate];
     NSDate *endDate = [self changeStringToDate:toDate];
@@ -201,8 +228,6 @@
         [dateList addObject: [self changeDateToString: currentDate]];
         currentDate = [currentCalendar dateByAddingComponents:comps toDate:currentDate  options:0];
     }
-    
-    
     
     for (int j = 0; j < dateList.count; j++)
     {
@@ -247,6 +272,42 @@
     return [dateformate stringFromDate:date];
 }
 
+- (IBAction)dateButtonClicked:(id)sender
+{
+    CalendarViewController * calendarVC = [[CalendarViewController alloc]init];
+    calendarVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    calendarVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    calendarVC.preferredContentSize = CGSizeMake(400, 450);
+    calendarVC.toDateDelegate = _dateTo;
+    calendarVC.fromDateDelegate = _dateFrom;
+    calendarVC.disableFutureDates = TRUE;
+    
+    calendarVC.didDismiss = ^(void){
+        [self datesUpdated];
+    };
+    
+    [self presentViewController:calendarVC animated:YES completion:nil];
+}
 
+-(void)datesUpdated
+{
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        _searchTextField.text = @"";
+        [self offer];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to load graph"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
+}
 
 @end

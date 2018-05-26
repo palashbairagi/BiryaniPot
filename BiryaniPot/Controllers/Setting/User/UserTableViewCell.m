@@ -107,7 +107,7 @@
 {
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?email=%@&loc_id=%@", Constants.DELETE_MANAGER_URL, user.email ,Constants.LOCATION_ID]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?username=%@&loc_id=%@", Constants.DELETE_MANAGER_URL, user.email ,Constants.LOCATION_ID]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -117,12 +117,18 @@
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         
-        NSDictionary *message = [result objectForKey:@"error"];
-        NSLog(@"%@", [message objectForKey:@"message"]);
+        NSDictionary *status = [result objectForKey:@"status"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate.userArray removeObject:user];
-            [_delegate.userTableView reloadData];
+            if ([status isEqual:[NSNumber numberWithInt:1]])
+            {
+                [_delegate.userArray removeObject:user];
+                [_delegate.userTableView reloadData];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:_delegate withTitle:@"Error" andMessage:@"Unable to delete"];
+            }
         });
         
     }];

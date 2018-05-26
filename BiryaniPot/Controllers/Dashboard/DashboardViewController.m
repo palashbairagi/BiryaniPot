@@ -31,13 +31,19 @@
              forState:UIControlStateNormal];
     [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
     [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
+    [Constants SET_DASHBOARD_FROM_DATE:[_dateFrom currentTitle]];
+    [Constants SET_DASHBOARD_TO_DATE:[_dateTo currentTitle]];
     
     _happySmiley.text = [NSString stringWithFormat:@"%C", 0xf118];
     _sadSmiley.text = [NSString stringWithFormat:@"%C", 0xf119];
 }
 
-- (void) viewDidAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
     [self initComponents];
     
     [self.navigationController setNavigationBarHidden:NO];
@@ -49,26 +55,62 @@
     backButton.tintColor = [UIColor colorWithRed:216.0/255.0 green:33.0/255.0 blue:42.0/255.0 alpha:1];
     
     self.navigationItem.backBarButtonItem = backButton;
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 -(void)initComponents
 {
-    self.graphArray = [[NSMutableArray alloc]init];
-    
-    self.durationSegmentedControl.frame = CGRectMake(0, 0, self.durationView.frame.size.width, self.durationView.frame.size.height);
-    
-    _durationView.layer.cornerRadius = CGRectGetHeight(_durationView.bounds) / 2;
-    _durationView.layer.borderColor = [UIColor colorWithRed:206.0/255.0 green:96.0/255.0 blue:40.0/255.0 alpha:1].CGColor;
-    _durationView.layer.borderWidth = 1;
-    
+    _graphArray = [[NSMutableArray alloc]init];
     _topSellersArray = [[NSMutableArray alloc]init];
     _offersArray = [[NSMutableArray alloc]init];
     
-    [self totalOrders];
-    [self topSellers];
-    [self feedback];
-    [self offer];
-    [self plotGraph];
+    @try
+    {
+        [self totalOrders];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get total orders"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self topSellers];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get top sellers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self feedback];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self offer];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get offers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self plotGraph];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order trend"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
 }
 
 - (void)createBarChart{
@@ -174,33 +216,36 @@
 
 -(void)totalOrders
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
-    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    NSString *orders = [totalOrders[0] objectForKey:@"totalOrders"];
-    NSString *amount = [totalOrders[0] objectForKey:@"totalPrice"];
+    long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
+    double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        _totalOrdersLabel.text = [NSString stringWithFormat:@"%@ of $%@", orders, amount];
+        _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
     });
 }
 
 -(void)topSellers
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    [_topSellersArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
-    NSArray *topSellers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-
-    for(NSDictionary *topSeller in topSellers)
+    NSDictionary *topSellersDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSArray *topSellersArray = [topSellersDic objectForKey:@"topSellers"];
+    
+    for(NSDictionary *topSeller in topSellersArray)
     {
         NSString *itemName = [topSeller objectForKey:@"itemName"];
         NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
@@ -220,22 +265,24 @@
 
 -(void)feedback
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
     NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
-    _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
+    _happyValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"goodCount"] longValue]];
+    _sadValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"badCount"] longValue]];
 }
 
 -(void)offer
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    [_offersArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -260,8 +307,8 @@
 
 -(void)offerStatistics
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -275,6 +322,11 @@
 
 -(void)plotGraph
 {
+    [_graphArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+    
     NSError *error;
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -287,8 +339,8 @@
     [request setHTTPMethod:@"POST"];
     NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:@"2018-01-03" forKey:@"fromDate"];
-    [paramDict setValue:@"2018-01-26" forKey:@"toDate"];
+    [paramDict setValue:fromDate forKey:@"fromDate"];
+    [paramDict setValue:toDate forKey:@"toDate"];
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
     
@@ -395,11 +447,76 @@
     CalendarViewController * calendarVC = [[CalendarViewController alloc]init];
     calendarVC.modalPresentationStyle = UIModalPresentationFormSheet;
     calendarVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    calendarVC.preferredContentSize = CGSizeMake(500, 425);
+    calendarVC.preferredContentSize = CGSizeMake(400, 450);
     calendarVC.toDateDelegate = _dateTo;
     calendarVC.fromDateDelegate = _dateFrom;
-
+    calendarVC.disableFutureDates = true;
+    calendarVC.didDismiss = ^(void){
+        [self datesUpdated];
+    };
+    
     [self presentViewController:calendarVC animated:YES completion:nil];
+}
+
+-(void)datesUpdated
+{
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    [Constants SET_DASHBOARD_FROM_DATE:[_dateFrom currentTitle]];
+    [Constants SET_DASHBOARD_TO_DATE:[_dateTo currentTitle]];
+    
+    @try
+    {
+        [self totalOrders];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get total orders"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self topSellers];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get top sellers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self feedback];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [self offer];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get offers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    @try
+    {
+        [_statisticsView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        [_statisticsView addSubview: _orderTrendLabel];
+        [self plotGraph];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order trend"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 @end

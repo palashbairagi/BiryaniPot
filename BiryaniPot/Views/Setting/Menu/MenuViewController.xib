@@ -25,11 +25,13 @@
             <connections>
                 <outlet property="addCategoryButton" destination="imy-Eq-Ivi" id="1Bq-ZS-bG6"/>
                 <outlet property="cancelButton" destination="2eY-BG-akJ" id="A0T-3g-iO1"/>
+                <outlet property="categorySearchTextField" destination="lRr-io-mdz" id="fPI-Y6-IV4"/>
                 <outlet property="deleteItemButton" destination="V2f-o3-A5q" id="Mbm-GE-0w5"/>
                 <outlet property="detail" destination="BnT-2J-RfF" id="PDl-Vx-QKK"/>
                 <outlet property="discount" destination="egn-PE-oKJ" id="brF-5W-caU"/>
                 <outlet property="image" destination="rQp-qg-kdK" id="nG8-UT-aRP"/>
                 <outlet property="isVegButton" destination="ftd-P0-hSX" id="B7o-mn-xzC"/>
+                <outlet property="itemSearchTextField" destination="rLf-Ej-abM" id="MIh-Ng-EeB"/>
                 <outlet property="itemTableView" destination="Odd-KC-yTI" id="9Qw-XQ-JBi"/>
                 <outlet property="menuCollectionView" destination="ONr-iD-kgm" id="VEl-MA-ozG"/>
                 <outlet property="name" destination="yCK-iA-CCJ" id="A5E-wH-kuf"/>
@@ -81,6 +83,10 @@
                                     <nil key="textColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <action selector="itemSearchStringChanged:" destination="-1" eventType="editingChanged" id="t4I-6e-3mC"/>
+                                        <outlet property="delegate" destination="-1" id="kRy-Fl-IzS"/>
+                                    </connections>
                                 </textField>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j4z-lN-rYJ">
                                     <rect key="frame" x="200" y="0.0" width="40" height="40"/>
@@ -377,6 +383,10 @@
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                             <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <action selector="categorySearchStringChanged:" destination="-1" eventType="editingChanged" id="QbM-dm-ngX"/>
+                                <outlet property="delegate" destination="-1" id="KDl-Hn-xXW"/>
+                            </connections>
                         </textField>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

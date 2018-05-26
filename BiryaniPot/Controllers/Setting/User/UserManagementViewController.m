@@ -42,37 +42,55 @@
     [self.userTableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"userCell"];
     
     self.userArray = [[NSMutableArray alloc]init];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    @try
+    {
+        [self getManagers];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get managers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
     
-    [self getManagers];
-    [self getDeliveryPersons];
+    @try
+    {
+        [self getDeliveryPersons];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get delivery persons"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    @finally
+    {
+        [_userTableView reloadData];
+    }
 }
 
 -(void)getManagers
 {
+    [_userArray removeAllObjects];
+    
     NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
     NSError *error = nil;
-    NSDictionary *managersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *managersDictionary = [orderList objectForKey:@"managersList"];
     
     for (NSDictionary *managerDictionary in managersDictionary)
     {
-        @try
-        {
-            User *user = [[User alloc]init];
-            user.userId = [managerDictionary objectForKey:@"managerId"];
-            user.name = [managerDictionary objectForKey:@"managerName"];
-            user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
-            user.mobile = [managerDictionary objectForKey:@"managerMobile"];
-            user.phone = @"";
-            user.email = [managerDictionary objectForKey:@"managerEmail"];
-            user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
-            
-            [_userArray addObject:user];
-        }
-        @catch(NSException *ex)
-        {
-            NSLog(@"%@ %@", ex.name, ex.reason);
-        }
+        User *user = [[User alloc]init];
+        user.userId = [managerDictionary objectForKey:@"managerId"];
+        user.name = [managerDictionary objectForKey:@"managerName"];
+        user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
+        user.mobile = [managerDictionary objectForKey:@"managerMobile"];
+        user.phone = @"";
+        user.email = [managerDictionary objectForKey:@"managerEmail"];
+        user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
+        
+        [_userArray addObject:user];
     }
 }
 
@@ -120,7 +138,19 @@
     cell.deleteButton.tag = indexPath.row;
     [cell setCellData:user withSelectedIndex:indexPath.row];
     cell.delegate = self;
-
+    
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSString *userId = [NSString stringWithFormat:@"%@", [_appDelegate.userDefaults objectForKey:@"userId"]];
+    
+    if([[NSString stringWithFormat:@"%@", user.userId] isEqualToString:userId])
+    {
+        cell.deleteButton.hidden = TRUE;
+    }
+    else
+    {
+        cell.deleteButton.hidden = FALSE;
+    }
+    
     return cell;
 }
 

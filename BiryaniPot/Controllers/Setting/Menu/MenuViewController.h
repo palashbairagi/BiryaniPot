@@ -23,6 +23,9 @@
 @property (nonatomic, retain) NSMutableArray *itemArray;
 @property (nonatomic, retain) NSMutableArray *recommendedItemArray;
 
+@property (nonatomic, retain) NSMutableArray *categorySearchArray;
+@property (nonatomic, retain) NSMutableArray *itemSearchArray;
+
 @property (nonatomic, retain) NSOperationQueue *categoryQueue ;
 
 @property (weak, nonatomic) IBOutlet UITextField *name;
@@ -32,6 +35,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIButton *isVegButton;
 @property (weak, nonatomic) IBOutlet UIButton *spiceSupportButton;
+
+@property (weak, nonatomic) IBOutlet UITextField *categorySearchTextField;
+@property (weak, nonatomic) IBOutlet UITextField *itemSearchTextField;
 
 @property BOOL spice, veg;
 

@@ -34,53 +34,61 @@
     NSURL *itemsURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?order_id=%@",Constants.GET_ITEMS_BY_ORDER_URL, _delegate.orderNo]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:itemsURL];
     NSError *error = nil;
-    NSDictionary *itemsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *orderDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    for (NSDictionary *itemDictionary in itemsDictionary)
+    _order = [[Order alloc]init];
+    _order.orderNo = _orderNo.text;
+    _order.deliveryFee = [orderDictionary objectForKey:@"deliveryFee"];
+    _order.tip = [orderDictionary objectForKey:@"tip"];
+    _order.grandTotal = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"grandTotal"] floatValue]];
+    _order.orderTime = [orderDictionary objectForKey:@"orderDate"];
+    _order.deliveryType = [orderDictionary objectForKey:@"orderType"];
+    _order.subTotal = [orderDictionary objectForKey:@"subTotal"];
+    _order.tax = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"tax"] floatValue]];
+    
+    NSArray *itemsArray = [orderDictionary objectForKey:@"items"];
+    
+    for (NSDictionary *itemDictionary in itemsArray)
     {
-        NSString *grandTotal = [NSString stringWithFormat:@"%.2f", [[itemDictionary objectForKey:@"grandTotal"] floatValue] ];
+        NSString *itemId = [itemDictionary objectForKey:@"itemId"];
         NSString *itemName = [itemDictionary objectForKey:@"itemName"];
-        NSString *itemType = [itemDictionary objectForKey:@"itemType"];
-        NSString *price = [itemDictionary objectForKey:@"price"];
-        NSString *quantity = [itemDictionary objectForKey:@"itemQuantity"];
-        NSString *taxName = [itemDictionary objectForKey:@"taxName"];
-        NSString *subTotal = [itemDictionary objectForKey:@"subTotal"];
-        NSString *tax = [NSString stringWithFormat:@"%.2f", [[itemDictionary objectForKey:@"tax"] floatValue]];
-        NSString *total = [itemDictionary objectForKey:@"total"];
-        NSString *deliveryFee = [itemDictionary objectForKey:@"deliveryFee"];
+        NSString *price = [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"];
+        NSString *quantity = [itemDictionary objectForKey:@"quantity"];
+        NSString *spiceLevel = [itemDictionary objectForKey:@"spiceLevel"];
+        NSString *isSpiceSupported = [itemDictionary objectForKey:@"spiceSupported"];
         
         Item *item = [[Item alloc]init];
-        item.grandTotal = grandTotal;
-        item.subTotal = subTotal;
+        item.itemId = itemId;
         item.name = itemName;
-        item.type = itemType;
         item.price = price;
         item.quantity = [NSString stringWithFormat:@"%@", quantity];
-        item.taxName = taxName;
-        item.tax = tax;
-        item.deliveryFee = deliveryFee;
-        item.total = total;
+        item.spiceLevel = spiceLevel;
+        item.isSpiceSupported = isSpiceSupported;
         
         [_itemArray addObject:item];
     }
+    
 }
 
 -(void)setDetails
 {
-    _deliveryType.text = _delegate.orderType;
-    _customerName.text = _delegate.email;
+    _customerName.text = _delegate.email; 
     _customerPhone.text = _delegate.contactNumber;
+    _paymentType.text = _delegate.paymentType;
     
-    Item *item = _itemArray[_itemArray.count-1];
-    _subTotal.text = [NSString stringWithFormat:@"%@", item.subTotal];
-    _tax.text = [NSString stringWithFormat:@"%@", item.tax];
-    _deliveryFee.text = [NSString stringWithFormat:@"%@", item.deliveryFee];
-    _total.text = [NSString stringWithFormat:@"%@", item.grandTotal];
+    _orderDate.text = [self convertDate:_order.orderTime];
+    _subTotal.text = [NSString stringWithFormat:@"$%@", _order.subTotal];
+    _tax.text = [NSString stringWithFormat:@"$%@", _order.tax];
+    _tip.text = [NSString stringWithFormat:@"$%@", _order.tip];
+    _deliveryFee.text = [NSString stringWithFormat:@"$%@", _order.deliveryFee];
+    _total.text = [NSString stringWithFormat:@"$%@", _order.grandTotal];
+    
+    _deliveryType.text = _order.deliveryType;
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _itemArray.count-1;
+    return _itemArray.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,5 +106,16 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(NSString *)convertDate:(NSString *) dateString
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    NSDate *dateFromString = [dateFormatter dateFromString:dateString];
+    
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    [dateFormatter1 setDateFormat:@"MMM dd, yyyy"];
+    return [dateFormatter1 stringFromDate:dateFromString];
+}
 
 @end

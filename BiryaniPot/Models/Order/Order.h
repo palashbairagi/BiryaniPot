@@ -19,6 +19,10 @@
 @property (nonatomic, retain) NSString *deliveryPerson;
 @property (nonatomic, retain) NSString *deliveryPersonURL;
 @property (nonatomic, retain) NSString *deliveryType;
+@property (nonatomic, retain) NSString *deliveryFee;
 @property (nonatomic, retain) NSString *status;
-
+@property (nonatomic, retain) NSString *grandTotal;
+@property (nonatomic, retain) NSString *tax;
+@property (nonatomic, retain) NSString *subTotal;
+@property (nonatomic, retain) NSString *tip;
 @end

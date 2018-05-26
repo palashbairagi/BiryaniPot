@@ -68,12 +68,39 @@
 
 }
 
+-(void)assignDeliveryPerson:(User *)user
+{
+    NSString *orderNo = _order.orderNo;
+    NSString *estTime = _order.timeRemain;
+    NSString *dboyId = user.userId;
+    
+    NSString *post = [NSString stringWithFormat:@"est_time=%@&order_id=%@&deliveryboy_id=%@", estTime, orderNo, dboyId];
+    
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.ASSIGN_DELIVERY_PERSON_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate loadData]; 
+        });
+        
+    }];
+    [postDataTask resume];
+}
+
 - (IBAction)selectButtonClicked:(id)sender
 {
     User *user = [_nameArray objectAtIndex:[_pickerView selectedRowInComponent:0]];
-    
-    // Code similar to select time
-    
+    [self assignDeliveryPerson:user];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

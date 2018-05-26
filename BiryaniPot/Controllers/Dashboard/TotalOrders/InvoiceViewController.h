@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Feedback.h"
+#import "Order.h"
 #import "Constants.h"
 
 @interface InvoiceViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
@@ -21,8 +22,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *tax;
 @property (weak, nonatomic) IBOutlet UILabel *total;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryType;
+@property (weak, nonatomic) IBOutlet UILabel *tip;
+@property (weak, nonatomic) IBOutlet UILabel *paymentType;
 
 @property (nonatomic, retain) NSMutableArray *itemArray;
-@property (nonatomic, retain) Feedback * delegate;
+@property (nonatomic, retain) Feedback *delegate;
+@property (nonatomic, retain) Order *order;
 
 @end

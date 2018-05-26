@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "PreparingTableViewCell.h"
 #import "Order.h"
+#import "OrderViewController.h"
 
-@interface SelectDeliveryPersonViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
+@interface SelectDeliveryPersonViewController : UIViewController <NSURLSessionDelegate ,UIPickerViewDataSource, UIPickerViewDelegate>
 
+@property (nonatomic, retain) OrderViewController *delegate;
 @property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
 @property (weak, nonatomic) IBOutlet UIButton *selectButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;

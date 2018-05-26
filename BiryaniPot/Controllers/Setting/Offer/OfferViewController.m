@@ -21,7 +21,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initComponents];
-    [self getOffers];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    @try
+    {
+        [self getOffers];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Offers"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
 }
 
 -(void)initComponents
@@ -138,6 +151,8 @@
 
 -(void)getOffers
 {
+    [_offerArray removeAllObjects];
+    
     NSURL *offerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_OFFERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:offerURL];
     NSError *error = nil;
@@ -145,26 +160,19 @@
     
     for (NSDictionary *offerDictionary in offersDictionary)
     {
-        @try
-        {
-            Offer *offer = [[Offer alloc]init];
-            offer.offerId = [offerDictionary objectForKey:@"codeId"];
-            offer.name = [offerDictionary objectForKey:@"codeName"];
-            offer.offerValue = [offerDictionary objectForKey:@"couponPercent"];
-            offer.imageURL = [offerDictionary objectForKey:@"couponImgURL"];
-            offer.startFrom = [offerDictionary objectForKey:@"validFrom"];
-            offer.endAt = [offerDictionary objectForKey:@"validTill"];
-            offer.detail = [offerDictionary objectForKey:@"codeDescription"];
-            offer.maxDisc = [offerDictionary objectForKey:@"maxDisc"];
-            offer.maxTimes = [offerDictionary objectForKey:@"maxTimes"];
-            offer.minValue = [offerDictionary objectForKey:@"minValue"];
-            
-            [_offerArray addObject:offer];
-        }
-        @catch(NSException *ex)
-        {
-            NSLog(@"%@ %@", ex.name, ex.reason);
-        }
+        Offer *offer = [[Offer alloc]init];
+        offer.offerId = [offerDictionary objectForKey:@"codeId"];
+        offer.name = [offerDictionary objectForKey:@"codeName"];
+        offer.offerValue = [offerDictionary objectForKey:@"couponPercent"];
+        offer.imageURL = [offerDictionary objectForKey:@"couponImgURL"];
+        offer.startFrom = [offerDictionary objectForKey:@"validFrom"];
+        offer.endAt = [offerDictionary objectForKey:@"validTill"];
+        offer.detail = [offerDictionary objectForKey:@"codeDescription"];
+        offer.maxDisc = [offerDictionary objectForKey:@"maxDisc"];
+        offer.maxTimes = [offerDictionary objectForKey:@"maxTimes"];
+        offer.minValue = [offerDictionary objectForKey:@"minValue"];
+        offer.maxUsageLimit = [offerDictionary objectForKey:@"couponUsageLimit"];
+        [_offerArray addObject:offer];
     }
 }
 

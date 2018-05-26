@@ -19,6 +19,7 @@ target 'BiryaniPot' do
 
     pod 'MKDropdownMenu'
     pod 'drCharts', :git => 'https://github.com/Zomato/DR-charts.git'
-    pod 'SSMaterialCalendarPicker'
     pod 'SCRSidewaysBarGraph'
+    pod 'IQKeyboardManager'
+    pod 'FSCalendar'
 end

@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
+#import "TaxViewController.h"
 
 @interface ProfileViewController : BaseViewController <NSURLSessionDelegate>
 @property (weak, nonatomic) IBOutlet UIView *saveAndCancelView;
 @property (weak, nonatomic) IBOutlet UIView *openingHoursView;
 @property (weak, nonatomic) IBOutlet UIView *openingHoursHeaderView;
 
+
+@property (weak, nonatomic) IBOutlet UIButton *taxButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 

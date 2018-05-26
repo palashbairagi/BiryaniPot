@@ -11,6 +11,10 @@
 #import "PieChart.h"
 
 @interface FeedbackViewController : BaseViewController <PieChartDataSource, UITableViewDelegate, UITableViewDataSource, NSURLSessionDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *waitView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (weak, nonatomic) IBOutlet UIView *positiveFeedbackView;
 @property (weak, nonatomic) IBOutlet UIView *negativeFeedbackView;
 
@@ -29,5 +33,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *dateTo;
 
 @property (nonatomic, retain) NSNumber *positiveQuantity, *positiveQuality, *positiveTaste, *positiveDelivery, *negativeQuantity, *negativeQuality, *negativeTaste, *negativeDelivery;
+
+@property (weak, nonatomic) IBOutlet UIButton *searchButton;
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 
 @end

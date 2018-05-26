@@ -29,8 +29,30 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-    [self initComponents];
+    @try
+    {
+        [_waitView setHidden:FALSE];
+        [_activityIndicator startAnimating];
+        
+        [super viewDidAppear:animated];
+        
+        [self initComponents];
+        [self loadData];
+        
+        [_activityIndicator stopAnimating];
+        [_waitView setHidden:TRUE];
+    }@catch(NSException *e)
+    {
+        NSLog(@"%@ %@", e.name, e.reason);
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to Process, Please Login again" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                             {
+                                 [super logout];
+                             }];
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -57,9 +79,9 @@
     }
     else
     {
-        if(self.searchArray.count > 3)
-            return 4;
-        else
+//        if(self.searchArray.count > 3)
+//            return 4;
+//        else
             return self.searchArray.count;
     }
 }
@@ -89,6 +111,7 @@
     {
         PreparingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"preparingCell" forIndexPath:indexPath];
         cell.delegate = self;
+        cell.doneButton.tag = indexPath.row;
         Order * order = self.preparingArray[indexPath.row];
         [cell setCellData:order];
         
@@ -135,31 +158,70 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    OrderDetailViewController * orderDetailViewController = [[OrderDetailViewController alloc]init];
+    orderDetailViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    orderDetailViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    orderDetailViewController.delegate = self;
     
     if (tableView == self.queueTableView)
     {
-        OrderDetailViewController * orderDetailViewController = [[OrderDetailViewController alloc]init];
-        orderDetailViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        orderDetailViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        orderDetailViewController.preferredContentSize = CGSizeMake(720, 580);
+        orderDetailViewController.preferredContentSize = CGSizeMake(850, 670);
+        orderDetailViewController.isQueue = TRUE;
+        orderDetailViewController.isPreparing = FALSE;
         
         Order *order = _queueArray[indexPath.row];
         orderDetailViewController.order = order;
+    }
+    else if (tableView == self.preparingTableView)
+    {
+        orderDetailViewController.preferredContentSize = CGSizeMake(720, 580);
+        orderDetailViewController.isQueue = FALSE;
+        orderDetailViewController.isPreparing = TRUE;
         
-        [self presentViewController: orderDetailViewController animated:YES completion:nil];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        Order *order = _preparingArray[indexPath.row];
+        orderDetailViewController.order = order;
+    }
+    else if (tableView == self.outForDeliveryTableView)
+    {
+        Order *order = _outForDeliveryArray[indexPath.row];
+        orderDetailViewController.order = order;
+        
+        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.isQueue = FALSE;
+        orderDetailViewController.isPreparing = FALSE;
+    }
+    else if (tableView == self.readyToPickupTableView)
+    {
+        Order *order = _readyToPickUpArray[indexPath.row];
+        orderDetailViewController.order = order;
+         
+        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.isQueue = FALSE;
+        orderDetailViewController.isPreparing = FALSE;
+    }
+    else if (tableView == self.completeTableView)
+    {
+        Order *order = _completeArray[indexPath.row];
+        orderDetailViewController.order = order;
+        orderDetailViewController.delegate = self;
+        
+        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.isQueue = FALSE;
+        orderDetailViewController.isPreparing = FALSE;
     }
     
+    [self presentViewController: orderDetailViewController animated:YES completion:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 -(void)initComponents
 {
+    [_containerView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationItem setHidesBackButton:YES];
-    self.navigationItem.titleView = _search;
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
     backButton.title = @"Orders";
-    
     self.navigationItem.backBarButtonItem = backButton;
     
     self.queueArray = [[NSMutableArray alloc]init];
@@ -196,6 +258,7 @@
     int containerHeight = _containerView.frame.size.height;
     _containerScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, _containerView.frame.size.width, containerHeight)];
     _containerScrollView.contentSize = CGSizeMake(1745, containerHeight);
+    _containerScrollView.backgroundColor = [UIColor colorWithRed:244.0/256.0 green:244.0/256.0 blue:244.0/256.0 alpha:0.3];
     
     CGFloat currentVerticalOffset = _containerScrollView.contentOffset.x;
     CGFloat width = self.containerView.frame.size.width;
@@ -273,21 +336,47 @@
     [self.completeTableView registerNib:[UINib nibWithNibName:@"CompleteTableViewCell" bundle:nil] forCellReuseIdentifier:@"completeCell"];
     [self.searchTableView registerNib:[UINib nibWithNibName:@"SearchTableViewCell" bundle:nil] forCellReuseIdentifier:@"searchOrderCell"];
     
-    [self getAllOrders];
-    [self getFooterStatistics];
+    [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(loadData) userInfo:nil repeats:YES];
+
+}
+
+-(void)loadData
+{
+    @try
+    {
+        [self getAllOrders];
+        [self getFooterStatistics];
+   
+        [_queueTableView reloadData];
+        [_preparingTableView reloadData];
+        [_outForDeliveryTableView reloadData];
+        [_readyToPickupTableView reloadData];
+        [_completeTableView reloadData];
+    }@catch(NSException *e)
+    {
+        NSLog(@"%@ %@", e.name, e.reason);
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to Process, Please Login again" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                             {
+                                 [super logout];
+                             }];
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 -(void)getFooterStatistics
 {
-    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@&date=2018-02-10", Constants.FOOTER_STATISTICS_URL, Constants.LOCATION_ID]];
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@&date=%@", Constants.FOOTER_STATISTICS_URL, Constants.LOCATION_ID, [Constants changeDateFormatForAPI: Constants.GET_TODAY_DATE] ]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
-    NSArray *result = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *result = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    _pickedUp.text = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"pickedup"]];
-    _delivered.text  = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"delivered"]];
-    _outForDeliveryLabel.text = [NSString stringWithFormat:@"%@", [result[0] objectForKey:@"delivering"]];
-    _totalOrders.text = [NSString stringWithFormat:@"%@ of $%@", [result[0] objectForKey:@"totalOrders"], [result[0] objectForKey:@"totalPrice"]];
+    _pickedUp.text = [NSString stringWithFormat:@"%i", [[result objectForKey:@"pickedup"] intValue]];
+    _delivered.text  = [NSString stringWithFormat:@"%i", [[result objectForKey:@"delivered"] intValue]];
+    _outForDeliveryLabel.text = [NSString stringWithFormat:@"%i", [[result objectForKey:@"delivering"] intValue]];
+    _totalOrders.text = [NSString stringWithFormat:@"%i of $%.2f", [[result objectForKey:@"totalOrders"] intValue], [[result objectForKey:@"totalPrice"] doubleValue]];
 }
 
 -(void)getAllOrders
@@ -296,11 +385,13 @@
     [_readyToPickUpArray removeAllObjects];
     [_outForDeliveryArray removeAllObjects];
     [_preparingArray removeAllObjects];
+    [_completeArray removeAllObjects];
     
     NSURL *queueURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=1&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:queueURL];
     NSError *error = nil;
-    NSDictionary *queuesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *queuesDictionary = [orderList objectForKey:@"ordersList"];
     
     for (NSDictionary *queueDictionary in queuesDictionary)
     {
@@ -327,7 +418,8 @@
     
     NSURL *preparingURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=2&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData1 = [NSData dataWithContentsOfURL:preparingURL];
-    NSDictionary *preparingsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData1 options:0 error:&error];
+    orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData1 options:0 error:&error];
+    NSDictionary *preparingsDictionary = [orderList objectForKey:@"ordersList"];
     
     for (NSDictionary *preparingDictionary in preparingsDictionary)
     {
@@ -354,7 +446,8 @@
     
     NSURL *outForDeliveryURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=3&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData2 = [NSData dataWithContentsOfURL:outForDeliveryURL];
-    NSDictionary *oFDsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData2 options:0 error:&error];
+    orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData2 options:0 error:&error];
+    NSDictionary *oFDsDictionary = [orderList objectForKey:@"ordersList"];
     
     for (NSDictionary *oFDDictionary in oFDsDictionary)
     {
@@ -375,7 +468,7 @@
         order.orderTime = orderDate;
         order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
-        order.status = @"OutForDelivery";
+        order.status = @"Out For Delivery";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
         order.deliveryPerson = dBoyName;
         order.deliveryPersonURL = dBoyImage;
@@ -385,17 +478,18 @@
     
     NSURL *readyToPickUpURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=4&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData3 = [NSData dataWithContentsOfURL:readyToPickUpURL];
-    NSDictionary *rTPsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData3 options:0 error:&error];
+    orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData3 options:0 error:&error];
+    NSDictionary *rTPsDictionary = [orderList objectForKey:@"ordersList"];
     
     for (NSDictionary *rTPDictionary in rTPsDictionary)
     {
         NSString *orderId = [rTPDictionary objectForKey:@"orderId"];
         NSString *orderDate = [rTPDictionary objectForKey:@"orderDate"];
-        NSString *orderTypeId = [[rTPDictionary objectForKey:@"orderType"]objectForKey:@"orderTypeId"];
+        NSString *orderTypeId = [[rTPDictionary objectForKey:@"orderType"] objectForKey:@"orderTypeId"];
         NSString *quantity = [rTPDictionary objectForKey:@"quantity"];
         NSString *estimatedTime = [rTPDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [rTPDictionary objectForKey:@"customerName"];
-        NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
+        NSString *customerPhone = [rTPDictionary objectForKey:@"mobile"];
         
         Order * order = [[Order alloc]init];
         order.orderNo =  [NSString stringWithFormat: @"%@", orderId];
@@ -404,7 +498,7 @@
         order.orderTime = orderDate;
         order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
-        order.status = @"ReadyToPickUp";
+        order.status = @"Ready To Pickup";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
         
         [_readyToPickUpArray addObject:order];
@@ -412,7 +506,8 @@
     
     NSURL *completedURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?status=6&loc_id=%@",Constants.GET_ALL_ORDERS_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData4 = [NSData dataWithContentsOfURL:completedURL];
-    NSDictionary *completedDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData4 options:0 error:&error];
+    orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData4 options:0 error:&error];
+    NSDictionary *completedDictionary = [orderList objectForKey:@"ordersList"];
     
     for (NSDictionary *cDictionary in completedDictionary)
     {
@@ -422,7 +517,7 @@
         NSString *quantity = [cDictionary objectForKey:@"quantity"];
         NSString *estimatedTime = [cDictionary objectForKey:@"estimatedTime"];
         NSString *customerName = [cDictionary objectForKey:@"customerName"];
-        NSString *customerPhone = [rTPsDictionary objectForKey:@"mobile"];
+        NSString *customerPhone = [cDictionary objectForKey:@"mobile"];
         
         Order * order = [[Order alloc]init];
         order.orderNo =  [NSString stringWithFormat: @"%@", orderId];
@@ -431,34 +526,112 @@
         order.orderTime = orderDate;
         order.timeRemain = [NSString stringWithFormat: @"%@", estimatedTime];
         order.itemCount = [NSString stringWithFormat: @"%@",quantity];
-        order.status = @"ReadyToPickUp";
+        order.status = @"Completed";
         order.deliveryType = [NSString stringWithFormat: @"%@",orderTypeId];
         
         [_completeArray addObject:order];
     }
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
-    _searchTableView.hidden = NO;
-    [_containerScrollView setScrollEnabled:NO];
-    
-    NSString *substring = [NSString stringWithString:textField.text];
-    substring = [substring stringByReplacingCharactersInRange:range withString:string];
-    [self searchAutocompleteEntriesWithSubstring:substring];
-    return YES;
-}
-
-- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring
+- (IBAction)searchTextChanged:(id)sender
 {
     [_searchArray removeAllObjects];
+    NSString *searchString = [Validation trim:_search.text];
     
-    for(Order *order in _queueArray)
+    if([searchString length] == 0)
     {
-        if ([order.customerName containsString:substring])
+        if ([_search.text isEqualToString:@" "])
         {
-            [_searchArray addObject:order];
+            _search.text = @"";
         }
+        
+        _searchTableView.hidden = YES;
+        [_containerScrollView setScrollEnabled:YES];
+    }
+    else
+    {
+        for(Order *order in _queueArray)
+        {
+            if(order.customerName && [order.customerName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.orderNo && [order.orderNo caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.contactNumber && [order.contactNumber caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+        }
+        
+        for(Order *order in _preparingArray)
+        {
+            if(order.customerName && [order.customerName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.orderNo && [order.orderNo caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.contactNumber && [order.contactNumber caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+        }
+        
+        for(Order *order in _outForDeliveryArray)
+        {
+            if(order.customerName && [order.customerName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.orderNo && [order.orderNo caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.contactNumber && [order.contactNumber caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+        }
+        
+        for(Order *order in _readyToPickUpArray)
+        {
+            if(order.customerName && [order.customerName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.orderNo && [order.orderNo caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.contactNumber && [order.contactNumber caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+        }
+        
+        for(Order *order in _completeArray)
+        {
+            if(order.customerName && [order.customerName rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.orderNo && [order.orderNo caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+            else if (order.contactNumber && [order.contactNumber caseInsensitiveCompare:searchString] == NSOrderedSame)
+            {
+                [_searchArray addObject:order];
+            }
+        }
+        _searchTableView.hidden = NO;
+        [_containerScrollView setScrollEnabled:YES];
+        
     }
     
     [_searchTableView reloadData];
@@ -472,9 +645,10 @@
     {
         CGFloat currentVerticalOffset = _containerScrollView.contentOffset.x;
         CGFloat width = self.containerView.frame.size.width;
-        _searchTableView.frame = CGRectMake(currentVerticalOffset + (width*0.125), 0, width*0.75, 300);
+        CGFloat height = _searchArray.count * 95;
+        if (height > 285) height = 285;
+        _searchTableView.frame = CGRectMake(currentVerticalOffset + (width*0.125), 0, width*0.75, height);
     }
-    
 }
 
 -(NSString *)convertDate:(NSString *) dateString

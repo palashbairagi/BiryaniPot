@@ -7,7 +7,6 @@
 //
 
 #import "QueueTableViewCell.h"
-#import "CancelViewController.h"
 #import "Constants.h"
 #import "SelectTimeViewController.h"
 

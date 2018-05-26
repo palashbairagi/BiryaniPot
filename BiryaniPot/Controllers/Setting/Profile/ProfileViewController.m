@@ -30,6 +30,18 @@
 
 -(void)initComponents
 {
+    self.taxButton.layer.cornerRadius = 5;
+    self.taxButton.layer.borderWidth = 1;
+    self.taxButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+    
+    CAGradientLayer *gradient1 = [CAGradientLayer layer];
+    gradient1.frame = CGRectMake(0, 0, 160, 40);
+    gradient1.colors = @[(id)[[UIColor orangeColor] CGColor], (id)[[UIColor colorWithRed:0.82 green:0.35 blue:0.11 alpha:1] CGColor]];
+    gradient1.locations = @[@(0), @(1)];gradient1.startPoint = CGPointMake(0.5, 0);
+    gradient1.endPoint = CGPointMake(0.5, 1);
+    gradient1.cornerRadius = 5;
+    [[self.taxButton layer] addSublayer:gradient1];
+    
     self.saveAndCancelView.layer.borderWidth = 1;
     self.saveAndCancelView.layer.cornerRadius = 3;
     self.saveAndCancelView.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];
@@ -455,6 +467,15 @@
     }
     
     return true;
+}
+
+- (IBAction)taxButtonClicked:(id)sender
+{
+    TaxViewController *tvc = [[TaxViewController alloc]init];
+    tvc.modalPresentationStyle = UIModalPresentationFormSheet;
+    tvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    tvc.preferredContentSize = CGSizeMake(520, 344);
+    [self presentViewController:tvc animated:YES completion:nil];
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ForgotPasswordViewController.h"
+#import "Constants.h"
 
 @interface ForgotPasswordViewController ()
 
@@ -15,8 +16,15 @@
 @implementation ForgotPasswordViewController
 
 - (void)viewDidLoad {
+    
+    [_waitView setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
     [super viewDidLoad];
     [self initComponents];
+    
+    [_activityIndicator stopAnimating];
+    [_waitView setHidden:TRUE];
 }
 
 -(void) initComponents
@@ -53,7 +61,43 @@
 
 - (IBAction)sendMeButtonClicked:(id)sender
 {
+    
+    [_waitView setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    [self sendPassword];
+    
+    [_activityIndicator stopAnimating];
+    [_waitView setHidden:TRUE];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)sendPassword
+{
+    NSString *email = _email.text;
+    
+    NSString *post = [NSString stringWithFormat:@"username=%@", email];
+    
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FORGOT_PASSWORD_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+        });
+        
+    }];
+    [postDataTask resume];
 }
 
 @end

@@ -10,9 +10,12 @@
 #import "TotalOrdersTableViewCell.h"
 #import "Constants.h"
 #import "Feedback.h"
+#import "CalendarViewController.h"
+#import "Validation.h"
 
 @interface TotalOrdersViewController ()
-
+@property (nonatomic, retain) NSString *searchString;
+@property (nonatomic, retain) NSMutableArray *searchResultArray;
 @end
 
 @implementation TotalOrdersViewController
@@ -22,18 +25,35 @@
     
     [self.totalOrdersTableView registerNib:[UINib nibWithNibName:@"TotalOrdersTableViewCell" bundle:nil] forCellReuseIdentifier:@"totalOrdersCell"];
     _totalOrderArray = [[NSMutableArray alloc]init];
+    _searchResultArray = [[NSMutableArray alloc]init];
     
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateNormal];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateNormal];
+    [_searchButton setTitle:[NSString stringWithFormat:@"%C", 0xf002] forState:UIControlStateSelected];
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateNormal];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE
              forState:UIControlStateNormal];
-    [_dateFrom setTitle:Constants.GET_FIFTEEN_DAYS_AGO_DATE forState:UIControlStateSelected];
-    [_dateTo setTitle:Constants.GET_TODAY_DATE forState:UIControlStateSelected];
-    
+    [_dateFrom setTitle:Constants.GET_DASHBOARD_FROM_DATE forState:UIControlStateSelected];
+    [_dateTo setTitle:Constants.GET_DASHBOARD_TO_DATE forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self totalOrdersList];
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        [self totalOrdersList];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Orders"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -53,8 +73,10 @@
 
 -(void)totalOrdersList
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    [_totalOrderArray removeAllObjects];
+    
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
@@ -66,7 +88,7 @@
         NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
         NSString *orderType = [totalOrder objectForKey:@"orderType"];
         NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-        NSString *totalAmount = [NSString stringWithFormat:@"%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
+        NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
         NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
         NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
         
@@ -77,7 +99,7 @@
         feedback.amount = totalAmount;
         feedback.email = userEmail;
         feedback.contactNumber = userMobile;
-
+       
         [_totalOrderArray addObject:feedback];
     }
         
@@ -85,25 +107,129 @@
         [_totalOrdersTableView reloadData];
     });
     
-    [self totalOrders];
+    @try
+    {
+        [self totalOrders];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order value"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
 }
 
 -(void)totalOrders
 {
-    NSString *fromDate = @"2018-01-03";
-    NSString *toDate = @"2018-01-26";
+    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
     NSError *error = nil;
-    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
     
-    NSString *orders = [totalOrders[0] objectForKey:@"totalOrders"];
-    NSString *amount = [totalOrders[0] objectForKey:@"totalPrice"];
+    long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
+    double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        _totalOrdersLabel.text = [NSString stringWithFormat:@"%@ of $%@", orders, amount];
+        _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
     });
+}
+
+- (IBAction)dateButtonClicked:(id)sender
+{
+    CalendarViewController * calendarVC = [[CalendarViewController alloc]init];
+    calendarVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    calendarVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    calendarVC.preferredContentSize = CGSizeMake(400, 450);
+    calendarVC.toDateDelegate = _dateTo;
+    calendarVC.fromDateDelegate = _dateFrom;
+    calendarVC.disableFutureDates = true;
+    calendarVC.didDismiss = ^(void){
+        [self datesUpdated];
+    };
+    
+    [self presentViewController:calendarVC animated:YES completion:nil];
+}
+
+-(void)datesUpdated
+{
+  
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    @try
+    {
+        _searchTextField.text = @"";
+        [self totalOrdersList];
+    }@catch(NSException *e)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Orders"];
+        NSLog(@"%@ %@", e.name, e.reason);
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
+}
+
+- (IBAction)searchButtonClicked:(id)sender
+{
+    if ([Validation isEmpty:_searchTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Search field must not be empty"];
+        return;
+    }
+    
+    [self.view endEditing:YES];
+    
+    [_waitView setHidden:FALSE];
+    [_activityIndicator setHidden:FALSE];
+    [_activityIndicator startAnimating];
+    
+    if ( ([[Validation trim:_searchTextField.text] caseInsensitiveCompare:_searchString] == NSOrderedSame) && _searchResultArray.count != 0)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[_searchResultArray objectAtIndex:0]intValue] inSection:0];
+        [_totalOrdersTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+        
+        NSNumber *temp = [NSNumber numberWithInt:[[_searchResultArray objectAtIndex:0]intValue]];
+        [_searchResultArray removeObjectAtIndex:0];
+        [_searchResultArray addObject:temp];
+    }
+    else
+    {
+        _searchString = [Validation trim:_searchTextField.text];
+        [_searchResultArray removeAllObjects];
+        
+        for (int i = 0; i<_totalOrderArray.count; i++)
+        {
+            Feedback *feedback = _totalOrderArray[i];
+            
+            if([feedback.orderNo isEqualToString:_searchString] || [feedback.contactNumber isEqualToString:_searchString] || (feedback.email && [feedback.email caseInsensitiveCompare:_searchString] == NSOrderedSame))
+            {
+                [_searchResultArray addObject:[NSNumber numberWithInt:i]];
+            }
+        }
+        
+        if (_searchResultArray.count == 0)
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No record found"];
+        }
+        else
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[[_searchResultArray objectAtIndex:0]intValue] inSection:0];
+            [_totalOrdersTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+            
+            NSNumber *temp = [NSNumber numberWithInt:[[_searchResultArray objectAtIndex:0]intValue]];
+            [_searchResultArray removeObjectAtIndex:0];
+            [_searchResultArray addObject:temp];
+        }
+    }
+    
+    [_activityIndicator stopAnimating];
+    [_activityIndicator setHidden:TRUE];
+    [_waitView setHidden:TRUE];
+    
 }
 
 @end

@@ -15,7 +15,16 @@
 +(NSString *) LOCATION_ID;
 +(NSString *) GET_TODAY_DATE;
 +(NSString *) GET_FIFTEEN_DAYS_AGO_DATE;
++(NSString *) GET_FIFTEEN_DAYS_FROM_NOW_DATE;
+
++(NSString *) GET_DASHBOARD_FROM_DATE;
++(NSString *) GET_DASHBOARD_TO_DATE;
++(void) SET_DASHBOARD_FROM_DATE:(NSString *)fromDate;
++(void) SET_DASHBOARD_TO_DATE:(NSString *)toDate;
+
 +(NSString *) LOGIN_URL;
++(NSString *)FORGOT_PASSWORD_URL;
+
 +(NSString *) FOOTER_STATISTICS_URL;
 
 /* Dashboard */
@@ -35,7 +44,8 @@
 +(NSString *) UPDATE_RESTAURANT_PROFILE_URL;
 +(NSString *) GET_RESTAURANT_TIME_URL;
 +(NSString *) UPDATE_RESTAURANT_TIME_URL;
-
++(NSString *) GET_TAX_URL;
++(NSString *) UPDATE_TAX_URL;
 
 /* User Management */
 +(NSString *) GET_DELIVERY_PERSON_URL;
@@ -50,7 +60,6 @@
 +(NSString *) INSERT_OFFER_URL;
 +(NSString *) UPDATE_OFFER_URL;
 
-
 /* Menu */
 +(NSString *) GET_CATEGORY_ON_SETTING_URL;
 +(NSString *) GET_ITEM_ON_SETTING_URL;
@@ -64,6 +73,7 @@
 +(NSString *) UPDATE_ORDER_STATUS_URL;
 +(NSString *) UPDATE_ESTIMATED_TIME_URL;
 +(NSString *) ASSIGN_DELIVERY_PERSON_URL;
++(NSString *) CANCEL_ORDER_URL;
 
 /* Menu */
 +(NSString *) GET_CATEGORIES_URL;

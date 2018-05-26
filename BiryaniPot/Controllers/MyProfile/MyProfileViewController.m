@@ -30,6 +30,8 @@
     [[self.updateButton layer] addSublayer:gradient1];
     
     [_checkButton setTitle:[NSString stringWithFormat:@"%C", 0xf00c] forState:UIControlStateNormal];
+    [_updateButton setHidden:TRUE];
+    [_cancelButton setHidden:TRUE];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -140,6 +142,9 @@
     {
         _profilePicture.image = _user.profilePicture;
     }
+    
+    [_updateButton setHidden:FALSE];
+    [_cancelButton setHidden:FALSE];
 }
 
 -(void)updateUser
