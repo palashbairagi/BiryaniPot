@@ -45,7 +45,7 @@
     _quantity.text = item.quantity;
     _price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
     
-    if (isQueue)
+    if (isQueue && item.isSpiceSupported)
     {
         _spiceView.hidden = FALSE;
         

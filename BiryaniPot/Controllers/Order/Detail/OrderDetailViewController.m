@@ -93,7 +93,7 @@
     _order.grandTotal = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"grandTotal"] floatValue]];
     _order.orderTime = [orderDictionary objectForKey:@"orderDate"];
     _order.deliveryType = [orderDictionary objectForKey:@"orderType"];
-    _order.subTotal = [orderDictionary objectForKey:@"subTotal"];
+    _order.subTotal = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"subTotal"] floatValue]];
     _order.tax = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"tax"] floatValue]];
     
     NSArray *itemsArray = [orderDictionary objectForKey:@"items"];
@@ -105,7 +105,7 @@
         NSString *price = [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"];
         NSString *quantity = [itemDictionary objectForKey:@"quantity"];
         NSString *spiceLevel = [itemDictionary objectForKey:@"spiceLevel"];
-        NSString *isSpiceSupported = [itemDictionary objectForKey:@"spiceSupported"];
+        BOOL isSpiceSupported = [[itemDictionary objectForKey:@"spiceSupported"] boolValue];
         
         Item *item = [[Item alloc]init];
         item.itemId = itemId;

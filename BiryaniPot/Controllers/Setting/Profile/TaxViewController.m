@@ -75,39 +75,31 @@
 
 -(void)updateTaxAndDelivery
 {
-    NSString *post = [NSString stringWithFormat:@"locationid=%@&taxpercent=%@&taxname=%@&deliveryfee=%@", Constants.LOCATION_ID, _taxTextField.text, _taxNameTextField.text, _deliveryTextField.text];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_TAX_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?locationid=%@&taxpercent=%@&taxname=%@&deliveryfee=%@", Constants.UPDATE_TAX_URL, Constants.LOCATION_ID, _taxTextField.text, _taxNameTextField.text, _deliveryTextField.text]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
     
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-        NSLog(@"%@ %@", response, resultDic);
+        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if([[resultDic objectForKey:@"status"] intValue] == 1)
+            if ([[result objectForKey:@"status"] intValue] == 1)
             {
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
             else
             {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to update"];
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Update"];
             }
+            
         });
-        
     }];
     [postDataTask resume];
-    
-    
 }
 
 - (IBAction)closeButtonClicked:(id)sender

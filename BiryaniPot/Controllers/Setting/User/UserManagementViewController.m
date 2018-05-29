@@ -85,12 +85,24 @@
         user.userId = [managerDictionary objectForKey:@"managerId"];
         user.name = [managerDictionary objectForKey:@"managerName"];
         user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
-        user.mobile = [managerDictionary objectForKey:@"managerMobile"];
+        user.mobile = [managerDictionary objectForKey:@"phone"];
         user.phone = @"";
         user.email = [managerDictionary objectForKey:@"managerEmail"];
         user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
         
-        [_userArray addObject:user];
+        if([[managerDictionary objectForKey:@"active"] boolValue])
+        {
+            [_userArray addObject:user];
+            
+            if([user.role isEqualToString:@"Manager"])
+            {
+                _managerCount++;
+            }
+            else if([user.role isEqualToString:@"Partner"])
+            {
+                _partnerCount++;
+            }
+        }
     }
 }
 

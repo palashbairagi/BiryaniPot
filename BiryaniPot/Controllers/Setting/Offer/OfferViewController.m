@@ -79,25 +79,21 @@
     
     Offer *offer = _offerArray[indexPath.row];
     
-    if(offer.image == NULL)
+    if (cell.offerImage.image == nil )
     {
         NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
             
+            UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
             NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:offer.imageURL]];
             
-            if (imgData == NULL)
+            if (imgData != NULL)
             {
-                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
-                offer.image = image;
-            }
-            else
-            {
-                UIImage * image = [UIImage imageWithData:imgData];
-                offer.image = image;
+                image = [UIImage imageWithData:imgData];
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.offerCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+                [cell.offerImage setImage:image];
+               // [_offerCollectionView reloadItemsAtIndexPaths:@[indexPath]];
             });
             
         }];

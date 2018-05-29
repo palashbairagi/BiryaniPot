@@ -11,6 +11,8 @@
 		9812951444C8E936B3B8F9BB /* libPods-BiryaniPot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */; };
 		B684B215079974EA3A338769 /* libPods-BiryaniPotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */; };
 		E50227B62030F93C00A51792 /* Validation.m in Sources */ = {isa = PBXBuildFile; fileRef = E50227B52030F93C00A51792 /* Validation.m */; };
+		E508247320BCA46C002A729C /* EditCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E508247120BCA46C002A729C /* EditCategoryViewController.m */; };
+		E508247420BCA46C002A729C /* EditCategoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E508247220BCA46C002A729C /* EditCategoryViewController.xib */; };
 		E511A09720B10DCA001E579A /* TaxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E511A09520B10DCA001E579A /* TaxViewController.m */; };
 		E511A09820B10DCA001E579A /* TaxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E511A09620B10DCA001E579A /* TaxViewController.xib */; };
 		E54204CA202F73990032FB88 /* FeedbackDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E54204C8202F73990032FB88 /* FeedbackDetailViewController.m */; };
@@ -156,6 +158,9 @@
 		D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot.debug.xcconfig"; sourceTree = "<group>"; };
 		E50227B42030F93C00A51792 /* Validation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Validation.h; sourceTree = "<group>"; };
 		E50227B52030F93C00A51792 /* Validation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Validation.m; sourceTree = "<group>"; };
+		E508247020BCA46C002A729C /* EditCategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditCategoryViewController.h; sourceTree = "<group>"; };
+		E508247120BCA46C002A729C /* EditCategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditCategoryViewController.m; sourceTree = "<group>"; };
+		E508247220BCA46C002A729C /* EditCategoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditCategoryViewController.xib; sourceTree = "<group>"; };
 		E511A09420B10DCA001E579A /* TaxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaxViewController.h; sourceTree = "<group>"; };
 		E511A09520B10DCA001E579A /* TaxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaxViewController.m; sourceTree = "<group>"; };
 		E511A09620B10DCA001E579A /* TaxViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaxViewController.xib; sourceTree = "<group>"; };
@@ -391,6 +396,17 @@
 				5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E508247520BCA474002A729C /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				E54204CC202F91CA0032FB88 /* AddCategoryViewController.h */,
+				E54204CD202F91CA0032FB88 /* AddCategoryViewController.m */,
+				E508247020BCA46C002A729C /* EditCategoryViewController.h */,
+				E508247120BCA46C002A729C /* EditCategoryViewController.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		E57BE9F120AA91AB0060F079 /* Calendar */ = {
@@ -657,6 +673,7 @@
 				E5B1CEA12006016A003B816C /* MenuCollectionViewCell.xib */,
 				E5768AD3200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.xib */,
 				E54204CE202F91CA0032FB88 /* AddCategoryViewController.xib */,
+				E508247220BCA46C002A729C /* EditCategoryViewController.xib */,
 				E5C0C88620B4807400807905 /* AddRecommendedItemViewController.xib */,
 			);
 			path = Menu;
@@ -665,14 +682,13 @@
 		E5B1CE992005F989003B816C /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				E508247520BCA474002A729C /* Category */,
 				E5B1CE9A2005F9DF003B816C /* MenuViewController.h */,
 				E5B1CE9B2005F9DF003B816C /* MenuViewController.m */,
 				E5B1CE9F2006016A003B816C /* MenuCollectionViewCell.h */,
 				E5B1CEA02006016A003B816C /* MenuCollectionViewCell.m */,
 				E5768AD1200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.h */,
 				E5768AD2200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.m */,
-				E54204CC202F91CA0032FB88 /* AddCategoryViewController.h */,
-				E54204CD202F91CA0032FB88 /* AddCategoryViewController.m */,
 				E5C0C88420B4807400807905 /* AddRecommendedItemViewController.h */,
 				E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */,
 			);
@@ -1116,6 +1132,7 @@
 				E5EFC032201C3DF20017128A /* MyProfileViewController.xib in Resources */,
 				E54204CB202F73990032FB88 /* FeedbackDetailViewController.xib in Resources */,
 				E5FB0B6E1FF0759C00771B40 /* AddUserViewController.xib in Resources */,
+				E508247420BCA46C002A729C /* EditCategoryViewController.xib in Resources */,
 				E5F359421FEDEE9500470842 /* OfferViewController.xib in Resources */,
 				E5F359381FEDEE5200470842 /* OrderViewController.xib in Resources */,
 				E5F358F61FEDCEC700470842 /* Assets.xcassets in Resources */,
@@ -1338,6 +1355,7 @@
 				E5BCA97E1FF431DC00D28878 /* Order.m in Sources */,
 				E5F359321FEDEE2C00470842 /* DashboardViewController.m in Sources */,
 				E5A3BB1D20154EF600840BF8 /* SelectTimeViewController.m in Sources */,
+				E508247320BCA46C002A729C /* EditCategoryViewController.m in Sources */,
 				E5F359411FEDEE9500470842 /* OfferViewController.m in Sources */,
 				E5985D88201D7EC100C200F4 /* Category.m in Sources */,
 				E5F359371FEDEE5200470842 /* OrderViewController.m in Sources */,

@@ -87,6 +87,14 @@
     [self.email.layer addSublayer:borderEM];
     self.email.layer.masksToBounds = YES;
     
+    CALayer *borderPass = [CALayer layer];
+    borderPass.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
+    borderPass.frame = CGRectMake(0, self.password.frame.size.height - borderWidth, self.password.frame.size.width, self.password.frame.size.height);
+    borderPass.borderWidth = borderWidth;
+    self.password.borderStyle = UITextBorderStyleNone;
+    [self.password.layer addSublayer:borderPass];
+    self.password.layer.masksToBounds = YES;
+    
     self.saveButton.layer.cornerRadius = 5;
     self.saveButton.layer.borderWidth = 1;
     self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
@@ -128,6 +136,13 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     _profilePicture.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+   
+    NSURL *imageURL = [info valueForKey:UIImagePickerControllerReferenceURL];
+    PHAsset *phAsset = [[PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil] lastObject];
+    NSString *imageName = [phAsset valueForKey:@"filename"];
+    
+    _extension = [imageName pathExtension];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -174,11 +189,150 @@
             [self saveDeliveryPerson];
         } else
         {
+            if ([_roleLabel.text isEqualToString:@"Manager"] && _delegate.managerCount > 0)
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Can't add more than one manager"];
+                return;
+            }
+            else if([_roleLabel.text isEqualToString:@"Partner"] && _delegate.partnerCount > 1)
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Can't add more than two partner"];
+                return;
+            }
+            
             [self saveManager];
         }
         
         [self dismissViewControllerAnimated:NO completion:nil];
     }
+}
+
+-(void)saveDeliveryPerson
+{
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text],  [Validation trim: _lastName.text]];
+    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
+    NSString *imgURL = @"xyz.jpeg";
+    NSString *license = [NSString stringWithFormat:@"%@", [Validation trim:_licenceNo.text]];
+    
+    NSString *post = [NSString stringWithFormat:@"dboymobile=%@&dboy_img_url=%@&dboy_email=%@&licensenumber=%@&dboyname=%@&loc_id=%@", mobile, imgURL, email, license, name, Constants.LOCATION_ID];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_DELIVERY_PERSON_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate.userArray removeAllObjects];
+            [_delegate getManagers];
+            [_delegate getDeliveryPersons];
+            [_delegate.userTableView reloadData];
+        });
+        
+    }];
+    [postDataTask resume];
+}
+
+-(void)saveManager
+{
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text], [Validation trim:_lastName.text]];
+    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
+    NSString *role = [NSString stringWithFormat:@"%@", [Validation trim:_roleLabel.text]];
+    NSString *password = [NSString stringWithFormat:@"%@", [Validation trim:_password.text]];
+    NSString *superUser = [_appDelegate.userDefaults objectForKey:@"userId"];
+    
+    if ([role isEqualToString:@"Manager"]) role = @"3";
+    else role = @"175";
+    
+    if(_extension == NULL) _extension = @"jpg";
+    else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Picture must be in the jpg format"];
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_MANAGER_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    NSMutableData *body = [NSMutableData data];
+    
+    NSDictionary *params = @{
+                                 @"managername" : name,
+                                 @"email" : email,
+                                 @"mobile" : mobile,
+                                 @"managerpassword" : password,
+                                 @"superuser"  : superUser,
+                                 @"locationid"   : Constants.LOCATION_ID,
+                                 @"role"  : role
+                             };
+    
+    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    NSData *imageData = UIImageJPEGRepresentation(_profilePicture.image, 1.0);
+    NSString *fieldName = @"file";
+    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",name];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:imageData];
+    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    request.HTTPBody = body;
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"%@ %@", result, response);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate getManagers];
+            [_delegate getDeliveryPersons];
+            [_delegate.userTableView reloadData];
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                [alertController dismissViewControllerAnimated:YES completion:nil];
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }];
+            
+            [alertController addAction:ok];
+            
+            [self presentViewController:alertController animated:YES completion:nil];
+        });
+        
+    }];
+    [task resume];
+
 }
 
 
@@ -266,80 +420,6 @@
     }
     
     return true;
-}
-
--(void)saveDeliveryPerson
-{
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text],  [Validation trim: _lastName.text]];
-    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
-    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
-    NSString *imgURL = @"xyz.jpeg";
-    NSString *license = [NSString stringWithFormat:@"%@", [Validation trim:_licenceNo.text]];
-    
-    NSString *post = [NSString stringWithFormat:@"dboymobile=%@&dboy_img_url=%@&dboy_email=%@&licensenumber=%@&dboyname=%@&loc_id=%@", mobile, imgURL, email, license, name, Constants.LOCATION_ID];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:NO];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_DELIVERY_PERSON_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate.userArray removeAllObjects];
-            [_delegate getManagers];
-            [_delegate getDeliveryPersons];
-            [_delegate.userTableView reloadData];
-        });
-        
-    }];
-    [postDataTask resume];
-}
-
--(void)saveManager
-{
-    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [Validation trim:_firstName.text], [Validation trim:_lastName.text]];
-    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
-    NSString *email = [NSString stringWithFormat:@"%@", [Validation trim:_email.text]];
-    NSString *role = [NSString stringWithFormat:@"%@", [Validation trim:_roleLabel.text]];
-    
-    if ([role isEqualToString:@"Manager"]) role = @"3";
-    else role = @"175";
-    
-    NSString *imgURL = @"xyz.jpeg";
-    NSString *superUser = [_appDelegate.userDefaults objectForKey:@"userId"];
-    NSString *password = @"12345";
-    
-    NSString *post = [NSString stringWithFormat:@"managername=%@&email=%@&mobile=%@&manager_pw=%@&superUser=%@&role=%@&imgurl=%@&locationId=%@", name, email, mobile, password, superUser, role, imgURL, Constants.LOCATION_ID];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_MANAGER_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate.userArray removeAllObjects];
-            [_delegate getManagers];
-            [_delegate getDeliveryPersons];
-            [_delegate.userTableView reloadData];
-        });
-        
-    }];
-    [postDataTask resume];
 }
 
 @end

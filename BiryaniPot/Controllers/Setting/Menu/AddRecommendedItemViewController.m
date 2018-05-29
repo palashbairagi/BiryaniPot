@@ -99,50 +99,28 @@
 {
     [_categoryArray removeAllObjects];
     
-    NSError *error;
-    
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_CATEGORY_ON_SETTING_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@??loc_id=%@&filterout=0", Constants.GET_CATEGORIES_URL, Constants.LOCATION_ID]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:@"" forKey:@"searchStr"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSDictionary *categoriesDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *categoriesArray= [resultDictionary objectForKey:@"categories"];
         
-        for(NSDictionary *categoryDictionary in [categoriesDictionary objectForKey:@"categories"])
+        for(NSDictionary *categoryDictionary in categoriesArray)
         {
             Category *category = [[Category alloc]init];
-            category.categoryName = [categoryDictionary objectForKey:@"catName"];
-            category.categoryId = [categoryDictionary objectForKey:@"catId"];
-            category.imageURL = [categoryDictionary objectForKey:@"imageUrl"];
-            category.menuId = [categoryDictionary objectForKey:@"menuId"];
+            category.categoryId = [categoryDictionary objectForKey:@"categoryId"];
+            category.categoryName = [categoryDictionary objectForKey:@"categoryName"];
+            category.imageURL = [categoryDictionary objectForKey:@"categoryUrl"];
+            category.isNonVeg = [categoryDictionary objectForKey:@"isNonVegSupported"];
             
             [_categoryArray addObject:category];
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_categoryTableView reloadData];
-            
-            if (_categoryArray.count > 0)
-            {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-                [_categoryTableView selectRowAtIndexPath:index animated:YES scrollPosition:UITableViewScrollPositionTop];
-                [self tableView:_categoryTableView didSelectRowAtIndexPath:index];
-            }
-            
-        });
         
     }];
     [postDataTask resume];
@@ -156,7 +134,7 @@
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_ITEM_ON_SETTING_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_ITEMS_BY_CATEGORY_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];

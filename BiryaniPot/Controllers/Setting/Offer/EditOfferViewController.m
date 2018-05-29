@@ -118,22 +118,21 @@
     _limitPerCustomer.text = [NSString stringWithFormat:@"%@", _offer.maxTimes];
     _maxUsageLimit.text = [NSString stringWithFormat:@"%@", _offer.maxUsageLimit];
     
-    if(_offer.image == NULL)
+    if (_offer.image == nil )
     {
         NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
             
+            UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
             NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_offer.imageURL]];
             
-            if (imgData == NULL)
+            if (imgData != NULL)
             {
-                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
-                _offer.image = image;
+                image = [UIImage imageWithData:imgData];
             }
-            else
-            {
-                UIImage * image = [UIImage imageWithData:imgData];
-                _offer.image = image;
-            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_offerImageView setImage:image];
+            });
             
         }];
         
@@ -160,9 +159,13 @@
         NSString *maxDiscount = [NSString stringWithFormat:@"%@", _maxDiscount.text];
         NSString *maxTimes = [NSString stringWithFormat:@"%@", _limitPerCustomer.text];
         NSString *usageLimit = [NSString stringWithFormat:@"%@", _maxUsageLimit.text];
-        NSString *promoPercent = [NSString stringWithFormat:@"%@", _offerValue.text];
         
         if(_extension == NULL) _extension = @"jpg";
+        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
+        }
+        
         NSString *imgName = [NSString stringWithFormat:@"%@.%@", promoCode, _extension];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_OFFER_URL]];
@@ -170,7 +173,8 @@
         
         NSMutableData *body = [NSMutableData data];
         
-        NSDictionary *params = @{@"codename" : promoCode,
+        NSDictionary *params = @{@"code_id" : _offer.offerId,
+                                 @"codename" : promoCode,
                                  @"code_description" : offerDescription,
                                  @"validfrom" : validFrom,
                                  @"validtill" : validTill,
@@ -178,8 +182,7 @@
                                  @"maxdisc"   : maxDiscount,
                                  @"maxtimes"  : maxTimes,
                                  @"usage_limit" : usageLimit,
-                                 @"coupon_percent" : promoPercent,
-                                 @"file_name" : imgName,
+                                 @"is_active"  : @"1",
                                  @"loc_id"    : Constants.LOCATION_ID
                                  };
         
@@ -217,13 +220,21 @@
             }
             
             NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"result = %@", result);
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate.offerArray removeAllObjects];
                 [_delegate getOffers];
                 [_delegate.offerCollectionView reloadData];
-                [self dismissViewControllerAnimated:NO completion:nil];
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                    [alertController dismissViewControllerAnimated:YES completion:nil];
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }];
+                
+                [alertController addAction:ok];
+                
+                [self presentViewController:alertController animated:YES completion:nil];
             });
             
         }];

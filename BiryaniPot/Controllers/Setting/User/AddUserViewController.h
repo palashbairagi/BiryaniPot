@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "UserManagementViewController.h"
 #import "AppDelegate.h"
+#import <Photos/Photos.h>
 
 @interface AddUserViewController : UIViewController <UINavigationControllerDelegate,UIImagePickerControllerDelegate, MKDropdownMenuDataSource, MKDropdownMenuDelegate, NSURLSessionDelegate>
 
@@ -25,12 +26,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
 @property (weak, nonatomic) IBOutlet MKDropdownMenu *role;
 @property (weak, nonatomic) IBOutlet UILabel *roleLabel;
-
 @property (weak, nonatomic) IBOutlet UITextField *mobile;
 @property (weak, nonatomic) IBOutlet UITextField *licenceNo;
 @property (weak, nonatomic) IBOutlet UILabel *licenceNoLabel;
-
 @property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (nonatomic, retain) NSString *extension;
 
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;

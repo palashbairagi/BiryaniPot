@@ -32,10 +32,7 @@
     [_checkButton setTitle:[NSString stringWithFormat:@"%C", 0xf00c] forState:UIControlStateNormal];
     [_updateButton setHidden:TRUE];
     [_cancelButton setHidden:TRUE];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
+    
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] init];
     backButton.title = @"My Profile";
     self.navigationItem.backBarButtonItem = backButton;
@@ -53,9 +50,10 @@
 {
     if([self isValidate])
     {
+       if(!([[Validation trim:_mobile.text] isEqualToString:_user.phone]))
         [self updateUser];
         
-        if([_checkButtonStatus isEqualToString:@"Checked"])
+       if([_checkButtonStatus isEqualToString:@"Checked"])
         {
             [self changePassword];
         }
@@ -77,9 +75,10 @@
     NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
     NSError *error = nil;
-    NSDictionary *managersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSDictionary *managerListDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    NSArray *managersArray = [managerListDictionary objectForKey:@"managersList"];
     
-    for (NSDictionary *managerDictionary in managersDictionary)
+    for (NSDictionary *managerDictionary in managersArray)
     {
         @try
         {
@@ -92,7 +91,7 @@
             {
                 _user.name = [managerDictionary objectForKey:@"managerName"];
                 _user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
-                _user.mobile = [managerDictionary objectForKey:@"managerMobile"];
+                _user.mobile = [managerDictionary objectForKey:@"phone"];
                 _user.phone = @"";
                 _user.email = [managerDictionary objectForKey:@"managerEmail"];
                 _user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
@@ -149,28 +148,89 @@
 
 -(void)updateUser
 {
-    NSString *post = [NSString stringWithFormat:@"manager_id=%@&mobile=%@", _user.userId, _mobile.text];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSString *managerId = _user.userId;
+    NSString *name = _user.name;
+    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+    NSString *email = _user.email;
+    NSString *role = _user.role;
+    
+    if ([role isEqualToString:@"Manager"]) role = @"3";
+    else role = @"175";
+    
+    if(_extension == NULL) _extension = @"jpg";
+    else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
+    }
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_PROFILE]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
-    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:postData];
+    NSMutableData *body = [NSMutableData data];
     
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        //NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSDictionary *params = @{
+                             @"manager_id" : managerId,
+                             @"managername" : name,
+                             @"email" : email,
+                             @"mobile" : mobile,
+                             @"locationid"   : Constants.LOCATION_ID,
+                             @"role"  : role
+                             };
+    
+    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    NSData *imageData = UIImageJPEGRepresentation(_profilePicture.image, 1.0);
+    NSString *fieldName = @"file";
+    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",name];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:imageData];
+    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    request.HTTPBody = body;
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"%@ %@", result, response);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+            if ([result isEqualToString:@"File saved"])
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Profile Updated"];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Update"];
+            }
         });
         
     }];
-    
-    [postDataTask resume];
+    [task resume];
+
 }
 
 -(void)changePassword
@@ -233,6 +293,32 @@
         _confirmPassword.text = @"";
         _password.text = @"";
     }
+}
+
+- (IBAction)profilePictureTapped:(id)sender
+{
+    UIImagePickerController *picker=[[UIImagePickerController alloc]init];
+    picker.sourceType=UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate=self;
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    _profilePicture.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    
+    NSURL *imageURL = [info valueForKey:UIImagePickerControllerReferenceURL];
+    PHAsset *phAsset = [[PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil] lastObject];
+    NSString *imageName = [phAsset valueForKey:@"filename"];
+    
+    _extension = [imageName pathExtension];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(BOOL)isValidate{

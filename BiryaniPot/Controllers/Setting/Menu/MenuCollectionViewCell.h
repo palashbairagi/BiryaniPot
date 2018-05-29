@@ -12,7 +12,10 @@
 @interface MenuCollectionViewCell : UICollectionViewCell <NSURLSessionDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel *label;
+
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
+
 @property (nonatomic, retain) MenuViewController *delegate;
 
 @end 

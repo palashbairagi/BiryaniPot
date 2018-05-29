@@ -16,6 +16,8 @@
 @property (nonatomic, retain) NSMutableArray * userArray;
 @property (nonatomic, retain) AppDelegate *appDelegate;
 
+@property int managerCount, partnerCount;
+
 -(void)getDeliveryPersons;
 -(void)getManagers;
 @end

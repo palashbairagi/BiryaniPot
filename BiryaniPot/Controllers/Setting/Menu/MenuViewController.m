@@ -15,7 +15,7 @@
 #import "AddRecommendedItemViewController.h"
 
 @interface MenuViewController ()
-
+@property int itemTypeIndex;
 @end
 
 @implementation MenuViewController
@@ -63,6 +63,9 @@
     gradient3.cornerRadius = 5;
     [[self.cancelButton layer]addSublayer:gradient3];
     
+    self.type.layer.masksToBounds = YES;
+    self.type.backgroundDimmingOpacity = 0.0;
+    
     [self.recommendedItemCollectionView registerNib:[UINib nibWithNibName:@"RecommendedItemsCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"recommendedItemsCell"];
     [self.menuCollectionView registerNib:[UINib nibWithNibName:@"MenuCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"categoryCell"];
     [self.deleteItemButton setTitle:[NSString stringWithFormat:@"%C", 0xf014] forState:UIControlStateNormal];
@@ -72,12 +75,15 @@
     _recommendedItemArray = [[NSMutableArray alloc]init];
     _categorySearchArray = [[NSMutableArray alloc]init];
     _itemSearchArray = [[NSMutableArray alloc]init];
+    _typeArray = [NSArray arrayWithObjects:@"Breakfast", @"Lunch", @"Dessert/Snacks", @"Dinner", nil ];
+    
     _categoryQueue = [[NSOperationQueue alloc] init];
     
     for (int i = 0; i<10; i++) {
         if (i%2 ==0)[_recommendedItemArray addObject:[NSString stringWithFormat:@"Item %d", i]];
         else [_recommendedItemArray addObject:[NSString stringWithFormat:@"RecommendedItem %d", i]];
     }
+    
     [_recommendedItemArray addObject:@"Add"];
     
     _veg = TRUE;
@@ -88,6 +94,13 @@
     [self disableAllButtons];
     
     [self getCategory];
+    
+    if (_categoryArray.count > 0)
+    {
+        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+        [_menuCollectionView selectItemAtIndexPath:index animated:true scrollPosition:UICollectionViewScrollPositionNone];
+        [self collectionView:_menuCollectionView didSelectItemAtIndexPath:index];
+    }
 }
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath
@@ -104,6 +117,7 @@
         
         cell.delegate = self;
         cell.deleteButton.tag = indexPath.row;
+        cell.editButton.tag = indexPath.row;
         
         Category *category = _categorySearchArray[indexPath.row];
         
@@ -257,13 +271,15 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    _status = @"update";
+    
     Item *item = _itemSearchArray[indexPath.row];
     
     if (item.name == NULL)item.name = @"";
     else _name.text = item.name;
         
     if (item.price == NULL)item.price = @"";
-    //else _price.text = item.price;
+    else _price.text = item.price;
         
     if (item.discount == NULL)item.discount = @"";
     else _discount.text = item.discount;
@@ -292,6 +308,9 @@
         _isVegButton.backgroundColor = [UIColor whiteColor];
         _veg = FALSE;
     }
+    
+    int index = [item.itemTypeId intValue];
+    self.typeLabel.text = _typeArray[index-1];
         
     if (item.image == nil )
     {
@@ -315,49 +334,54 @@
     }
 }
 
-- (IBAction)addCategoryButtonClicked:(id)sender {
-    AddCategoryViewController * addCategoryVC = [[AddCategoryViewController alloc]init];
-    addCategoryVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    addCategoryVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    addCategoryVC.preferredContentSize = CGSizeMake(540, 500);
-    addCategoryVC.delegate = self;
+-(NSInteger)numberOfComponentsInDropdownMenu:(MKDropdownMenu *)dropdownMenu
+{
+    return 1;
+}
+
+-(NSInteger)dropdownMenu:(MKDropdownMenu *)dropdownMenu numberOfRowsInComponent:(NSInteger)component
+{
+    return _typeArray.count;
+}
+
+- (NSAttributedString *)dropdownMenu:(MKDropdownMenu *)dropdownMenu attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return [[NSAttributedString alloc] initWithString:_typeArray[row] attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Roboto" size:16.0], NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
     
-    [self presentViewController:addCategoryVC animated:YES completion:nil];
+}
+
+- (void)dropdownMenu:(MKDropdownMenu *)dropdownMenu didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    
+    _itemTypeIndex = row;
+    NSString *selectedOption = self.typeArray[row];
+    self.typeLabel.text = selectedOption;
+    
+    [dropdownMenu closeAllComponentsAnimated:YES];
 }
 
 -(void)getCategory
 {
     [_categoryArray removeAllObjects];
-    
-    NSError *error;
+    [_categorySearchArray removeAllObjects];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_CATEGORY_ON_SETTING_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&filterout=0", Constants.GET_CATEGORIES_URL, Constants.LOCATION_ID]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:@"" forKey:@"searchStr"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
+
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSDictionary *categoriesDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *categoriesArray= [resultDictionary objectForKey:@"categories"];
         
-        for(NSDictionary *categoryDictionary in [categoriesDictionary objectForKey:@"categories"])
+        for(NSDictionary *categoryDictionary in categoriesArray)
         {
             Category *category = [[Category alloc]init];
-            category.categoryName = [categoryDictionary objectForKey:@"catName"];
-            category.categoryId = [categoryDictionary objectForKey:@"catId"];
-            category.imageURL = [categoryDictionary objectForKey:@"imageUrl"];
-            category.menuId = [categoryDictionary objectForKey:@"menuId"];
+            category.categoryId = [categoryDictionary objectForKey:@"categoryId"];
+            category.categoryName = [categoryDictionary objectForKey:@"categoryName"];
+            category.imageURL = [categoryDictionary objectForKey:@"categoryUrl"];
+            category.isNonVeg = [categoryDictionary objectForKey:@"isNonVegSupported"];
             
             [_categoryArray addObject:category];
             [_categorySearchArray addObject:category];
@@ -365,14 +389,6 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [_menuCollectionView reloadData];
-            
-            if (_categoryArray.count > 0)
-            {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-                [_menuCollectionView selectItemAtIndexPath:index animated:true scrollPosition:UICollectionViewScrollPositionNone];
-                [self collectionView:_menuCollectionView didSelectItemAtIndexPath:index];
-            }
-            
         });
         
     }];
@@ -382,54 +398,46 @@
 -(void)getItem: (NSString *)categoryId
 {
     [_itemArray removeAllObjects];
-    
-    NSError *error;
+    [_itemSearchArray removeAllObjects];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_ITEM_ON_SETTING_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?category_id=%@", Constants.GET_ITEMS_BY_CATEGORY_URL, categoryId]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:categoryId forKey:@"catId"];
-    [paramDict setValue:@"" forKey:@"searchStr"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSDictionary *itemsDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    
-        for(NSDictionary *itemDictionary in [itemsDictionary objectForKey:@"items"])
+        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *itemArray = [resultDictionary objectForKey:@"items"];
+        
+        for(NSDictionary *itemDictionary in itemArray)
         {
             Item *item = [[Item alloc]init];
             item.itemId = [itemDictionary objectForKey:@"itemId"];
             item.name = [itemDictionary objectForKey:@"itemName"];
-            item.price = [itemDictionary objectForKey:@"actuvalPrice"];
-            item.discount = [itemDictionary objectForKey:@"discontPrice"];
-            item.imageURL = [itemDictionary objectForKey:@"imageUrl"];
-            item.detail = [itemDictionary objectForKey:@"description"];
+            item.price = [NSString stringWithFormat:@"%@", [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"]];
+            item.discount = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"discount"]];
+            item.imageURL = [itemDictionary objectForKey:@"itemImageUrl"];
+            item.detail = [itemDictionary objectForKey:@"itemDescription"];
+            item.itemTypeId = [itemDictionary objectForKey:@"itemTypeId"];
             
-            if([itemDictionary objectForKey:@"veg"] == NULL)
+            if([itemDictionary objectForKey:@"isVeg"] == NULL)
             {
                 item.isVeg = FALSE;
             }
-            else if(([[itemDictionary objectForKey:@"veg"]intValue] == 1))
+            else if(([[itemDictionary objectForKey:@"isVeg"] intValue] == 1))
             {
                 item.isVeg = TRUE;
             }
             else item.isVeg = FALSE;
             
-            if([itemDictionary objectForKey:@"spiceSuppot"] == NULL)
+            if([itemDictionary objectForKey:@"spiceSupported"] == NULL)
             {
                 item.isSpiceSupported = FALSE;
             }
-            else if(([[itemDictionary objectForKey:@"spiceSuppot"]intValue] == 1))
+            else if(([[itemDictionary objectForKey:@"spiceSupported"]intValue] == 1))
             {
                 item.isSpiceSupported = TRUE;
             }
@@ -455,85 +463,13 @@
     [postDataTask resume];
 }
 
-- (IBAction)isVegButtonClicked:(id)sender
-{
-    if(_veg)
-    {
-        _isVegButton.backgroundColor = [UIColor whiteColor];
-        _veg = FALSE;
-    }
-    else
-    {
-        _isVegButton.backgroundColor = [UIColor colorWithRed:0.0 green:109.0/256 blue:1.0 alpha:1.0];
-        _veg = TRUE;
-    }
-}
-
-- (IBAction)spiceSupportButtonClicked:(id)sender
-{
-    if(_spice)
-    {
-        _spiceSupportButton.backgroundColor = [UIColor whiteColor];
-        _spice = FALSE;
-    }
-    else
-    {
-        _spiceSupportButton.backgroundColor = [UIColor colorWithRed:0.0 green:109.0/256 blue:1.0 alpha:1.0];
-        _spice = TRUE;
-    }
-}
-
-- (IBAction)addButtonClicked:(id)sender
-{
-    _name.text = @"";
-    _price.text = @"";
-    _discount.text = @"";
-    _isVegButton.backgroundColor = [UIColor whiteColor];
-    _veg = FALSE;
-    _spiceSupportButton.backgroundColor = [UIColor whiteColor];
-    _spice = FALSE;
-    _detail.text = @"Description";
-    _image.image = [UIImage imageNamed:@"biryanipotusa"];
-    [self enableAllButtons];
-}
-
--(void) disableAllButtons
-{
-    [_saveButton setEnabled:NO];
-    [_cancelButton setEnabled:NO];
-    
-    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.saveButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    
-    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-}
-
--(void) enableAllButtons
-{
-    [_saveButton setEnabled:YES];
-    [_cancelButton setEnabled:YES];
-    
-    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-}
-
 -(void)addItem
 {
-    NSString *imgURL = @"xyz.jpeg";
     NSString *itemName = _name.text;
-    NSString *itemDetail = _detail.text;
     NSString *price = _price.text;
     NSString *discount = _discount.text;
-    
-    if(discount == nil)discount = 0;
-    
-    NSArray *selectedItem = [_menuCollectionView indexPathsForSelectedItems];
-    Category *category = _categoryArray[0];
-    
+    NSString *itemDetail = _detail.text;
+
     NSString *veg;
     if (_veg == FALSE)veg =@"0";
     else veg = @"1";
@@ -542,44 +478,89 @@
     if (_spice == FALSE)spice =@"0";
     else spice = @"1";
     
-    NSString *post = [NSString stringWithFormat:@"item_name=%@&item_img_url=%@&item_description=%@&category_id=%@&item_type_id=2&amount=%@&discount=%@&is_veg=%@&is_spice_supported=%@&is_active=1&loc_id=%@&rec_items=0", itemName, imgURL, itemDetail, category.categoryId, price, discount, veg, spice, Constants.LOCATION_ID];
+    NSLog(@"component %ld", (long)_type.selectedComponent);
+    NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
     
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
+    NSIndexPath *indexPath = selectedIndex[0];
+    Category *category = _categoryArray[indexPath.row];
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_ITEM_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-
+    
+    NSMutableData *body = [NSMutableData data];
+    
+    NSDictionary *params = @{
+                             @"item_name" : itemName,
+                             @"item_description" : itemDetail,
+                             @"category_id" : category.categoryId,
+                             @"item_type_id" : typeId,
+                             @"amount" : price,
+                             @"discount" : discount,
+                             @"is_veg" : veg,
+                             @"is_spice_supported" : spice,
+                             @"is_active" : @"1",
+                             @"loc_id" : Constants.LOCATION_ID
+                             };
+    NSLog(@"%@", params);
+    
+    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    
     [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-
-        });
-
+    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
     }];
-    [postDataTask resume];
-}
+    
+    NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
+    NSString *fieldName = @"file";
+    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:imageData];
+    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    request.HTTPBody = body;
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([result isEqualToString:@"Item created"])
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Created"];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
+            }
+        });
+        
+    }];
+    [task resume];
+} 
 
 -(void)updateItem
 {
-    NSIndexPath *indexPath = [_itemTableView indexPathForSelectedRow];
-    Item * item = _itemArray[indexPath.row];
-    
-    NSString *imgURL = @"xyz.jpeg";
     NSString *itemName = _name.text;
-    NSString *itemDetail = _detail.text;
     NSString *price = _price.text;
     NSString *discount = _discount.text;
-    
-    if(discount == nil)discount = 0;
-    
-    NSArray *selectedItem = [_menuCollectionView indexPathsForSelectedItems];
-    Category *category = _categoryArray[0];
+    NSString *itemDetail = _detail.text;
     
     NSString *veg;
     if (_veg == FALSE)veg =@"0";
@@ -589,27 +570,84 @@
     if (_spice == FALSE)spice =@"0";
     else spice = @"1";
     
-    NSString *post = [NSString stringWithFormat:@"item_id=%@&item_name=%@&item_img_url=%@&item_description=%@&category_id=%@&item_type_id=2&amount=%@&discount=%@&is_veg=%@&is_spice_supported=%@&is_active=1", item.itemId, itemName, imgURL, itemDetail, category.categoryId, price, discount, veg, spice];
+    NSLog(@"component %ld", (long)_type.selectedComponent);
+    NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
     
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
+    NSIndexPath *indexPath = selectedIndex[0];
+    Category *category = _categorySearchArray[indexPath.row];
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    indexPath = [_itemTableView indexPathForSelectedRow];
+    Item *item = _itemSearchArray[indexPath.row];
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_ITEM_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
+    NSMutableData *body = [NSMutableData data];
     
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSDictionary *params = @{
+                             @"item_id" : item.itemId,
+                             @"item_name" : itemName,
+                             @"item_description" : itemDetail,
+                             @"category_id" : category.categoryId,
+                             @"item_type_id" : typeId,
+                             @"amount" : price,
+                             @"discount" : discount,
+                             @"is_veg" : veg,
+                             @"is_spice_supported" : spice,
+                             @"is_active" : @"1"
+                             };
+    NSLog(@"%@", params);
+    
+    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
+    NSString *fieldName = @"file";
+    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:imageData];
+    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    request.HTTPBody = body;
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+            if ([result isEqualToString:@"Item created"])
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Created"];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
+            }
         });
         
     }];
-    [postDataTask resume];
+    [task resume];
 }
 
 -(void)deleteItem
@@ -659,9 +697,122 @@
     [postDataTask resume];
 }
 
+
+-(void) disableAllButtons
+{
+    [_saveButton setEnabled:NO];
+    [_cancelButton setEnabled:NO];
+    
+    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+    [self.saveButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    
+    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+    [self.cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+}
+
+-(void) enableAllButtons
+{
+    [_saveButton setEnabled:YES];
+    [_cancelButton setEnabled:YES];
+    
+    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+    [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+    [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+}
+
+- (IBAction)uploadPhotoTapped:(id)sender
+{
+    UIImagePickerController *picker=[[UIImagePickerController alloc]init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate=self;
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    _image.image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    
+    NSURL *imageURL = [info valueForKey:UIImagePickerControllerReferenceURL];
+    PHAsset *phAsset = [[PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil] lastObject];
+    NSString *imageName = [phAsset valueForKey:@"filename"];
+    
+    _extension = [imageName pathExtension];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)addCategoryButtonClicked:(id)sender {
+    AddCategoryViewController * addCategoryVC = [[AddCategoryViewController alloc]init];
+    addCategoryVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    addCategoryVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    addCategoryVC.preferredContentSize = CGSizeMake(540, 500);
+    addCategoryVC.delegate = self;
+    
+    [self presentViewController:addCategoryVC animated:YES completion:nil];
+}
+
+
+- (IBAction)isVegButtonClicked:(id)sender
+{
+    if(_veg)
+    {
+        _isVegButton.backgroundColor = [UIColor whiteColor];
+        _veg = FALSE;
+    }
+    else
+    {
+        _isVegButton.backgroundColor = [UIColor colorWithRed:0.0 green:109.0/256 blue:1.0 alpha:1.0];
+        _veg = TRUE;
+    }
+}
+
+- (IBAction)spiceSupportButtonClicked:(id)sender
+{
+    if(_spice)
+    {
+        _spiceSupportButton.backgroundColor = [UIColor whiteColor];
+        _spice = FALSE;
+    }
+    else
+    {
+        _spiceSupportButton.backgroundColor = [UIColor colorWithRed:0.0 green:109.0/256 blue:1.0 alpha:1.0];
+        _spice = TRUE;
+    }
+}
+
+- (IBAction)addButtonClicked:(id)sender
+{
+    _name.text = @"";
+    _price.text = @"";
+    _discount.text = @"";
+    _isVegButton.backgroundColor = [UIColor whiteColor];
+    _veg = FALSE;
+    _spiceSupportButton.backgroundColor = [UIColor whiteColor];
+    _spice = FALSE;
+    _detail.text = @"";
+    _typeLabel.text = @"Select";
+    _image.image = [UIImage imageNamed:@"biryanipotusa"];
+    [self enableAllButtons];
+    _status = @"add";
+}
+
 - (IBAction)saveButtonClicked:(id)sender
 {
-    [self updateItem];
+    if ([_status isEqualToString:@"add"])
+    {
+        [self addItem];
+    }
+    else
+    {
+        [self updateItem];
+    }
 }
 
 - (IBAction)cancelButtonClicked:(id)sender

@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Validation.h"
 
 @interface ForgotPasswordViewController : UIViewController <NSURLSessionDelegate>
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @property (weak, nonatomic) IBOutlet UITextField *email;
 @property (weak, nonatomic) IBOutlet UIButton *sendMePassword;
 @property (weak, nonatomic) IBOutlet UIView *headerView;
+
+@property (weak, nonatomic) IBOutlet UILabel *otpLabel;
+@property (nonatomic, retain) NSString  *sessionId;
 
 @end

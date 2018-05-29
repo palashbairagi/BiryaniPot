@@ -34,7 +34,8 @@
 
 -(void)getImages
 {
-    NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=102",Constants.GET_LANDING_PAGES_URL]];
+    [_landingImageArray removeAllObjects];
+    NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=%@",Constants.GET_LANDING_PAGES_URL, Constants.ORGANIZATION_ID]];
     NSData *responseJSONData = [NSData dataWithContentsOfURL:pagesURL];
     NSError *error = nil;
     NSDictionary *pagesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
@@ -65,6 +66,7 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     landingImage.image = image;
+                    cell.image.tag = indexPath.row;
                 });
             }
             else
@@ -72,6 +74,7 @@
                 UIImage * image = [UIImage imageWithData:imgData];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     landingImage.image = image;
+                    cell.image.tag = indexPath.row;
                 });
             }
             
@@ -86,6 +89,7 @@
     else
     {
         cell.image.image = landingImage.image;
+        cell.image.tag = indexPath.row;
     }
     return cell;
 }

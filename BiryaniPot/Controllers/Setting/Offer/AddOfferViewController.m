@@ -128,6 +128,11 @@
         NSString *promoPercent = [NSString stringWithFormat:@"%@", _offerValue.text];
         
         if(_extension == NULL) _extension = @"jpg";
+        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
+        }
+        
         NSString *imgName = [NSString stringWithFormat:@"%@.%@", promoCode, _extension];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_OFFER_URL]];
@@ -144,7 +149,6 @@
                                  @"maxtimes"  : maxTimes,
                                  @"usage_limit" : usageLimit,
                                  @"coupon_percent" : promoPercent,
-                                 @"file_name" : imgName,
                                  @"loc_id"    : Constants.LOCATION_ID
                                  };
         
@@ -182,13 +186,22 @@
             }
            
             NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"result = %@", result);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [_delegate.offerArray removeAllObjects];
                 [_delegate getOffers];
                 [_delegate.offerCollectionView reloadData];
-                [self dismissViewControllerAnimated:NO completion:nil];
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                    [alertController dismissViewControllerAnimated:YES completion:nil];
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }];
+                
+                [alertController addAction:ok];
+                
+                [self presentViewController:alertController animated:YES completion:nil];
             });
             
         }];

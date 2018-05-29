@@ -82,8 +82,7 @@ NSMutableData *mutableData;
 
 - (IBAction)loginButtonClicked:(id)sender
 {
-    //[self authenticateWithUsername:[Validation trim:_username.text] andPassword:[Validation trim:_password.text]];
-    _appDelegate.window.rootViewController = _appDelegate.tabBarController;
+    [self authenticateWithUsername:[Validation trim:_username.text] andPassword:[Validation trim:_password.text]];
 }
 
 -(void)authenticateWithUsername: (NSString *)username andPassword : (NSString *)password
@@ -106,18 +105,18 @@ NSMutableData *mutableData;
             
             NSDictionary * loginDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
             
-            NSString *isLoginValid = [loginDictionary objectForKey:@"isLoginValid"];
+            long isLoginValid = [[loginDictionary objectForKey:@"isLoginValid"] longValue];
             
-            if ([isLoginValid intValue] == 1)
+            if (isLoginValid == 1)
             {
-                [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"locationId"] forKey:@"locationId"];
-                [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userId"] forKey:@"userId"];
-                [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userName"] forKey:@"userName"];
-                [_appDelegate.userDefaults setObject:password forKey:@"password"];
-                [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userRole"] forKey:@"userRole"];
-                [_appDelegate.userDefaults setBool:YES forKey:@"loginStatus"];
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [self appSetting];
+                    [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"locationId"] forKey:@"locationId"];
+                    [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userId"] forKey:@"userId"];
+                    [_appDelegate.userDefaults setObject:username forKey:@"userName"];
+                    [_appDelegate.userDefaults setObject:password forKey:@"password"];
+                    [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userRole"] forKey:@"userRole"];
+                    [_appDelegate.userDefaults setBool:YES forKey:@"loginStatus"];
                     _appDelegate.window.rootViewController = _appDelegate.tabBarController;
                 });
             }
@@ -129,6 +128,7 @@ NSMutableData *mutableData;
             }
         }];
         [postDataTask resume];
+        
     }
     @catch(NSException *e)
     {
@@ -136,6 +136,29 @@ NSMutableData *mutableData;
         [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
 
+}
+
+-(void) appSetting
+{
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.APP_SETTING_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        NSDictionary * settingDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        [_appDelegate.userDefaults setObject:[settingDictionary objectForKey:@"organizationId"] forKey:@"organizationId"];
+        [_appDelegate.userDefaults setObject:[settingDictionary objectForKey:@"menuId"] forKey:@"menuId"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+        });
+    }];
+    [postDataTask resume];
 }
 
 - (IBAction)forgotPasswordButtonClicked:(id)sender

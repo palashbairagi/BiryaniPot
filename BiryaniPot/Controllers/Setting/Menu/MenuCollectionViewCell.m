@@ -8,6 +8,7 @@
 
 #import "MenuCollectionViewCell.h"
 #import "Category.h"
+#import "EditCategoryViewController.h"
 
 @implementation MenuCollectionViewCell
 
@@ -15,6 +16,7 @@
     [super awakeFromNib];
     
     [self.deleteButton setTitle:[NSString stringWithFormat:@"%C", 0xf014] forState:UIControlStateNormal];
+    [self.editButton setTitle:[NSString stringWithFormat:@"%C", 0xf040] forState:UIControlStateNormal];
     
     if (self.selected)
     {
@@ -27,35 +29,82 @@
     
 }
 
-- (IBAction)deleteButtonClicked:(id)sender
+-(void)deleteRecord
 {
     NSInteger index = _deleteButton.tag;
     
-    Category *category = _delegate.categoryArray[index];
+    Category *category = _delegate.categorySearchArray[index];
     
-    NSString *post = [NSString stringWithFormat:@"category_id=%@&category_name=%@&img_url=%@&is_active=0", category.categoryId, category.categoryName, category.imageURL];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.DELETE_CATEGORY_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_CATEGORY_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate.categoryArray removeAllObjects];
-            [_delegate getCategory];
-            [_delegate.menuCollectionView reloadData];
-        });
-
-    }];
-    [postDataTask resume];
     
+    NSMutableData *body = [NSMutableData data];
+    
+    NSDictionary *params = @{
+                             @"category_id" : category.categoryId,
+                             @"category_name" : category.categoryName,
+                             @"is_nonveg_supported" : category.isNonVeg,
+                             @"is_active" : @"0"
+                             };
+    
+    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    request.HTTPBody = body;
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate getCategory];
+        });
+    }];
+    [task resume];
 }
+
+- (IBAction)deleteButtonClicked:(id)sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Do you really want to delete?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        return;
+    }];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        [self deleteRecord];
+    }];
+    
+    [alert addAction:yes];
+    [alert addAction:no];
+    [_delegate presentViewController:alert animated:YES completion:nil];
+}
+
+- (IBAction)editButtonClicked:(id)sender
+{
+    EditCategoryViewController * editCategoryVC = [[EditCategoryViewController alloc]init];
+    editCategoryVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    editCategoryVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    editCategoryVC.preferredContentSize = CGSizeMake(540, 500);
+    editCategoryVC.delegate = _delegate;
+    editCategoryVC.category = _delegate.categorySearchArray[_editButton.tag];
+    
+    [_delegate presentViewController:editCategoryVC animated:YES completion:nil];
+}
+
 
 @end

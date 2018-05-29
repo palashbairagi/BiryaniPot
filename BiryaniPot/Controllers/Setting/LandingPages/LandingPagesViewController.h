@@ -9,12 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
 
-@interface LandingPagesViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource>
+@interface LandingPagesViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, NSURLSessionDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *landingPageCollectionView;
-
 @property (nonatomic, retain) NSMutableArray *landingImageArray;
-
 @property (nonatomic, retain) NSOperationQueue *imageQueue ;
 
+-(void)getImages;
 @end

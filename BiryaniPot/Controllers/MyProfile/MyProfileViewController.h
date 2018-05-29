@@ -10,8 +10,9 @@
 #import "BaseViewController.h"
 #import "User.h"
 #import "AppDelegate.h"
+#import <Photos/Photos.h>
 
-@interface MyProfileViewController : BaseViewController <NSURLSessionDelegate>
+@interface MyProfileViewController : BaseViewController <NSURLSessionDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, retain) AppDelegate *appDelegate;
 @property (nonatomic, retain) User *user;
@@ -28,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *currentPassword;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPassword;
 @property (weak, nonatomic) IBOutlet UITextField *password;
+@property (nonatomic, retain) NSString *extension;
 
 @property (nonatomic, retain) NSOperationQueue *profilePictureQueue ;
 

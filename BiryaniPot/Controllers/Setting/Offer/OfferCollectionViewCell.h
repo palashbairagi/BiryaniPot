@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OfferViewController.h"
+#import "Offer.h"
 
 @interface OfferCollectionViewCell : UICollectionViewCell
 
@@ -20,4 +21,5 @@
 @property (weak, nonatomic) IBOutlet UIView *disableView;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+
 @end

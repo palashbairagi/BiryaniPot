@@ -278,6 +278,9 @@
                                     <color key="value" red="0.73333333333333328" green="0.73262399435043335" blue="0.73262399435043335" alpha="1" colorSpace="calibratedRGB"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="cvw-jh-s4R" appends="YES" id="8AW-hM-Ibz"/>
+                            </connections>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -308,6 +311,12 @@
             <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
         </view>
+        <tapGestureRecognizer id="cvw-jh-s4R">
+            <connections>
+                <action selector="profilePictureTapped:" destination="-1" id="Ol8-F3-Y7i"/>
+                <outlet property="delegate" destination="-1" id="ENO-WC-0Mz"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="defaultPicture" width="300" height="300"/>

@@ -43,6 +43,19 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [appDelegate.userDefaults objectForKey:@"locationId"];
 }
 
++(NSString *) ORGANIZATION_ID
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    return [appDelegate.userDefaults objectForKey:@"organizationId"];
+}
+
++(NSString *) MENU_ID
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    return [appDelegate.userDefaults objectForKey:@"menuId"];
+}
+
+#pragma mark - Date
 +(NSString *)GET_TODAY_DATE
 {
     NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
@@ -96,6 +109,13 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     toDate = dashboardDate;
 }
 
+#pragma mark - Login
+
++(NSString *) APP_SETTING_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/application/appsettings?appkey=D7AwuC2qhqOmodKvQfUndIm6OK3A728c", BASE_URL];
+}
+
 +(NSString *)LOGIN_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/authentication/superusermanager",BASE_URL];
@@ -103,7 +123,12 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *)FORGOT_PASSWORD_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/forgetpassword",BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/authentication/forgotpassword", BASE_URL];
+}
+
++(NSString *)GET_PASSWORD_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/authentication/getpassword", BASE_URL];
 }
 
 +(NSString *) FOOTER_STATISTICS_URL
@@ -111,7 +136,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/dashboard/footerstatistics",BASE_URL];
 }
 
-/* Dashboard */
+#pragma mark - Dashboard
 
 +(NSString *) TOTAL_ORDER_URL
 {
@@ -163,7 +188,8 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/Provider/getTrendChart", PROVIDER_BASE_URL];
 }
 
-/* Restaurant Profile */
+#pragma mark - Restaurant Profile
+
 +(NSString *) GET_RESTAURANT_PROFILE_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/organization/restaurant", BASE_URL];
@@ -194,7 +220,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/organization/updateadditionalpayments", BASE_URL];
 }
 
-/* User Management */
+#pragma mark - User
 
 +(NSString *) GET_DELIVERY_PERSON_URL
 {
@@ -226,7 +252,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/manager/insertmanager", BASE_URL];
 }
 
-/* Offer */
+#pragma mark - Offers
 
 +(NSString *) GET_OFFERS_URL
 {
@@ -240,31 +266,14 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) UPDATE_OFFER_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/updatepromocodes", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/discounts/updatepromocodes", BASE_URL];
 }
 
-/* Menu */
-
-+(NSString *) GET_CATEGORY_ON_SETTING_URL
-{
-    return [NSString stringWithFormat:@"%@rest/menu/getCategoryList", PROVIDER_BASE_URL];
-}
-
-+(NSString *) GET_ITEM_ON_SETTING_URL
-{
-    return [NSString stringWithFormat:@"%@rest/menu/getItemSearchByCat", PROVIDER_BASE_URL];
-}
-
-/* Menu */
+#pragma mark - Menu
 
 +(NSString *) GET_CATEGORIES_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/menu/category", BASE_URL];
-}
-
-+(NSString *) GET_ITEMS_BY_CATEGORY_URL
-{
-    return [NSString stringWithFormat:@"%@rest/services/menu/items", BASE_URL];
 }
 
 +(NSString *) INSERT_CATEGORY_URL
@@ -272,9 +281,14 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/menu/insertcategory", BASE_URL];
 }
 
-+(NSString *) DELETE_CATEGORY_URL
++(NSString *) UPDATE_CATEGORY_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/menu/updatecategory", BASE_URL];
+}
+
++(NSString *) GET_ITEMS_BY_CATEGORY_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/provideritems", BASE_URL];
 }
 
 +(NSString *) INSERT_ITEM_URL
@@ -287,14 +301,19 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/menu/updateitem", BASE_URL];
 }
 
-/* Landing Pages */
+#pragma mark - Landing Images
 
 +(NSString *) GET_LANDING_PAGES_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/organization/images", BASE_URL];
 }
 
-/* Order */
++(NSString *) UPDATE_LANDING_IMAGE
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/updatelandingimage", BASE_URL];
+}
+
+#pragma mark - Orders
 
 +(NSString *) GET_ALL_ORDERS_URL
 {
@@ -326,11 +345,11 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/orders/cancelorder", BASE_URL];
 }
 
-/* PROFILE*/
+#pragma mark - Profile
 
 +(NSString *) UPDATE_PROFILE
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/updatemanagerpartner", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/manager/updatemanager", BASE_URL];
 }
 
 +(NSString *) CHANGE_PASSWORD

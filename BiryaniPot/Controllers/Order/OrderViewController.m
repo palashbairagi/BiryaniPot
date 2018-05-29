@@ -174,7 +174,7 @@
     }
     else if (tableView == self.preparingTableView)
     {
-        orderDetailViewController.preferredContentSize = CGSizeMake(720, 580);
+        orderDetailViewController.preferredContentSize = CGSizeMake(850, 670);
         orderDetailViewController.isQueue = FALSE;
         orderDetailViewController.isPreparing = TRUE;
         
@@ -186,7 +186,7 @@
         Order *order = _outForDeliveryArray[indexPath.row];
         orderDetailViewController.order = order;
         
-        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.preferredContentSize = CGSizeMake(850, 600);
         orderDetailViewController.isQueue = FALSE;
         orderDetailViewController.isPreparing = FALSE;
     }
@@ -195,7 +195,7 @@
         Order *order = _readyToPickUpArray[indexPath.row];
         orderDetailViewController.order = order;
          
-        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.preferredContentSize = CGSizeMake(850, 600);
         orderDetailViewController.isQueue = FALSE;
         orderDetailViewController.isPreparing = FALSE;
     }
@@ -205,7 +205,7 @@
         orderDetailViewController.order = order;
         orderDetailViewController.delegate = self;
         
-        orderDetailViewController.preferredContentSize = CGSizeMake(720, 510);
+        orderDetailViewController.preferredContentSize = CGSizeMake(850, 600);
         orderDetailViewController.isQueue = FALSE;
         orderDetailViewController.isPreparing = FALSE;
     }

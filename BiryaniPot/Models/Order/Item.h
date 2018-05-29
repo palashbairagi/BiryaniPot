@@ -22,4 +22,5 @@
 @property (nonatomic, retain) NSString *detail;
 @property (nonatomic, retain) NSString *quantity;
 @property (nonatomic, retain) NSString *spiceLevel;
+@property (nonatomic, retain) NSString *itemTypeId;
 @end

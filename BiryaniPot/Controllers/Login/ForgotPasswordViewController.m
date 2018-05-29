@@ -17,14 +17,9 @@
 
 - (void)viewDidLoad {
     
-    [_waitView setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     [super viewDidLoad];
     [self initComponents];
     
-    [_activityIndicator stopAnimating];
-    [_waitView setHidden:TRUE];
 }
 
 -(void) initComponents
@@ -52,6 +47,8 @@
     gradient.endPoint = CGPointMake(0.5, 1);
     gradient.cornerRadius = 5;
     [[self.sendMePassword layer] addSublayer:gradient];
+    
+    _otpLabel.hidden = TRUE;
 }
 
 - (IBAction)closeButtonClicked:(id)sender
@@ -61,29 +58,64 @@
 
 - (IBAction)sendMeButtonClicked:(id)sender
 {
-    
-    [_waitView setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    [self sendPassword];
-    
-    [_activityIndicator stopAnimating];
-    [_waitView setHidden:TRUE];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if(_sessionId == NULL)
+    {
+        [self sendPassword];
+    }
+    else
+    {
+        [self getPassword];
+    }
+   
 }
 
 -(void)sendPassword
 {
     NSString *email = _email.text;
     
-    NSString *post = [NSString stringWithFormat:@"username=%@", email];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?username=%@", Constants.FORGOT_PASSWORD_URL, email]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        if ([[resultDictionary objectForKey:@"isValid"] integerValue] == 1)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _sessionId = [resultDictionary objectForKey:@"sessionId"];
+                _otpLabel.hidden = FALSE;
+                _email.text = @"";
+                _email.placeholder = @"Enter One Time Password";
+                [_sendMePassword setTitle:@"Send me Password" forState:UIControlStateNormal];
+            });
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to send One Time Password"];
+                });
+        }
+        
+    }];
+    [postDataTask resume];
+}
+
+-(void)getPassword
+{
+    NSString *otp = _email.text;
+    
+    NSString *post = [NSString stringWithFormat:@"otp=%@&sessionId=%@", otp, _sessionId];
     
     NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.FORGOT_PASSWORD_URL]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_PASSWORD_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     [request setHTTPMethod:@"POST"];
@@ -92,9 +124,22 @@
     
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-        });
+        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        if ([[resultDictionary objectForKey:@"isValid"] integerValue] == 1)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _email.text =[NSString stringWithFormat:@"%@", [resultDictionary objectForKey:@"password"]];
+                _otpLabel.hidden = TRUE;
+                _sendMePassword.hidden = TRUE;
+            });
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to get Password"];
+            });
+        }
         
     }];
     [postDataTask resume];

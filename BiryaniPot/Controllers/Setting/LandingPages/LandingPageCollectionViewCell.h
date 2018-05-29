@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "LandingPagesViewController.h"
+#import "AppDelegate.h"
+#import <Photos/Photos.h>
 
 @interface LandingPageCollectionViewCell : UICollectionViewCell <UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
@@ -15,4 +17,5 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (nonatomic, retain) UIImagePickerController *pickerController;
 @property (nonatomic, retain) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, retain) AppDelegate *appDelegate;
 @end

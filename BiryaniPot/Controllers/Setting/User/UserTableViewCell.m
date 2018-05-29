@@ -95,7 +95,8 @@
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate.userArray removeObject:user];
+            [_delegate getManagers];
+            [_delegate getDeliveryPersons];
             [_delegate.userTableView reloadData];
         });
         
@@ -122,7 +123,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([status isEqual:[NSNumber numberWithInt:1]])
             {
-                [_delegate.userArray removeObject:user];
+                [_delegate getManagers];
+                [_delegate getDeliveryPersons];
                 [_delegate.userTableView reloadData];
             }
             else

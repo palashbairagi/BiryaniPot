@@ -13,6 +13,6 @@
 @property (nonatomic, retain) NSString *categoryId;
 @property (nonatomic, retain) NSString *categoryName;
 @property (nonatomic, retain) NSString *imageURL;
-@property (nonatomic, retain) NSString *menuId;
+@property (nonatomic, retain) NSString *isNonVeg;
 @property (nonatomic,strong) UIImage *image ;
 @end

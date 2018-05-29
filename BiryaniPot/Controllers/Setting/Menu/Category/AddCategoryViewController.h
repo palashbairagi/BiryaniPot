@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 #import "MenuViewController.h"
 #import "Constants.h"
 
@@ -17,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *uploadPhotoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *nonVegButton;
+@property BOOL isNonVeg;
+@property (nonatomic, retain) NSString *extension;
 
 @property (nonatomic, retain) MenuViewController *delegate;
 
