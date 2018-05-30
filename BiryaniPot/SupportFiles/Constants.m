@@ -357,4 +357,25 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/organization/changemanagerpw", BASE_URL];
 }
 
+
+#pragma mark - Payment
++(NSString *) MERCHANTID
+{
+    return @"496160873888";
+}
+
++(NSString *) PAYMENT_URL
+{
+    return @"fts.cardconnect.com:6443";
+}
+
++(NSString *) PAYMENT_USERNAME_PASSWORD
+{
+    return @"testing:testing123";
+}
+
++(NSString *) REFUND_URL
+{
+    return [NSString stringWithFormat:@"https://%@/cardconnect/rest/void", Constants.PAYMENT_URL];
+}
 @end

@@ -207,14 +207,60 @@
     
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
+        NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate loadData];
+            if ([[resultDic objectForKey:@"status"] intValue] == 1)
+            {
+                [self voidPayment];
+             //   [_delegate loadData];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to cancel"];
+            }
+            
         });
         
     }];
     [postDataTask resume];
+}
+
+-(void) voidPayment
+{
+    NSString *orderNo = _order.orderNo;
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSString *post = [NSString stringWithFormat:@"order_id=%@", orderNo];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.CANCEL_ORDER_URL]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([[resultDic objectForKey:@"status"] intValue] == 1)
+            {
+                [self voidPayment];
+                //   [_delegate loadData];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Order is cancelled but unable to refund"];
+            }
+            
+        });
+        
+    }];
+    [postDataTask resume];
 }
 
 - (IBAction)closeButtonClicked:(id)sender

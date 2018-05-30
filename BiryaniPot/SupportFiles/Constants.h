@@ -89,4 +89,10 @@
 +(NSString *) CHANGE_PASSWORD;
 +(NSString *) UPDATE_PROFILE;
 
+#pragma mark - Payment
++(NSString *) MERCHANTID;
++(NSString *) PAYMENT_URL;
++(NSString *) PAYMENT_USERNAME;
++(NSString *) PAYMENT_USERNAME_PASSWORD;
++(NSString *) REFUND_URL;
 @end
