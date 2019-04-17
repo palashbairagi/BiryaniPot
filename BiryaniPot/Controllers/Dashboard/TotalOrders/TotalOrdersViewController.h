@@ -11,9 +11,6 @@
 
 @interface TotalOrdersViewController : BaseViewController <UITableViewDataSource, UITableViewDelegate, NSURLSessionDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
 @property (weak, nonatomic) IBOutlet UITableView *totalOrdersTableView;
 @property (weak, nonatomic) IBOutlet UILabel *totalOrdersLabel;
 

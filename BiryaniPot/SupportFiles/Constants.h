@@ -7,6 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MRProgress/MRProgressOverlayView+AFNetworking.h>
+#import "Print.h"
+
+#if DEBUG == 1
+#define DebugLog(...)
+#elif DEBUG == 1
+#define DebugLog(...) NSLog(__VA_ARGS__)
+#endif
 
 @interface Constants : NSObject
 
@@ -15,6 +23,8 @@
 +(NSString *) LOCATION_ID;
 +(NSString *) ORGANIZATION_ID;
 +(NSString *) MENU_ID;
++(NSString *) ACCESS_TOKEN;
++(NSString *) GET_LOCATION_DETAILS;
 
 #pragma mark - Date
 +(NSString *) GET_TODAY_DATE;
@@ -71,6 +81,7 @@
 #pragma mark - Order
 +(NSString *) GET_ALL_ORDERS_URL;
 +(NSString *) GET_ITEMS_BY_ORDER_URL;
++(NSString *) UPDATE_ORDER_DETAIL;
 +(NSString *) UPDATE_ORDER_STATUS_URL;
 +(NSString *) UPDATE_ESTIMATED_TIME_URL;
 +(NSString *) ASSIGN_DELIVERY_PERSON_URL;
@@ -82,17 +93,25 @@
 +(NSString *) GET_ITEMS_BY_CATEGORY_URL;
 +(NSString *) INSERT_CATEGORY_URL;
 +(NSString *) UPDATE_CATEGORY_URL;
++(NSString *) DELETE_CATEGORY_URL;
 +(NSString *) INSERT_ITEM_URL;
 +(NSString *) UPDATE_ITEM_URL;
++(NSString *) DELETE_ITEM_URL;
++(NSString *) GET_RECOMMENDED_ITEMS_URL;
++(NSString *) ADD_RECOMMENDED_ITEMS_URL;
++(NSString *) REMOVE_RECOMMENDED_ITEMS_URL;
 
 #pragma mark - Profile
 +(NSString *) CHANGE_PASSWORD;
 +(NSString *) UPDATE_PROFILE;
 
+#pragma mark - print
++(void) printInvoice: (Print *)print;
+
 #pragma mark - Payment
-+(NSString *) MERCHANTID;
-+(NSString *) PAYMENT_URL;
-+(NSString *) PAYMENT_USERNAME;
-+(NSString *) PAYMENT_USERNAME_PASSWORD;
++(NSString *) CARD_CONNECT_BASE_URL;
++(NSString *) AUTHORIZATION_STRING;
 +(NSString *) REFUND_URL;
++(NSString *) GET_PAYMENT_DETAIL_URL;
+
 @end

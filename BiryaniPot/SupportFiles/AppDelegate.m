@@ -31,8 +31,10 @@
     _dashboardNavigationController = [[UINavigationController alloc]initWithRootViewController:dashboardViewController];
     _orderNavigationController = [[UINavigationController alloc]initWithRootViewController:orderViewController];
     
-    _dashboardNavigationController.tabBarItem.title = @"DASHBOARD";
     _orderNavigationController.tabBarItem.title = @"ORDER";
+    _orderNavigationController.tabBarItem.image = [UIImage imageNamed:@"order"];
+    _dashboardNavigationController.tabBarItem.title = @"DASHBOARD";
+    _dashboardNavigationController.tabBarItem.image = [UIImage imageNamed:@"dashboard"];
     
     self.tabBarController = [[UITabBarController alloc]init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects: _orderNavigationController, _dashboardNavigationController, nil];
@@ -41,16 +43,16 @@
     
     [self.tabBarController.tabBar setBarTintColor: [UIColor colorWithRed:253.0/255.0 green:205.0/255.0 blue:25.0/255.0 alpha:1.0]];
     
-    UIImageView *logoHolder = [[UIImageView alloc] initWithFrame:CGRectMake(60, 3, 120, 40)];
-    UIImage *logo = [UIImage imageNamed:@"biryanipotusa"];
-    logoHolder.image = logo;
-    [self.tabBarController.tabBar addSubview:logoHolder];
-    
-    UITabBarItem* first = [[self.tabBarController.tabBar items] objectAtIndex:0];
-    first.titlePositionAdjustment = UIOffsetMake(110.0, 0.0);
-    
-    UITabBarItem* second = [[self.tabBarController.tabBar items] objectAtIndex:1];
-    second.titlePositionAdjustment = UIOffsetMake(-110.0, 0.0);
+//    UIImageView *logoHolder = [[UIImageView alloc] initWithFrame:CGRectMake(60, 3, 120, 40)];
+//    UIImage *logo = [UIImage imageNamed:@"biryanipotusa"];
+//    logoHolder.image = logo;
+//    [self.tabBarController.tabBar addSubview:logoHolder];
+//    
+//    UITabBarItem* first = [[self.tabBarController.tabBar items] objectAtIndex:0];
+//    first.titlePositionAdjustment = UIOffsetMake(110.0, 0.0);
+//
+//    UITabBarItem* second = [[self.tabBarController.tabBar items] objectAtIndex:1];
+//    second.titlePositionAdjustment = UIOffsetMake(-110.0, 0.0);
     
     self.window.rootViewController = _loginViewController;
     [self.window makeKeyAndVisible];

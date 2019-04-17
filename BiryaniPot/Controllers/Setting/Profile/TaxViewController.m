@@ -7,6 +7,7 @@
 //
 
 #import "TaxViewController.h"
+#import "Validation.h"
 
 @interface TaxViewController ()
 
@@ -63,43 +64,121 @@
 
 -(void)getTaxAndDeliveryFee
 {
-    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@?locationid=%@",Constants.GET_TAX_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    _deliveryTextField.text = [NSString stringWithFormat:@"%@", [resultDic objectForKey:@"deliveryFee"]];
-    _taxNameTextField.text = [[resultDic objectForKey:@"tax"] objectForKey:@"taxName"];
-    _taxTextField.text = [NSString stringWithFormat:@"%@", [[resultDic objectForKey:@"tax"] objectForKey:@"taxPercent"]];
+    @try
+    {
+        NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"%@?locationid=%@",Constants.GET_TAX_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", responseJSONData);
+        
+        NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        _deliveryTextField.text = [NSString stringWithFormat:@"%@", [resultDic objectForKey:@"deliveryFee"]];
+        _taxNameTextField.text = [[resultDic objectForKey:@"tax"] objectForKey:@"taxName"];
+        _taxTextField.text = [NSString stringWithFormat:@"%.2f", [[[resultDic objectForKey:@"tax"] objectForKey:@"taxPercent"] floatValue]];
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"TaxViewController [getTaxAndDeliveryFee]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)updateTaxAndDelivery
 {
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?locationid=%@&taxpercent=%@&taxname=%@&deliveryfee=%@", Constants.UPDATE_TAX_URL, Constants.LOCATION_ID, _taxTextField.text, _taxNameTextField.text, _deliveryTextField.text]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"POST"];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    @try
+    {
         
-        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?locationid=%@&taxpercent=%@&taxname=%@&deliveryfee=%@", Constants.UPDATE_TAX_URL, Constants.LOCATION_ID, _taxTextField.text, _taxNameTextField.text, _deliveryTextField.text]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([[result objectForKey:@"status"] intValue] == 1)
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPMethod:@"POST"];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
             {
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }
-            else
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Update"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
             }
             
-        });
-    }];
-    [postDataTask resume];
+            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([[result objectForKey:@"status"] intValue] == 1)
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Success" andMessage:@"Record Updated"];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Update"];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+        }];
+        
+        [postDataTask resume];
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"TaxViewController [updateTaxAndDelivery]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)closeButtonClicked:(id)sender
@@ -109,8 +188,61 @@
 
 - (IBAction)saveButtonClicked:(id)sender
 {
+    if ([self isValidate])
     [self updateTaxAndDelivery];
 }
 
+-(BOOL)isValidate{
+    
+    if([Validation isEmpty:_taxNameTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Name Field should not be empty"];
+        return false;
+    }
+    if ([Validation isLess:_taxNameTextField thanMinLength:3])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Name Field should not be less than 3 characters"];
+        return false;
+    }
+    if ([Validation isMore:_taxNameTextField thanMaxLength:10])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Name Field should not be more than 10 characters"];
+        return false;
+    }
+    
+    if([Validation isEmpty:_taxTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_taxNameTextField thanMaxLength:5])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Field should not be more than 4 digits"];
+        return false;
+    }
+    if ([Validation isDecimal:_taxTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Tax Field should contain numeric value"];
+        return false;
+    }
+    
+    if([Validation isEmpty:_deliveryTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Delivery Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_deliveryTextField thanMaxLength:3])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Delivery Field should not be more than 2 digits"];
+        return false;
+    }
+    if ([Validation isDecimal:_deliveryTextField])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Delivery Field should contain numeric value"];
+        return false;
+    }
+    
+    return true;
+}
 
 @end

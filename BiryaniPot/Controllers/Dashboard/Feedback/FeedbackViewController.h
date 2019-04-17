@@ -12,9 +12,6 @@
 
 @interface FeedbackViewController : BaseViewController <PieChartDataSource, UITableViewDelegate, UITableViewDataSource, NSURLSessionDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
 @property (weak, nonatomic) IBOutlet UIView *positiveFeedbackView;
 @property (weak, nonatomic) IBOutlet UIView *negativeFeedbackView;
 

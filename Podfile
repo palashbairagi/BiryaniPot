@@ -22,4 +22,6 @@ target 'BiryaniPot' do
     pod 'SCRSidewaysBarGraph'
     pod 'IQKeyboardManager'
     pod 'FSCalendar'
+    pod 'MRProgress'
+    pod 'MRProgress/AFNetworking'
 end

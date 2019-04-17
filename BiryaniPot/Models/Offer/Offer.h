@@ -23,4 +23,5 @@
 @property (nonatomic, retain) NSString * detail;
 @property (nonatomic, retain) NSString * maxUsageLimit;
 @property (nonatomic, retain) NSString * timesApplied;
+@property (nonatomic, retain) NSString * isPercent;
 @end

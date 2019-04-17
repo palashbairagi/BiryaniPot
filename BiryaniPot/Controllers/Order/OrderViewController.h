@@ -11,14 +11,12 @@
 
 @interface OrderViewController : BaseViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
 @property (weak, nonatomic) IBOutlet UITextField *search;
 
 @property (weak, nonatomic) IBOutlet UILabel *totalOrders;
 @property (weak, nonatomic) IBOutlet UILabel *delivered;
 @property (weak, nonatomic) IBOutlet UILabel *pickedUp;
+@property (weak, nonatomic) IBOutlet UILabel *outForDelivery;
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (nonatomic, retain) UIScrollView *containerScrollView;
@@ -37,8 +35,11 @@
 @property (nonatomic, retain) NSMutableArray * preparingArray;
 @property (nonatomic, retain) NSMutableArray * outForDeliveryArray;
 @property (nonatomic, retain) NSMutableArray * readyToPickUpArray;
+@property (nonatomic, retain) NSMutableArray * pickedUpArray;
+@property (nonatomic, retain) NSMutableArray * deliveredArray;
 @property (nonatomic, retain) NSMutableArray * completeArray;
 
+@property (nonatomic, retain) NSTimer *timer;
 -(void)getAllOrders;
 -(void)loadData;
 

@@ -38,22 +38,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    @try
-    {
-        [self totalOrdersList];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Orders"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
+    [self totalOrdersList];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -73,66 +58,135 @@
 
 -(void)totalOrdersList
 {
-    [_totalOrderArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for(NSDictionary *totalOrder in totalOrders)
-    {
-        NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
-        NSString *orderType = [totalOrder objectForKey:@"orderType"];
-        NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-        NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
-        NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
-        NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
-        
-        Feedback *feedback = [[Feedback alloc]init];
-        feedback.orderNo = orderId;
-        feedback.orderType = orderType;
-        feedback.paymentType = paymentType;
-        feedback.amount = totalAmount;
-        feedback.email = userEmail;
-        feedback.contactNumber = userMobile;
-       
-        [_totalOrderArray addObject:feedback];
-    }
-        
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_totalOrdersTableView reloadData];
-    });
-    
     @try
     {
-        [self totalOrders];
+        MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+
+        [_totalOrderArray removeAllObjects];
+        
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        
+        DebugLog(@"Request %@", url);
+        //[overlayView setModeAndProgressWithStateOfTask:postDataTask];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", totalOrders);
+        
+        for(NSDictionary *totalOrder in totalOrders)
+        {
+            NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
+            NSString *orderType = [totalOrder objectForKey:@"orderType"];
+            NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
+            NSString *totalAmount = [NSString stringWithFormat:@"$%.2f",[[totalOrder objectForKey:@"totalOrdersAmount"] floatValue]];
+            NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
+            NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
+            
+            Feedback *feedback = [[Feedback alloc]init];
+            feedback.orderNo = orderId;
+            feedback.orderType = orderType;
+            feedback.paymentType = paymentType;
+            feedback.amount = totalAmount;
+            feedback.email = userEmail;
+            feedback.contactNumber = userMobile;
+           
+            [_totalOrderArray addObject:feedback];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_totalOrdersTableView reloadData];
+            [overlayView dismiss:YES];
+        });
+        
     }@catch(NSException *e)
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order value"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"TotalOrdersViewController [totalOrdersList]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [self totalOrders];
     }
 }
 
 -(void)totalOrders
 {
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
-    double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
-    });
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+
+    @try
+    {
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        //[overlayView setModeAndProgressWithStateOfTask:postDataTask];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@",totalOrders);
+        
+        long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
+        double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
+            [overlayView dismiss:YES];
+        });
+    }@catch(NSException *e)
+    {
+        DebugLog(@"TotalOrdersViewController [totalOrders]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)dateButtonClicked:(id)sender
@@ -153,11 +207,6 @@
 
 -(void)datesUpdated
 {
-  
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     @try
     {
         _searchTextField.text = @"";
@@ -165,12 +214,8 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Orders"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 - (IBAction)searchButtonClicked:(id)sender
@@ -182,10 +227,6 @@
     }
     
     [self.view endEditing:YES];
-    
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
     
     if ( ([[Validation trim:_searchTextField.text] caseInsensitiveCompare:_searchString] == NSOrderedSame) && _searchResultArray.count != 0)
     {
@@ -225,11 +266,6 @@
             [_searchResultArray addObject:temp];
         }
     }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
-    
 }
 
 @end

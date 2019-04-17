@@ -9,6 +9,8 @@
 #import "InvoiceViewController.h"
 #import "InvoiceDetailTableViewCell.h"
 #import "Item.h"
+#import "Print.h"
+#import "Validation.h"
 
 @interface InvoiceViewController ()
 
@@ -31,41 +33,82 @@
 
 -(void)getItemsList
 {
-    NSURL *itemsURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?order_id=%@",Constants.GET_ITEMS_BY_ORDER_URL, _delegate.orderNo]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:itemsURL];
-    NSError *error = nil;
-    NSDictionary *orderDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    _order = [[Order alloc]init];
-    _order.orderNo = _orderNo.text;
-    _order.deliveryFee = [orderDictionary objectForKey:@"deliveryFee"];
-    _order.tip = [orderDictionary objectForKey:@"tip"];
-    _order.grandTotal = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"grandTotal"] floatValue]];
-    _order.orderTime = [orderDictionary objectForKey:@"orderDate"];
-    _order.deliveryType = [orderDictionary objectForKey:@"orderType"];
-    _order.subTotal = [orderDictionary objectForKey:@"subTotal"];
-    _order.tax = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"tax"] floatValue]];
-    
-    NSArray *itemsArray = [orderDictionary objectForKey:@"items"];
-    
-    for (NSDictionary *itemDictionary in itemsArray)
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+
+    @try
     {
-        NSString *itemId = [itemDictionary objectForKey:@"itemId"];
-        NSString *itemName = [itemDictionary objectForKey:@"itemName"];
-        NSString *price = [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"];
-        NSString *quantity = [itemDictionary objectForKey:@"quantity"];
-        NSString *spiceLevel = [itemDictionary objectForKey:@"spiceLevel"];
-        NSString *isSpiceSupported = [itemDictionary objectForKey:@"spiceSupported"];
+        NSURL *itemsURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?order_id=%@",Constants.GET_ITEMS_BY_ORDER_URL, _delegate.orderNo]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:itemsURL];
         
-        Item *item = [[Item alloc]init];
-        item.itemId = itemId;
-        item.name = itemName;
-        item.price = price;
-        item.quantity = [NSString stringWithFormat:@"%@", quantity];
-        item.spiceLevel = spiceLevel;
-        item.isSpiceSupported = isSpiceSupported;
+        DebugLog(@"Request %@", itemsURL);
         
-        [_itemArray addObject:item];
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *orderDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@",orderDictionary);
+        
+        _order = [[Order alloc]init];
+        _order.customerName = _delegate.name;
+        _order.contactNumber = _delegate.contactNumber;
+        _order.orderNo = _orderNo.text;
+        _order.deliveryFee = [orderDictionary objectForKey:@"deliveryFee"];
+        _order.tip = [orderDictionary objectForKey:@"tip"];
+        _order.grandTotal = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"grandTotal"] floatValue]];
+        _order.orderTime = [orderDictionary objectForKey:@"orderDate"];
+        _order.deliveryType = [orderDictionary objectForKey:@"orderType"];
+        _order.subTotal = [orderDictionary objectForKey:@"subTotal"];
+        _order.tax = [NSString stringWithFormat:@"%.2f", [[orderDictionary objectForKey:@"tax"] floatValue]];
+        
+        NSArray *itemsArray = [orderDictionary objectForKey:@"items"];
+        
+        for (NSDictionary *itemDictionary in itemsArray)
+        {
+            NSString *itemId = [itemDictionary objectForKey:@"itemId"];
+            NSString *itemName = [itemDictionary objectForKey:@"itemName"];
+            NSString *price = [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"];
+            NSString *quantity = [itemDictionary objectForKey:@"quantity"];
+            NSString *spiceLevel = [itemDictionary objectForKey:@"spiceLevel"];
+            NSString *isSpiceSupported = [itemDictionary objectForKey:@"spiceSupported"];
+            
+            Item *item = [[Item alloc]init];
+            item.itemId = itemId;
+            item.name = itemName;
+            item.price = price;
+            item.quantity = [NSString stringWithFormat:@"%@", quantity];
+            item.spiceLevel = spiceLevel;
+            item.isSpiceSupported = isSpiceSupported;
+            
+            [_itemArray addObject:item];
+        }
+        
+        [overlayView dismiss:YES];
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"InvoiceViewController [getItemsList]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
     }
     
 }
@@ -99,6 +142,15 @@
     cell.quantity.text = [NSString stringWithFormat:@"X%@", item.quantity];
     cell.price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
     return cell;
+}
+
+- (IBAction)printButtonClicked:(id)sender
+{
+    Print *print = [[Print alloc] init];
+    print.order = _order;
+    print.itemArray = _itemArray;
+    
+    [Constants printInvoice:print];
 }
 
 - (IBAction)closeButtonClicked:(id)sender

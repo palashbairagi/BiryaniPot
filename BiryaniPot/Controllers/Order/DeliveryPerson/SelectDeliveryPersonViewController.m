@@ -39,62 +39,153 @@
 
 -(void)getDeliveryPersons
 {
-    NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_DELIVERY_PERSON_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:deliveryPersonURL];
-    NSError *error = nil;
-    NSDictionary *deliveryPersonsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-
-    for (NSDictionary *deliveryPersonDictionary in deliveryPersonsDictionary)
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
     {
+        NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_DELIVERY_PERSON_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:deliveryPersonURL];
         
-        NSString *dboyId = [deliveryPersonDictionary objectForKey:@"dboyId"];
-        NSString *imgURL = [deliveryPersonDictionary objectForKey:@"dboyImgUrl"];
-        NSString *dboyMobile = [deliveryPersonDictionary objectForKey:@"dboyMobile"];
-        NSString *name = [deliveryPersonDictionary objectForKey:@"dboyName"];
-        NSString *isActive = [deliveryPersonDictionary objectForKey:@"isActive"];
-        NSString *isAvailable = [deliveryPersonDictionary objectForKey:@"isAvailable"];
+        DebugLog(@"Request %@", deliveryPersonURL);
         
-        if ([isActive intValue] == 1 && [isAvailable intValue] == 1)
+        if (error != nil)
         {
-            User *user = [[User alloc]init];
-            user.userId = dboyId;
-            user.name = name;
-            user.profilePictureURL = imgURL;
-            user.mobile = dboyMobile;
-            
-            [_nameArray addObject:user];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
         }
+        
+        NSDictionary *deliveryPersonsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", deliveryPersonsDictionary);
+        
+        for (NSDictionary *deliveryPersonDictionary in deliveryPersonsDictionary)
+        {
+            
+            NSString *dboyId = [deliveryPersonDictionary objectForKey:@"dboyId"];
+            NSString *imgURL = [deliveryPersonDictionary objectForKey:@"dboyImgUrl"];
+            NSString *dboyMobile = [deliveryPersonDictionary objectForKey:@"dboyMobile"];
+            NSString *name = [deliveryPersonDictionary objectForKey:@"dboyName"];
+            NSString *isActive = [deliveryPersonDictionary objectForKey:@"isActive"];
+            NSString *isAvailable = [deliveryPersonDictionary objectForKey:@"isAvailable"];
+            
+            if ([isActive intValue] == 1 && [isAvailable intValue] == 1)
+            {
+                User *user = [[User alloc]init];
+                user.userId = dboyId;
+                user.name = name;
+                user.profilePictureURL = imgURL;
+                user.mobile = dboyMobile;
+                
+                [_nameArray addObject:user];
+            }
+        }
+        
+        [overlayView dismiss:YES];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"SelectDeliveryPersonViewController [getDeliveryPerson]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
-
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)assignDeliveryPerson:(User *)user
 {
-    NSString *orderNo = _order.orderNo;
-    NSString *estTime = _order.timeRemain;
-    NSString *dboyId = user.userId;
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSString *post = [NSString stringWithFormat:@"est_time=%@&order_id=%@&deliveryboy_id=%@", estTime, orderNo, dboyId];
-    
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.ASSIGN_DELIVERY_PERSON_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    @try
+    {
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate loadData]; 
-        });
+        NSString *orderNo = _order.orderNo;
+        NSString *estTime = _order.timeRemain;
+        NSString *dboyId = user.userId;
         
-    }];
-    [postDataTask resume];
+        NSString *post = [NSString stringWithFormat:@"est_time=%@&order_id=%@&deliveryboy_id=%@", estTime, orderNo, dboyId];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", Constants.ASSIGN_DELIVERY_PERSON_URL, post]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *status = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"status %@",status);
+            
+            if ([[status objectForKey:@"status"] intValue] == 1)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:_delegate withTitle:@"Success" andMessage:@"Delivery Assigned"];
+                    [_delegate loadData];
+                });
+            }
+            else
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:_delegate withTitle:@"Error" andMessage:@"Unable to assign delivery"];
+                    [_delegate loadData];
+                });
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [postDataTask resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"SelectDeliveryPersonViewController [assignDeliveryPersonViewController]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)selectButtonClicked:(id)sender

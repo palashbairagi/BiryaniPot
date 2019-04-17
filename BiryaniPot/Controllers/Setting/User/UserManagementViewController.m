@@ -46,88 +46,144 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    @try
-    {
-        [self getManagers];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get managers"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    @try
-    {
-        [self getDeliveryPersons];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get delivery persons"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    @finally
-    {
-        [_userTableView reloadData];
-    }
+    [self getManagers];
+    [self getDeliveryPersons];
+    [_userTableView reloadData];
 }
 
 -(void)getManagers
 {
-    [_userArray removeAllObjects];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
-    NSError *error = nil;
-    NSDictionary *orderList = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    NSDictionary *managersDictionary = [orderList objectForKey:@"managersList"];
-    
-    for (NSDictionary *managerDictionary in managersDictionary)
+    @try
     {
-        User *user = [[User alloc]init];
-        user.userId = [managerDictionary objectForKey:@"managerId"];
-        user.name = [managerDictionary objectForKey:@"managerName"];
-        user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
-        user.mobile = [managerDictionary objectForKey:@"phone"];
-        user.phone = @"";
-        user.email = [managerDictionary objectForKey:@"managerEmail"];
-        user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
+        [_userArray removeAllObjects];
         
-        if([[managerDictionary objectForKey:@"active"] boolValue])
+        NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
+        NSError *error = nil;
+        
+        if (error != nil)
         {
-            [_userArray addObject:user];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", result);
+        
+        NSDictionary *managersDictionary = [result objectForKey:@"managersList"];
+        
+        for (NSDictionary *managerDictionary in managersDictionary)
+        {
+            User *user = [[User alloc]init];
+            user.userId = [managerDictionary objectForKey:@"managerId"];
+            user.name = [managerDictionary objectForKey:@"managerName"];
+            user.role = [[managerDictionary objectForKeyedSubscript:@"role"] objectForKey:@"typeName"];
+            user.mobile = [managerDictionary objectForKey:@"phone"];
+            user.phone = @"";
+            user.email = [managerDictionary objectForKey:@"managerEmail"];
+            user.profilePictureURL = [managerDictionary objectForKey:@"imageURL"];
             
-            if([user.role isEqualToString:@"Manager"])
+            if([[managerDictionary objectForKey:@"active"] boolValue])
             {
-                _managerCount++;
-            }
-            else if([user.role isEqualToString:@"Partner"])
-            {
-                _partnerCount++;
+                [_userArray addObject:user];
+                
+                if([user.role isEqualToString:@"Manager"])
+                {
+                    _managerCount++;
+                }
+                else if([user.role isEqualToString:@"Partner"])
+                {
+                    _partnerCount++;
+                }
             }
         }
+        [overlayView dismiss:YES];
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"UserManagementViewController [getManagers]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
     }
 }
 
 -(void)getDeliveryPersons
 {
-    NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_DELIVERY_PERSON_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:deliveryPersonURL];
-    NSError *error = nil;
-    NSDictionary *deliveryPersonsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    for (NSDictionary *deliveryPersonDictionary in deliveryPersonsDictionary)
+    @try
     {
-        User *user = [[User alloc]init];
-        user.userId = [deliveryPersonDictionary objectForKey:@"dboyId"];
-        user.name = [deliveryPersonDictionary objectForKey:@"dboyName"];
-        user.role = @"Delivery Person";
-        user.mobile = [deliveryPersonDictionary objectForKey:@"dboyMobile"];
-        user.phone = @"";
-        user.email = [deliveryPersonDictionary objectForKey:@"dboyEmail"];
-        user.profilePictureURL = [deliveryPersonDictionary objectForKey:@"dboyImgUrl"];
-        user.licenseNumber = [deliveryPersonDictionary objectForKey:@"licenseNumber"];
+        NSURL *deliveryPersonURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_DELIVERY_PERSON_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:deliveryPersonURL];
         
-        [_userArray addObject:user];
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *deliveryPersonsDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", deliveryPersonsDictionary);
+        
+        for (NSDictionary *deliveryPersonDictionary in deliveryPersonsDictionary)
+        {
+            User *user = [[User alloc]init];
+            user.userId = [deliveryPersonDictionary objectForKey:@"dboyId"];
+            user.name = [deliveryPersonDictionary objectForKey:@"dboyName"];
+            user.role = @"Delivery Person";
+            user.mobile = [deliveryPersonDictionary objectForKey:@"dboyMobile"];
+            user.phone = @"";
+            user.email = [deliveryPersonDictionary objectForKey:@"dboyEmail"];
+            user.profilePictureURL = [deliveryPersonDictionary objectForKey:@"dboyImgUrl"];
+            user.licenseNumber = [deliveryPersonDictionary objectForKey:@"licenseNumber"];
+            
+            [_userArray addObject:user];
+        }
+        [overlayView dismiss:YES];
     }
-    
+    @catch(NSException *e)
+    {
+        DebugLog(@"UserManagementViewController [getDeliveryPerson]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+       
+    }
 }
 
 - (IBAction)addNewMemberButtonClicked:(id)sender {

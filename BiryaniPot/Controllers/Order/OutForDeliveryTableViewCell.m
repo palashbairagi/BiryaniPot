@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf015] forState:UIControlStateNormal];
+    [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf1b9] forState:UIControlStateNormal];
      _dboyQueue = [[NSOperationQueue alloc] init];
 }
 

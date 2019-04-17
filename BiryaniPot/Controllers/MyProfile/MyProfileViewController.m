@@ -70,19 +70,43 @@
 
 -(void)getManagers
 {
-    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
-    NSError *error = nil;
-    NSDictionary *managerListDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    NSArray *managersArray = [managerListDictionary objectForKey:@"managersList"];
-    
-    for (NSDictionary *managerDictionary in managersArray)
-    {
-        @try
+    @try{
+        _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        NSURL *managerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_MANAGER_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:managerURL];
+        
+        DebugLog(@"Request %@ ", managerURL);
+        
+        if (error != nil)
         {
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                //[overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *managerListDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                //[overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@",managerListDictionary);
+        
+        NSArray *managersArray = [managerListDictionary objectForKey:@"managersList"];
+        
+        for (NSDictionary *managerDictionary in managersArray)
+        {
             _user = [[User alloc]init];
             _user.userId = [NSString stringWithFormat:@"%@", [managerDictionary objectForKey:@"managerId"]];
             NSString *userId = [NSString stringWithFormat:@"%@", [_appDelegate.userDefaults objectForKey:@"userId"]];
@@ -99,12 +123,20 @@
                 [self setData];
                 break;
             }
-            
         }
-        @catch(NSException *ex)
-        {
-            NSLog(@"%@ %@", ex.name, ex.reason);
-        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[overlayView dismiss:YES];
+        });
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"MyProfileViewController [getManagers]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        //[overlayView dismiss:YES];
     }
 }
 
@@ -148,128 +180,203 @@
 
 -(void)updateUser
 {
-    _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSString *managerId = _user.userId;
-    NSString *name = _user.name;
-    NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
-    NSString *email = _user.email;
-    NSString *role = _user.role;
-    
-    if ([role isEqualToString:@"Manager"]) role = @"3";
-    else role = @"175";
-    
-    if(_extension == NULL) _extension = @"jpg";
-    else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+    @try
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
-    }
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_PROFILE]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    NSMutableData *body = [NSMutableData data];
-    
-    NSDictionary *params = @{
-                             @"manager_id" : managerId,
-                             @"managername" : name,
-                             @"email" : email,
-                             @"mobile" : mobile,
-                             @"locationid"   : Constants.LOCATION_ID,
-                             @"role"  : role
-                             };
-    
-    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
-    
-    NSData *imageData = UIImageJPEGRepresentation(_profilePicture.image, 1.0);
-    NSString *fieldName = @"file";
-    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
-    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",name];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:imageData];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    request.HTTPBody = body;
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"error = %@", error);
-            return;
+        _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        NSString *managerId = _user.userId;
+        NSString *name = _user.name;
+        NSString *mobile = [NSString stringWithFormat:@"%@", [Validation trim:_mobile.text]];
+        NSString *email = _user.email;
+        NSString *role = _user.role;
+        
+        if ([role isEqualToString:@"Manager"]) role = @"3";
+        else role = @"175";
+        
+        if(_extension == NULL) _extension = @"jpg";
+        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
         }
         
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_PROFILE]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         
-        NSLog(@"%@ %@", result, response);
+        NSMutableData *body = [NSMutableData data];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isEqualToString:@"File saved"])
+        NSDictionary *params = @{
+                                 @"manager_id" : managerId,
+                                 @"managername" : name,
+                                 @"email" : email,
+                                 @"mobile" : mobile,
+                                 @"locationid"   : Constants.LOCATION_ID,
+                                 @"role"  : role
+                                 };
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_profilePicture.image, 1.0);
+        NSString *fieldName = @"file";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+        NSString *imgName = [NSString stringWithFormat:@"%@.jpg",name];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
             {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Profile Updated"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
             }
-            else
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error != nil)
             {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Update"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
             }
-        });
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([result isEqualToString:@"File saved"])
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Profile Updated"];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Update"];
+                }
+            });
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        [task resume];
         
-    }];
-    [task resume];
-
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MyProfileViewController [updateUser]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)changePassword
 {
-    NSString *post = [NSString stringWithFormat:@"managerEmail=%@&oldpassword=%@&newpassword=%@", _user.email, _currentPassword.text, _password.text];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.CHANGE_PASSWORD]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    @try
+    {
+        NSString *post = [NSString stringWithFormat:@"email=%@&oldpassword=%@&password=%@", _user.email, _currentPassword.text, _password.text];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
         
-        NSDictionary *message = [result objectForKey:@"error"];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.CHANGE_PASSWORD]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         
-        if ([[message objectForKey:@"message"] isEqualToString:@"Successfully changed."])
-        {
-            [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Password Change"];
-        }
-        else
-        {
-            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Incorrect Current Password"];
-        }
+        [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:postData];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _currentPassword.text = @"";
-            _password.text = @"";
-            _confirmPassword.text = @"";
-        });
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            NSString *status = [result objectForKey:@"status"];
+            
+            if ([status intValue] == 1)
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Password Change"];
+            }
+            else
+            {
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Incorrect Current Password"];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _currentPassword.text = @"";
+                _password.text = @"";
+                _confirmPassword.text = @"";
+            });
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [overlayView dismiss:YES];
+            });
+        }];
         
-    }];
-    
-    [postDataTask resume];
+        [postDataTask resume];
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"MyProfileViewController [changePassword]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)checkButtonClicked:(id)sender

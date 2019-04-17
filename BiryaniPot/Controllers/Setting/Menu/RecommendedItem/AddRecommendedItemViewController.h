@@ -13,11 +13,14 @@
 
 @property (nonatomic, retain) MenuViewController *delegate;
 
+@property (nonatomic, retain) Item *selectedItem;
+
 @property (weak, nonatomic) IBOutlet UITableView *categoryTableView;
 @property (weak, nonatomic) IBOutlet UITableView *itemTableView;
 
 @property (nonatomic, retain) NSMutableArray *categoryArray;
 @property (nonatomic, retain) NSMutableArray *itemArray;
+@property (nonatomic, retain) NSMutableArray *recommendedItemArray;
 
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;

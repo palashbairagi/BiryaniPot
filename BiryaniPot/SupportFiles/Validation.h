@@ -17,5 +17,6 @@
 +(BOOL)isLess:(UITextField *)textField thanMinLength: (int)minLength;
 +(BOOL)isMore:(UITextField *)textField thanMaxLength: (int)maxLength;
 +(BOOL)isNumber:(UITextField *)textField;
++(BOOL)isDecimal:(UITextField *)textField;
 +(BOOL)isEmail:(UITextField *)textField;
 @end

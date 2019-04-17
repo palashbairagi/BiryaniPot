@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *licenceNo;
 @property (weak, nonatomic) IBOutlet UILabel *licenceNoLabel;
 @property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UILabel *passwordLabel;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (nonatomic, retain) NSString *extension;
 

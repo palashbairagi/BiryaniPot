@@ -9,13 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "Item.h"
 #import "OrderDetailViewController.h"
+#import "AddItemToOrderViewController.h"
+#import "Validation.h"
 
 @interface OrderDetailTableViewCell : UITableViewCell
 @property (nonatomic, retain) OrderDetailViewController *delegate;
+@property (nonatomic, retain) AddItemToOrderViewController *addItemDelegate;
 
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UIButton *negativeButton;
 @property (weak, nonatomic) IBOutlet UIButton *positiveButton;
+
 @property (weak, nonatomic) IBOutlet UILabel *quantity;
 @property (weak, nonatomic) IBOutlet UILabel *price;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *spiceLevel;

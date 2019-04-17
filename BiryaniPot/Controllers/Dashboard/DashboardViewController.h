@@ -12,8 +12,6 @@
 
 @interface DashboardViewController : BaseViewController <BarChartDataSource, UITableViewDelegate, UITableViewDataSource, NSURLSessionDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @property (weak, nonatomic) IBOutlet UIView *statisticsView;
 

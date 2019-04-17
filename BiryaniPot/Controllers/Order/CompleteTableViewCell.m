@@ -13,7 +13,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf058] forState:UIControlStateNormal];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -30,13 +29,15 @@
     _orderNo.text = order.orderNo;
     _itemCount.text = [NSString stringWithFormat:@"%@ Items", order.itemCount];
     _customerName.text = order.customerName;
-}
-
-- (IBAction)checkIconButtonClicked:(id)sender
-{
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    NSNotification *notification = [NSNotification notificationWithName:@"OrderEnteringPreparingStage" object: self];
-    [notificationCenter postNotification:notification];
+    
+    if ([order.status isEqualToString:@"Delivered"])
+    {
+        [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf015] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [self.checkIconButton setTitle:[NSString stringWithFormat:@"%C", 0xf058] forState:UIControlStateNormal];
+    }
 }
 
 @end

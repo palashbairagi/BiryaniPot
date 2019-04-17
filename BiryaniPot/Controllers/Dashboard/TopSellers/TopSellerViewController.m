@@ -36,18 +36,11 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     _xAxisArray =  [[NSMutableArray alloc]init];
     _yAxisArray = [[NSMutableArray alloc]init];
     
     [self topSellers];
     
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 -(void) drawGraph
@@ -74,44 +67,83 @@
 
 -(void)topSellers
 {
-    [_scrollView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-    [_yAxisArray removeAllObjects];
-    [_xAxisArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSDictionary *topSellersDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    NSArray *topSellersArray = [topSellersDic objectForKey:@"topSellers"];
-    
-    for(NSDictionary *topSeller in topSellersArray)
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+
+    @try
     {
-        NSString *itemName = [topSeller objectForKey:@"itemName"];
-        NSNumber *total = [NSNumber numberWithInt:[[topSeller objectForKey:@"timesSold"] intValue]];
-  
-        [_yAxisArray addObject:itemName];
-        [_xAxisArray addObject:total];
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+        [_scrollView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        [_yAxisArray removeAllObjects];
+        [_xAxisArray removeAllObjects];
         
-            if (_yAxisArray.count != 0)
-            {
-                [self drawGraph];
-                [_graph setXValues:_xAxisArray];
-                [_graph setYAxisLabels:_yAxisArray];
-                [_graph setMaxXValue: [_xAxisArray[0] intValue]];
-                [_graph reloadInputViews];
-                [self.scrollView addSubview:_graph];
-            }
-            else
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Data"];
-            }
-    });
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];;
+            });
+            return;
+        }
+        
+        NSDictionary *topSellersDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", topSellersDic);
+        
+        NSArray *topSellersArray = [topSellersDic objectForKey:@"topSellers"];
+        
+        for(NSDictionary *topSeller in topSellersArray)
+        {
+            NSString *itemName = [topSeller objectForKey:@"itemName"];
+            NSNumber *total = [NSNumber numberWithInt:[[topSeller objectForKey:@"timesSold"] intValue]];
+      
+            [_yAxisArray addObject:itemName];
+            [_xAxisArray addObject:total];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+                if (_yAxisArray.count != 0)
+                {
+                    [self drawGraph];
+                    [_graph setXValues:_xAxisArray];
+                    [_graph setYAxisLabels:_yAxisArray];
+                    [_graph setMaxXValue: [_xAxisArray[0] intValue]];
+                    [_graph reloadInputViews];
+                    [self.scrollView addSubview:_graph];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Data"];
+                }
+            
+            [overlayView dismiss:YES];
+        });
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"TopSellerViewController [topSellers]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
     
 }
 
@@ -133,23 +165,15 @@
 
 -(void)datesUpdated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    @try
+   @try
     {
         _searchTextField.text = @"";
         [self topSellers];
     }@catch(NSException *e)
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Top Sellers"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"TopSellerViewController [datesUpdated]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 - (IBAction)searchButtonClicked:(id)sender

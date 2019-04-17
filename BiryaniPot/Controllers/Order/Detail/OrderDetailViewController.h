@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *tip;
 @property (weak, nonatomic) IBOutlet UILabel *tax;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryType;
+@property (weak, nonatomic) IBOutlet UIImageView *paymentTypeImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *grandTotal;
 
@@ -32,11 +33,18 @@
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UITableView *itemTable;
-@property (nonatomic, retain) NSMutableArray *itemArray;
+
+@property (copy, nonatomic) NSMutableArray *itemArray;
+@property (copy, nonatomic) NSMutableArray *updatedItemArray;
 
 @property (nonatomic, retain) Order *order;
+@property int noOfItems;
 
 @property BOOL isQueue;
 @property BOOL isPreparing;
+
+@property (nonatomic, retain) NSString *merchantId, *reference;
+
+-(float) getTotal;
 
 @end

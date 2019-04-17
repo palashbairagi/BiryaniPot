@@ -19,10 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     if (_delegate.smiley == (id)[NSNull null])
     {
         self.feedbackIcon.text = @"-";
@@ -65,28 +61,59 @@
     gradient1.cornerRadius = 5;
     [[self.sendButton layer] addSublayer:gradient1];
     
-    @try
-    {
-        [self userFeedback];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
+   [self userFeedback];
     
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 -(void)userFeedback
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?order_id=%@", Constants.FEEDBACK_BY_USER_URL, _delegate.orderNo]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *userFeedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    _feedbackDescription.text = [userFeedback[0] objectForKey:@"comments"];
+    @try
+    {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?order_id=%@", Constants.FEEDBACK_BY_USER_URL, _delegate.orderNo]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *userFeedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", userFeedback);
+        
+        _feedbackDescription.text = [userFeedback objectForKey:@"comments"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"FeedbackDetailViewController [userFeedback]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)sendButtonClicked:(id)sender {
@@ -101,9 +128,7 @@
         return;
     }
     
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
@@ -123,6 +148,18 @@
         
         NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(error != NULL)
                 {
@@ -132,6 +169,7 @@
                 {
                     [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to send Email"];
                 }
+                [overlayView dismiss:YES];
             });
             
         }];
@@ -140,14 +178,12 @@
     }
     @catch(NSException *e)
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to send response"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"FeedbackDetailViewController [sendButtonClicked]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
     @finally
     {
-        [_activityIndicator stopAnimating];
-        [_activityIndicator setHidden:TRUE];
-        [_waitView setHidden:TRUE];
+        [overlayView dismiss:YES];
     }
 }
 

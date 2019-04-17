@@ -85,10 +85,9 @@
 		E5CE99371FF75604006E6F7F /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CE99361FF75604006E6F7F /* Item.m */; };
 		E5D4259E1FEF181C002003D2 /* RadialGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5D4259D1FEF181C002003D2 /* RadialGradientView.m */; };
 		E5D425A01FEF48FE002003D2 /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D4259F1FEF48FE002003D2 /* fontawesome-webfont.ttf */; };
-		E5D425A31FEF9403002003D2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D425A21FEF9403002003D2 /* Roboto-Medium.ttf */; };
-		E5D425A51FEF9421002003D2 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5D425A41FEF9421002003D2 /* Roboto-Regular.ttf */; };
 		E5D5C81E20AEA965000E0DEE /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D5C81D20AEA965000E0DEE /* Photos.framework */; };
 		E5D5C82020AEAB92000E0DEE /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D5C81F20AEAB92000E0DEE /* AssetsLibrary.framework */; };
+		E5D9CD5420F71A6100B32708 /* Print.m in Sources */ = {isa = PBXBuildFile; fileRef = E5D9CD5320F71A6100B32708 /* Print.m */; };
 		E5DA7D8320A93EA20051B279 /* RangePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5DA7D8220A93EA20051B279 /* RangePickerCell.m */; };
 		E5E628CB20001B0F00ADC67C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E628CA20001B0F00ADC67C /* Constants.m */; };
 		E5E628CF2000702400ADC67C /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E628CE2000702400ADC67C /* Graph.m */; };
@@ -274,10 +273,10 @@
 		E5D4259C1FEF181C002003D2 /* RadialGradientView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RadialGradientView.h; sourceTree = "<group>"; };
 		E5D4259D1FEF181C002003D2 /* RadialGradientView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RadialGradientView.m; sourceTree = "<group>"; };
 		E5D4259F1FEF48FE002003D2 /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
-		E5D425A21FEF9403002003D2 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Medium.ttf"; path = "../../../../Downloads/Roboto/Roboto-Medium.ttf"; sourceTree = "<group>"; };
-		E5D425A41FEF9421002003D2 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../../../Downloads/Roboto/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		E5D5C81D20AEA965000E0DEE /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		E5D5C81F20AEAB92000E0DEE /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		E5D9CD5220F71A6100B32708 /* Print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Print.h; sourceTree = "<group>"; };
+		E5D9CD5320F71A6100B32708 /* Print.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Print.m; sourceTree = "<group>"; };
 		E5DA7D8120A93EA20051B279 /* RangePickerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangePickerCell.h; sourceTree = "<group>"; };
 		E5DA7D8220A93EA20051B279 /* RangePickerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RangePickerCell.m; sourceTree = "<group>"; };
 		E5E628C920001B0F00ADC67C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -407,6 +406,17 @@
 				E508247120BCA46C002A729C /* EditCategoryViewController.m */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		E54FCC3E20E2ACA4003C3F4D /* RecommendedItem */ = {
+			isa = PBXGroup;
+			children = (
+				E5768AD1200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.h */,
+				E5768AD2200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.m */,
+				E5C0C88420B4807400807905 /* AddRecommendedItemViewController.h */,
+				E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */,
+			);
+			path = RecommendedItem;
 			sourceTree = "<group>";
 		};
 		E57BE9F120AA91AB0060F079 /* Calendar */ = {
@@ -682,15 +692,12 @@
 		E5B1CE992005F989003B816C /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				E54FCC3E20E2ACA4003C3F4D /* RecommendedItem */,
 				E508247520BCA474002A729C /* Category */,
 				E5B1CE9A2005F9DF003B816C /* MenuViewController.h */,
 				E5B1CE9B2005F9DF003B816C /* MenuViewController.m */,
 				E5B1CE9F2006016A003B816C /* MenuCollectionViewCell.h */,
 				E5B1CEA02006016A003B816C /* MenuCollectionViewCell.m */,
-				E5768AD1200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.h */,
-				E5768AD2200740CE00A60EC7 /* RecommendedItemsCollectionViewCell.m */,
-				E5C0C88420B4807400807905 /* AddRecommendedItemViewController.h */,
-				E5C0C88520B4807400807905 /* AddRecommendedItemViewController.m */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -751,11 +758,18 @@
 		E5D425A11FEF93DB002003D2 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				E5D425A41FEF9421002003D2 /* Roboto-Regular.ttf */,
-				E5D425A21FEF9403002003D2 /* Roboto-Medium.ttf */,
 				E5D4259F1FEF48FE002003D2 /* fontawesome-webfont.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		E5D9CD5120F71A3900B32708 /* Print */ = {
+			isa = PBXGroup;
+			children = (
+				E5D9CD5220F71A6100B32708 /* Print.h */,
+				E5D9CD5320F71A6100B32708 /* Print.m */,
+			);
+			path = Print;
 			sourceTree = "<group>";
 		};
 		E5E628CC2000700C00ADC67C /* Graph */ = {
@@ -923,6 +937,7 @@
 		E5F359201FEDD98400470842 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E5D9CD5120F71A3900B32708 /* Print */,
 				E5C903CF205F555B002A6A69 /* LandingImage */,
 				E5985D85201D7EA300C200F4 /* Menu */,
 				E5ADF29F20048D6B00347BA2 /* Feedback */,
@@ -1109,9 +1124,7 @@
 				E511A09820B10DCA001E579A /* TaxViewController.xib in Resources */,
 				E5FFB75E206153E5001C75E3 /* InvoiceDetailTableViewCell.xib in Resources */,
 				E5CE99341FF74CC2006E6F7F /* OrderDetailTableViewCell.xib in Resources */,
-				E5D425A31FEF9403002003D2 /* Roboto-Medium.ttf in Resources */,
 				E5ADF2AD2004AF8100347BA2 /* TotalOrdersTableViewCell.xib in Resources */,
-				E5D425A51FEF9421002003D2 /* Roboto-Regular.ttf in Resources */,
 				E5A624682014762A00D01F4B /* UserTableViewCellHeader.xib in Resources */,
 				E5F359261FEDDF6500470842 /* LoginViewController.xib in Resources */,
 				E5BF89161FF37CD5007209A2 /* ReadyToPickUpTableViewCell.xib in Resources */,
@@ -1390,6 +1403,7 @@
 				E5BCA9821FF4A7D500D28878 /* UserTableViewCell.m in Sources */,
 				E511A09720B10DCA001E579A /* TaxViewController.m in Sources */,
 				E5BCA9941FF5679000D28878 /* Offer.m in Sources */,
+				E5D9CD5420F71A6100B32708 /* Print.m in Sources */,
 				E5B1CE9D2005F9DF003B816C /* MenuViewController.m in Sources */,
 				E5F358EE1FEDCEC700470842 /* AppDelegate.m in Sources */,
 				E5ADF29D20048AC300347BA2 /* FeedbackTableViewCell.m in Sources */,
@@ -1550,11 +1564,15 @@
 			baseConfigurationReference = D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9Z2K44HC2K;
+				IBC_WARNINGS = YES;
 				INFOPLIST_FILE = BiryaniPot/SupportFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.palashbairagi.BiryaniPot;
+				PRODUCT_BUNDLE_IDENTIFIER = BiryaniPot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -1564,11 +1582,15 @@
 			baseConfigurationReference = 52E282B6E0C7C09177DDCE37 /* Pods-BiryaniPot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9Z2K44HC2K;
+				IBC_WARNINGS = YES;
 				INFOPLIST_FILE = BiryaniPot/SupportFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.palashbairagi.BiryaniPot;
+				PRODUCT_BUNDLE_IDENTIFIER = BiryaniPot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;

@@ -33,55 +33,91 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    @try
-    {
-        [self offer];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to load graph"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
+    [self offer];
 }
 
 -(void)offer
 {
-    [_offersAvailedView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-    [_offersArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *offers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for(NSDictionary *offer in offers)
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+
+    @try
     {
-        NSString *codeName = [offer objectForKey:@"codeName"];
+        [_offersAvailedView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        [_offersArray removeAllObjects];
         
-        OfferStatistics *os = [[OfferStatistics alloc]init];
-        os.codeName = codeName;
-        os.timesApplied = [offer objectForKey:@"times"];
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
        
-        [_offersArray addObject:os];
-    }
-    
-    if(_offersArray.count == 0)
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *result = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", result);
+        
+        NSArray *offers = [result objectForKey:@"dashboardOffers"];
+        
+        for(NSDictionary *offer in offers)
+        {
+            NSString *codeName = [offer objectForKey:@"codeName"];
+            
+            OfferStatistics *os = [[OfferStatistics alloc]init];
+            os.codeName = codeName;
+            os.timesApplied = [offer objectForKey:@"times"];
+           
+            [_offersArray addObject:os];
+        }
+        
+        if(_offersArray.count == 0)
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Data"];
+        }
+        else
+        {
+            @try
+            {
+                [self createLineGraph];
+            }@catch(NSException *e)
+            {
+                DebugLog(@"OffersAvailedViewController [offer]: %@ %@",e.name, e.reason);
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Create Graph"];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }@catch(NSException *e)
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Data"];
+        DebugLog(@"OffersAvailedViewController [offer]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
-    else
+    @finally
     {
-        [self createLineGraph];
+        [overlayView dismiss:YES];
     }
 }
 
@@ -291,23 +327,7 @@
 
 -(void)datesUpdated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    @try
-    {
-        _searchTextField.text = @"";
-        [self offer];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to load graph"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
+   [self offer];
 }
 
 @end

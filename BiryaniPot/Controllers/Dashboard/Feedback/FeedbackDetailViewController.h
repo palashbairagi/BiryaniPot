@@ -10,8 +10,6 @@
 #import "Feedback.h"
 
 @interface FeedbackDetailViewController : UIViewController <NSURLSessionDelegate>
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UILabel *feedbackIcon;

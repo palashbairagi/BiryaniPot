@@ -13,9 +13,12 @@
 
 @interface MenuViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, NSURLSessionDelegate, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate,UIImagePickerControllerDelegate, MKDropdownMenuDelegate, MKDropdownMenuDataSource>
 
+@property (weak, nonatomic) IBOutlet UIView *itemDescriptionView;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *menuCollectionView;
 @property (weak, nonatomic) IBOutlet UITableView *itemTableView;
 @property (weak, nonatomic) IBOutlet UICollectionView *recommendedItemCollectionView;
+@property (weak, nonatomic) IBOutlet UIView *recommendedItemView;
 
 @property (weak, nonatomic) IBOutlet UIButton *deleteItemButton;
 @property (weak, nonatomic) IBOutlet UIButton *addCategoryButton;
@@ -39,15 +42,20 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIButton *isVegButton;
 @property (weak, nonatomic) IBOutlet UIButton *spiceSupportButton;
+@property (weak, nonatomic) IBOutlet UITextField *loyaltyPoints;
 @property (weak, nonatomic) IBOutlet MKDropdownMenu *type;
 @property (weak, nonatomic) IBOutlet UILabel *typeLabel;
 
 @property (weak, nonatomic) IBOutlet UITextField *categorySearchTextField;
+@property (weak, nonatomic) IBOutlet UIView *itemSearchView;
 @property (weak, nonatomic) IBOutlet UITextField *itemSearchTextField;
 
 @property BOOL spice, veg;
 @property (nonatomic, retain) NSString *extension;
-@property (nonatomic, retain) NSString *status;
+@property (nonatomic, retain) NSString *mode;
 
--(void)getCategory;
+-(void) getCategory;
+-(void)getItem: (NSString *)categoryId;
+-(void) modeChanged;
+-(void)getRecommendedItem: (Item *) item;
 @end

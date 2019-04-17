@@ -25,6 +25,700 @@
     [self initComponents];
 }
 
+-(void)getCategory
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        [_categoryArray removeAllObjects];
+        [_categorySearchArray removeAllObjects];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&filterout=0", Constants.GET_CATEGORIES_URL, Constants.LOCATION_ID]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", resultDictionary);
+            
+            NSArray *categoriesArray= [resultDictionary objectForKey:@"categories"];
+            
+            for(NSDictionary *categoryDictionary in categoriesArray)
+            {
+                Category *category = [[Category alloc]init];
+                category.categoryId = [categoryDictionary objectForKey:@"categoryId"];
+                category.categoryName = [categoryDictionary objectForKey:@"categoryName"];
+                category.imageURL = [categoryDictionary objectForKey:@"categoryUrl"];
+                category.isNonVeg = [categoryDictionary objectForKey:@"isNonVegSupported"];
+                
+                [_categoryArray addObject:category];
+                [_categorySearchArray addObject:category];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_menuCollectionView reloadData];
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [postDataTask resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [getCategory]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
+}
+
+-(void)getItem: (NSString *)categoryId
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        [_itemArray removeAllObjects];
+        [_itemSearchArray removeAllObjects];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?access_token=%@&category_id=%@&locationid=%@", Constants.GET_ITEMS_BY_CATEGORY_URL, Constants.ACCESS_TOKEN ,categoryId, Constants.LOCATION_ID]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", resultDictionary);
+            
+            NSArray *itemArray = [resultDictionary objectForKey:@"items"];
+            
+            for(NSDictionary *itemDictionary in itemArray)
+            {
+                Item *item = [[Item alloc]init];
+                item.itemId = [itemDictionary objectForKey:@"itemId"];
+                item.name = [itemDictionary objectForKey:@"itemName"];
+                item.price = [NSString stringWithFormat:@"%@", [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"]];
+                item.discount = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"discount"]];
+                item.imageURL = [itemDictionary objectForKey:@"itemImageUrl"];
+                item.detail = [itemDictionary objectForKey:@"itemDescription"];
+                item.itemTypeId = [itemDictionary objectForKey:@"itemTypeId"];
+                item.pointsRequired = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"pointsRequired"]];
+                
+                if([itemDictionary objectForKey:@"isVeg"] == NULL)
+                {
+                    item.isVeg = FALSE;
+                }
+                else if(([[itemDictionary objectForKey:@"isVeg"] intValue] == 1))
+                {
+                    item.isVeg = TRUE;
+                }
+                else item.isVeg = FALSE;
+                
+                if([itemDictionary objectForKey:@"spiceSupported"] == NULL)
+                {
+                    item.isSpiceSupported = FALSE;
+                }
+                else if(([[itemDictionary objectForKey:@"spiceSupported"]intValue] == 1))
+                {
+                    item.isSpiceSupported = TRUE;
+                }
+                else item.isSpiceSupported = FALSE;
+                
+                [_itemArray addObject:item];
+                [_itemSearchArray addObject:item];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_itemTableView reloadData];
+                
+                if (_itemArray.count > 0)
+                {
+                    NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+                    [_itemTableView selectRowAtIndexPath:index animated:true scrollPosition:UITableViewScrollPositionNone];
+                    [self tableView:_itemTableView didSelectRowAtIndexPath:index];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [postDataTask resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [getItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
+}
+
+-(void)addItem
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSString *itemName = [NSString stringWithFormat:@"%@", _name.text];
+        NSString *price = [NSString stringWithFormat:@"%@", _price.text];
+        NSString *discount = [NSString stringWithFormat:@"%@", _discount.text];
+        NSString *itemDetail = [NSString stringWithFormat:@"%@", _detail.text];
+        NSString *loyaltyPoints = [NSString stringWithFormat:@"%@", _loyaltyPoints.text];
+        
+        NSString *veg;
+        if (_veg == FALSE)veg =@"0";
+        else veg = @"1";
+        
+        NSString *spice;
+        if (_spice == FALSE)spice =@"0";
+        else spice = @"1";
+        
+        NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
+        
+        NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
+        NSIndexPath *indexPath = selectedIndex[0];
+        Category *category = _categoryArray[indexPath.row];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_ITEM_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSMutableData *body = [NSMutableData data];
+        
+        NSDictionary *params = @{
+                                     @"accesstoken" :   Constants.ACCESS_TOKEN,
+                                     @"name" : itemName,
+                                     @"description" : itemDetail,
+                                     @"categoryid" : category.categoryId,
+                                     @"itemtypeid" : typeId,
+                                     @"amount" : price,
+                                     @"discount" : discount,
+                                     @"isveg" : veg,
+                                     @"pointsrequired"  : loyaltyPoints,
+                                     @"isspicesupported" : spice,
+                                     @"locationid" : Constants.LOCATION_ID,
+                                     @"newmenu" : @"0"
+                                 };
+        DebugLog(@"%@", params);
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"PUT"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
+        NSString *fieldName = @"image";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+        NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([result isEqualToString:@"Item created"])
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Created"];
+                    [self getItem:category.categoryId];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [task resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [addItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)updateItem
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSString *itemName = [NSString stringWithFormat:@"%@", _name.text];
+        NSString *price = [NSString stringWithFormat:@"%@", _price.text];
+        NSString *discount = [NSString stringWithFormat:@"%@", _discount.text];
+        NSString *itemDetail = [NSString stringWithFormat:@"%@", _detail.text];
+        NSString *loyaltyPoints = [NSString stringWithFormat:@"%@", _loyaltyPoints.text];
+        
+        NSString *veg;
+        if (_veg == FALSE)veg =@"0";
+        else veg = @"1";
+        
+        NSString *spice;
+        if (_spice == FALSE)spice =@"0";
+        else spice = @"1";
+        
+        NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
+        
+        NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
+        NSIndexPath *indexPath = selectedIndex[0];
+        Category *category = _categoryArray[indexPath.row];
+        
+        indexPath = [_itemTableView indexPathForSelectedRow];
+        Item *item = _itemSearchArray[indexPath.row];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_ITEM_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSMutableData *body = [NSMutableData data];
+        
+        NSDictionary *params = @{
+                                 @"accesstoken" :   Constants.ACCESS_TOKEN,
+                                 @"itemid" : item.itemId,
+                                 @"name" : itemName,
+                                 @"description" : itemDetail,
+                                 @"categoryid" : category.categoryId,
+                                 @"itemtypeid" : typeId,
+                                 @"amount" : price,
+                                 @"discount" : discount,
+                                 @"isveg" : veg,
+                                 @"pointsrequired"  : loyaltyPoints,
+                                 @"isspicesupported" : spice,
+                                 @"locationid" : Constants.LOCATION_ID,
+                                 @"newmenu" : @"0"
+                                 };
+        DebugLog(@"%@", params);
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
+        NSString *fieldName = @"image";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+        NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([result isEqualToString:@"Item updated"])
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Updated"];
+                    [self getItem:category.categoryId];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [task resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [updateItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)deleteItem
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
+        NSIndexPath *indexPath = selectedIndex[0];
+        Category *category = _categoryArray[indexPath.row];
+        
+        indexPath = [_itemTableView indexPathForSelectedRow];
+        Item *item = _itemSearchArray[indexPath.row];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?accesstoken=%@&itemid=%@&locationid=%@&newmenu=0", Constants.DELETE_ITEM_URL, Constants.ACCESS_TOKEN, item.itemId, Constants.LOCATION_ID]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"DELETE"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([[result objectForKey:@"success"] intValue] == 1)
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Success" andMessage:@"Item Deleted"];
+                    [self getItem:category.categoryId];
+                    _mode = @"VIEW";
+                    [self modeChanged];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Delete Item"];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+        }];
+        
+        [task resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [deleteItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)getRecommendedItem: (Item *) item
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        [_recommendedItemArray removeAllObjects];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GET_RECOMMENDED_ITEMS_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSDictionary *parameters = @{ @"items": @[ @{ @"itemId": item.itemId } ],
+                                      @"accessToken": Constants.ACCESS_TOKEN
+                                    };
+        
+        NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/json;" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSArray *resultArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", resultArray);
+            
+            for(NSDictionary * itemDictionary in resultArray)
+            {
+                Item *item = [[Item alloc]init];
+                item.itemId = [itemDictionary objectForKey:@"itemId"];
+                item.name = [itemDictionary objectForKey:@"itemName"];
+                
+                [_recommendedItemArray addObject:item];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_recommendedItemCollectionView reloadData];
+                [overlayView dismiss:YES];
+            });
+        }];
+        
+        [task resume];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [getRecommendedItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void) deleteRecommendedItem: (Item *) recItem
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSIndexPath *indexPath = _itemTableView.indexPathForSelectedRow;
+        
+        if (indexPath == NULL || indexPath.row == -1)
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Please select item"];
+            [overlayView dismiss:YES];
+            return;
+        }
+        
+        Item *item = _itemArray[indexPath.row];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.ADD_RECOMMENDED_ITEMS_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSString *postString = [NSString stringWithFormat:@"item_id=%@&rec_item_id=%@&loc_id=%@&statement_type=delete", item.itemId, recItem.itemId, Constants.LOCATION_ID];
+        
+        NSData *postData = [postString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", resultDic);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([[resultDic objectForKey:@"status"] intValue] == 1)
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Successful" andMessage:@"Recommended Item Deleted"];
+                    [self getRecommendedItem:item];
+                }
+                else
+                {
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Delete"];
+                }
+                
+                [overlayView dismiss:YES];
+            });
+        }];
+        
+        [task resume];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"MenuViewController [deleteRecommendedItem]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
 -(void)initComponents
 {
     self.addCategoryButton.layer.cornerRadius = 5;
@@ -79,27 +773,116 @@
     
     _categoryQueue = [[NSOperationQueue alloc] init];
     
-    for (int i = 0; i<10; i++) {
-        if (i%2 ==0)[_recommendedItemArray addObject:[NSString stringWithFormat:@"Item %d", i]];
-        else [_recommendedItemArray addObject:[NSString stringWithFormat:@"RecommendedItem %d", i]];
-    }
-    
-    [_recommendedItemArray addObject:@"Add"];
-    
+//    for (int i = 0; i<10; i++) {
+//        if (i%2 ==0)[_recommendedItemArray addObject:[NSString stringWithFormat:@"Item %d", i]];
+//        else [_recommendedItemArray addObject:[NSString stringWithFormat:@"RecommendedItem %d", i]];
+//    }
+
     _veg = TRUE;
     _spice = TRUE;
     
     [_isVegButton setTitle:[NSString stringWithFormat:@"%C", 0xf00c] forState:UIControlStateNormal];
     [_spiceSupportButton setTitle:[NSString stringWithFormat:@"%C", 0xf00c] forState:UIControlStateNormal];
-    [self disableAllButtons];
-    
+   
     [self getCategory];
     
-    if (_categoryArray.count > 0)
+    _mode = @"VIEW";
+    
+    _itemDescriptionView.hidden = TRUE;
+    _itemTableView.hidden = TRUE;
+    _saveButton.hidden = TRUE;
+    _cancelButton.hidden = TRUE;
+    _itemSearchView.hidden = TRUE;
+    
+    [self modeChanged];
+}
+
+-(void) modeChanged
+{
+    if([_mode isEqualToString:@"EDIT"])
     {
-        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-        [_menuCollectionView selectItemAtIndexPath:index animated:true scrollPosition:UICollectionViewScrollPositionNone];
-        [self collectionView:_menuCollectionView didSelectItemAtIndexPath:index];
+        [_itemDescriptionView setUserInteractionEnabled:TRUE];
+        
+        [_saveButton setEnabled:YES];
+        [_cancelButton setEnabled:YES];
+        
+        self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        _recommendedItemView.hidden = FALSE;
+    }
+    else if([_mode isEqualToString:@"ADD"])
+    {
+        NSIndexPath *indexPath = [_itemTableView indexPathForSelectedRow];
+        NSArray *indexes = [_menuCollectionView indexPathsForSelectedItems];
+        
+        if (indexes.count > 0)
+        {
+            [self tableView:_itemTableView didDeselectRowAtIndexPath:indexPath];
+        }
+        else
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Please select a category"];
+            return;
+        }
+        
+        [_saveButton setEnabled:YES];
+        [_cancelButton setEnabled:YES];
+        
+        self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        [_itemDescriptionView setUserInteractionEnabled:TRUE];
+        
+        _name.text = @"";
+        _price.text = @"";
+        _discount.text = @"";
+        _detail.text = @"";
+        _loyaltyPoints.text = @"";
+        _isVegButton.backgroundColor = [UIColor whiteColor];
+        _veg = FALSE;
+        _spiceSupportButton.backgroundColor = [UIColor whiteColor];
+        _spice = FALSE;
+        _image.image = [UIImage imageNamed:@"biryanipot"];
+        [_type selectRow:0 inComponent:0];
+        
+        _recommendedItemView.hidden = TRUE;
+    }
+    else //mode = VIEW
+    {
+        [_itemSearchArray removeAllObjects];
+        [_itemTableView reloadData];
+        
+        [_itemDescriptionView setUserInteractionEnabled:FALSE];
+        _recommendedItemView.hidden = FALSE;
+        
+        [_saveButton setEnabled:NO];
+        [_cancelButton setEnabled:NO];
+        
+        self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.saveButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        
+        self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
+        [self.cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        
+        _name.text = @"";
+        _price.text = @"";
+        _discount.text = @"";
+        _detail.text = @"";
+        _loyaltyPoints.text = @"";
+        _isVegButton.backgroundColor = [UIColor whiteColor];
+        _veg = FALSE;
+        _spiceSupportButton.backgroundColor = [UIColor whiteColor];
+        _spice = FALSE;
+        _image.image = [UIImage imageNamed:@"biryanipot"];
+        
+        _recommendedItemView.hidden = TRUE;
     }
 }
 
@@ -108,7 +891,17 @@
     if (collectionView == _recommendedItemCollectionView)
     {
         RecommendedItemsCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"recommendedItemsCell" forIndexPath:indexPath];
-        cell.label.text = _recommendedItemArray[indexPath.row];
+        
+        if(indexPath.row < _recommendedItemArray.count)
+        {
+            Item *item = _recommendedItemArray[indexPath.row];
+            cell.label.text = item.name;
+        }
+        else
+        {
+            cell.label.text = @"Add";
+        }
+        
         return cell;
     }
     else
@@ -127,17 +920,19 @@
 
                 NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:category.imageURL]];
                     
-                if (imgData == NULL)
+                UIImage * image;
+                
+                if ([UIImage imageWithData:imgData])
                 {
-                    UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
-                    category.image = image;
+                    image = [UIImage imageWithData:imgData];
                 }
                 else
                 {
-                    UIImage * image = [UIImage imageWithData:imgData];
-                    category.image = image;
+                    image = [UIImage imageNamed:@"biryanipot"];
                 }
-                    
+                
+                category.image = image;
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.menuCollectionView reloadItemsAtIndexPaths:@[indexPath]];
                 });
@@ -153,13 +948,15 @@
         
         cell.label.text = category.categoryName;
         
-        if (cell.selected)
+        if (cell.isSelected)
         {
-            cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:0.2];
+            cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
+            cell.label.textColor = [UIColor whiteColor];
         }
         else
         {
             cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.label.textColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
         }
         
         return cell;
@@ -174,7 +971,7 @@
     }
     else
     {
-        return _recommendedItemArray.count;
+        return _recommendedItemArray.count+1;
     }
 }
 
@@ -182,22 +979,35 @@
 {
     if(collectionView == _menuCollectionView)
     {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:0.2];
+        MenuCollectionViewCell *cell = (MenuCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
+        cell.label.textColor = [UIColor whiteColor];
+        
+        _mode = @"ADD";
+        [self modeChanged];
+        
         Category *category = _categorySearchArray[indexPath.row];
         [self getItem:category.categoryId];
+        
+        _itemDescriptionView.hidden = FALSE;
+        _itemTableView.hidden = FALSE;
+        _saveButton.hidden = FALSE;
+        _cancelButton.hidden = FALSE;
+        _itemSearchView.hidden = FALSE;
+        
+        _itemSearchTextField.text = @"";
     }
     else
     {
-        if(indexPath.row != _recommendedItemArray.count-1)
+        if(indexPath.row < _recommendedItemArray.count)
         {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle: @"Confirmation" message:@"Do you want to delete selected recommended item?" preferredStyle: UIAlertControllerStyleAlert];
             
             UIAlertAction *okAction = [UIAlertAction actionWithTitle: @"Confirm" style: UIAlertActionStyleDefault handler: ^(UIAlertAction *action){
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [_recommendedItemArray removeObjectAtIndex:indexPath.row];
-                    [_recommendedItemCollectionView reloadData];
+                    Item *item = _recommendedItemArray[indexPath.row];
+                    [self deleteRecommendedItem:item];
                 });
                 
             }];
@@ -218,10 +1028,13 @@
         }
         else
         {
+            NSIndexPath *selectedIndex = _itemTableView.indexPathForSelectedRow;
+            
             AddRecommendedItemViewController *ari = [[AddRecommendedItemViewController alloc]init];
             ari.modalPresentationStyle = UIModalPresentationFormSheet;
             ari.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             ari.preferredContentSize = CGSizeMake(720, 438);
+            ari.selectedItem = _itemArray[selectedIndex.row];
             ari.delegate = self; 
             
             [self presentViewController:ari animated:YES completion:nil];
@@ -233,8 +1046,9 @@
 {
     if(collectionView == _menuCollectionView)
     {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        MenuCollectionViewCell *cell = (MenuCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
         cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.label.textColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
     }
 }
 
@@ -246,10 +1060,18 @@
     }
     else
     {
-        NSString *itemString;
-        itemString = [_recommendedItemArray objectAtIndex:indexPath.row];
-        CGSize size = [itemString sizeWithAttributes:NULL];
-        return CGSizeMake(size.width+70, CGRectGetHeight(collectionView.frame));
+        if (indexPath.row < _recommendedItemArray.count)
+        {
+            Item *item = [_recommendedItemArray objectAtIndex:indexPath.row];
+            CGSize size = [item.name sizeWithAttributes:NULL];
+            return CGSizeMake(size.width+70, CGRectGetHeight(collectionView.frame));
+        }
+        else
+        {
+            CGSize size = [@"Add" sizeWithAttributes:NULL];
+            return CGSizeMake(size.width+70, CGRectGetHeight(collectionView.frame));
+        }
+        
     }
 }
 
@@ -266,12 +1088,27 @@
     cell.textLabel.adjustsFontSizeToFitWidth=YES;
     cell.textLabel.minimumScaleFactor=0.5;
     
+    if (cell.isSelected)
+    {
+        cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor whiteColor];
+    }
+    else
+    {
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.textLabel.textColor = [UIColor blackColor];
+    }
+    
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    _status = @"update";
+    _itemDescriptionView.hidden = FALSE;
+    _saveButton.hidden = FALSE;
+    _cancelButton.hidden = FALSE;
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     Item *item = _itemSearchArray[indexPath.row];
     
@@ -286,6 +1123,9 @@
         
     if (item.detail == NULL)item.itemId = @"";
     else _detail.text = item.detail;
+    
+    if (item.pointsRequired == NULL)item.pointsRequired = @"";
+    else _loyaltyPoints.text = item.pointsRequired;
     
     if (item.isSpiceSupported)
     {
@@ -317,7 +1157,17 @@
         NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
             
             NSData * imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:item.imageURL]];
-            UIImage * image = [UIImage imageWithData:imgData];
+            UIImage * image;
+            
+            if ([UIImage imageWithData:imgData])
+            {
+                image = [UIImage imageWithData:imgData];
+            }
+            else
+            {
+                image = [UIImage imageNamed:@"biryanipot"];
+            }
+            
             item.image = image;
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -332,6 +1182,35 @@
     {
         _image.image = item.image;
     }
+    
+    [self getRecommendedItem:item];
+    
+    cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
+    cell.textLabel.textColor = [UIColor whiteColor];
+ 
+    _mode = @"EDIT";
+    [self modeChanged];
+}
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor blackColor];
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (cell.isSelected)
+    {
+        cell.contentView.backgroundColor = [UIColor colorWithRed:206.0/256.0 green:96.0/256.0 blue:40.0/256.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor whiteColor];
+    }
+    else
+    {
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.textLabel.textColor = [UIColor blackColor];
+    }
 }
 
 -(NSInteger)numberOfComponentsInDropdownMenu:(MKDropdownMenu *)dropdownMenu
@@ -345,8 +1224,7 @@
 }
 
 - (NSAttributedString *)dropdownMenu:(MKDropdownMenu *)dropdownMenu attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [[NSAttributedString alloc] initWithString:_typeArray[row] attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Roboto" size:16.0], NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
-    
+    return [[NSAttributedString alloc] initWithString:_typeArray[row] attributes:@{ NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
 }
 
 - (void)dropdownMenu:(MKDropdownMenu *)dropdownMenu didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
@@ -356,370 +1234,6 @@
     self.typeLabel.text = selectedOption;
     
     [dropdownMenu closeAllComponentsAnimated:YES];
-}
-
--(void)getCategory
-{
-    [_categoryArray removeAllObjects];
-    [_categorySearchArray removeAllObjects];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&filterout=0", Constants.GET_CATEGORIES_URL, Constants.LOCATION_ID]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        NSArray *categoriesArray= [resultDictionary objectForKey:@"categories"];
-        
-        for(NSDictionary *categoryDictionary in categoriesArray)
-        {
-            Category *category = [[Category alloc]init];
-            category.categoryId = [categoryDictionary objectForKey:@"categoryId"];
-            category.categoryName = [categoryDictionary objectForKey:@"categoryName"];
-            category.imageURL = [categoryDictionary objectForKey:@"categoryUrl"];
-            category.isNonVeg = [categoryDictionary objectForKey:@"isNonVegSupported"];
-            
-            [_categoryArray addObject:category];
-            [_categorySearchArray addObject:category];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_menuCollectionView reloadData];
-        });
-        
-    }];
-    [postDataTask resume];
-}
-
--(void)getItem: (NSString *)categoryId
-{
-    [_itemArray removeAllObjects];
-    [_itemSearchArray removeAllObjects];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?category_id=%@", Constants.GET_ITEMS_BY_CATEGORY_URL, categoryId]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        NSDictionary *resultDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        NSArray *itemArray = [resultDictionary objectForKey:@"items"];
-        
-        for(NSDictionary *itemDictionary in itemArray)
-        {
-            Item *item = [[Item alloc]init];
-            item.itemId = [itemDictionary objectForKey:@"itemId"];
-            item.name = [itemDictionary objectForKey:@"itemName"];
-            item.price = [NSString stringWithFormat:@"%@", [[itemDictionary objectForKey:@"price"] objectForKey:@"amount"]];
-            item.discount = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"discount"]];
-            item.imageURL = [itemDictionary objectForKey:@"itemImageUrl"];
-            item.detail = [itemDictionary objectForKey:@"itemDescription"];
-            item.itemTypeId = [itemDictionary objectForKey:@"itemTypeId"];
-            
-            if([itemDictionary objectForKey:@"isVeg"] == NULL)
-            {
-                item.isVeg = FALSE;
-            }
-            else if(([[itemDictionary objectForKey:@"isVeg"] intValue] == 1))
-            {
-                item.isVeg = TRUE;
-            }
-            else item.isVeg = FALSE;
-            
-            if([itemDictionary objectForKey:@"spiceSupported"] == NULL)
-            {
-                item.isSpiceSupported = FALSE;
-            }
-            else if(([[itemDictionary objectForKey:@"spiceSupported"]intValue] == 1))
-            {
-                item.isSpiceSupported = TRUE;
-            }
-            else item.isSpiceSupported = FALSE;
-            
-            [_itemArray addObject:item];
-            [_itemSearchArray addObject:item];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_itemTableView reloadData];
-            
-            if (_itemArray.count > 0)
-            {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-                [_itemTableView selectRowAtIndexPath:index animated:true scrollPosition:UITableViewScrollPositionNone];
-                [self tableView:_itemTableView didSelectRowAtIndexPath:index];
-            }
-            
-        });
-        
-    }];
-    [postDataTask resume];
-}
-
--(void)addItem
-{
-    NSString *itemName = _name.text;
-    NSString *price = _price.text;
-    NSString *discount = _discount.text;
-    NSString *itemDetail = _detail.text;
-
-    NSString *veg;
-    if (_veg == FALSE)veg =@"0";
-    else veg = @"1";
-    
-    NSString *spice;
-    if (_spice == FALSE)spice =@"0";
-    else spice = @"1";
-    
-    NSLog(@"component %ld", (long)_type.selectedComponent);
-    NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
-    
-    NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
-    NSIndexPath *indexPath = selectedIndex[0];
-    Category *category = _categoryArray[indexPath.row];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.INSERT_ITEM_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    NSMutableData *body = [NSMutableData data];
-    
-    NSDictionary *params = @{
-                             @"item_name" : itemName,
-                             @"item_description" : itemDetail,
-                             @"category_id" : category.categoryId,
-                             @"item_type_id" : typeId,
-                             @"amount" : price,
-                             @"discount" : discount,
-                             @"is_veg" : veg,
-                             @"is_spice_supported" : spice,
-                             @"is_active" : @"1",
-                             @"loc_id" : Constants.LOCATION_ID
-                             };
-    NSLog(@"%@", params);
-    
-    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
-    
-    NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
-    NSString *fieldName = @"file";
-    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
-    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:imageData];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    request.HTTPBody = body;
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"error = %@", error);
-            return;
-        }
-        
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isEqualToString:@"Item created"])
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Created"];
-            }
-            else
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
-            }
-        });
-        
-    }];
-    [task resume];
-} 
-
--(void)updateItem
-{
-    NSString *itemName = _name.text;
-    NSString *price = _price.text;
-    NSString *discount = _discount.text;
-    NSString *itemDetail = _detail.text;
-    
-    NSString *veg;
-    if (_veg == FALSE)veg =@"0";
-    else veg = @"1";
-    
-    NSString *spice;
-    if (_spice == FALSE)spice =@"0";
-    else spice = @"1";
-    
-    NSLog(@"component %ld", (long)_type.selectedComponent);
-    NSString *typeId = [NSString stringWithFormat:@"%d", _itemTypeIndex+1];
-    
-    NSArray *selectedIndex = [_menuCollectionView indexPathsForSelectedItems];
-    NSIndexPath *indexPath = selectedIndex[0];
-    Category *category = _categorySearchArray[indexPath.row];
-    
-    indexPath = [_itemTableView indexPathForSelectedRow];
-    Item *item = _itemSearchArray[indexPath.row];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_ITEM_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    NSMutableData *body = [NSMutableData data];
-    
-    NSDictionary *params = @{
-                             @"item_id" : item.itemId,
-                             @"item_name" : itemName,
-                             @"item_description" : itemDetail,
-                             @"category_id" : category.categoryId,
-                             @"item_type_id" : typeId,
-                             @"amount" : price,
-                             @"discount" : discount,
-                             @"is_veg" : veg,
-                             @"is_spice_supported" : spice,
-                             @"is_active" : @"1"
-                             };
-    NSLog(@"%@", params);
-    
-    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
-    
-    NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
-    NSString *fieldName = @"file";
-    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
-    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",itemName];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:imageData];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    request.HTTPBody = body;
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"error = %@", error);
-            return;
-        }
-        
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isEqualToString:@"Item created"])
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Item Created"];
-            }
-            else
-            {
-                [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Create Item"];
-            }
-        });
-        
-    }];
-    [task resume];
-}
-
--(void)deleteItem
-{
-    NSIndexPath *indexPath = [_itemTableView indexPathForSelectedRow];
-    Item * item = _itemArray[indexPath.row];
-    
-    NSString *imgURL = @"xyz.jpeg";
-    NSString *itemName = _name.text;
-    NSString *itemDetail = _detail.text;
-    NSString *price = _price.text;
-    NSString *discount = _discount.text;
-    
-    if(discount == nil)discount = 0;
-    
-    NSArray *selectedItem = [_menuCollectionView indexPathsForSelectedItems];
-    Category *category = _categoryArray[0];
-    
-    NSString *veg;
-    if (item.isVeg == FALSE)veg =@"0";
-    else veg = @"1";
-    
-    NSString *spice;
-    if (item.isSpiceSupported == FALSE)spice =@"0";
-    else spice = @"1";
-    
-    NSString *post = [NSString stringWithFormat:@"item_id=%@&item_name=%@&item_img_url=%@&item_description=%@&category_id=%@&item_type_id=2&amount=%@&discount=%@&is_veg=%@&is_spice_supported=%@&is_active=0", item.itemId, item.name, item.imageURL, item.detail, category.categoryId, item.price, item.discount, veg, spice];
-    
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_ITEM_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-        });
-        
-    }];
-    [postDataTask resume];
-}
-
-
--(void) disableAllButtons
-{
-    [_saveButton setEnabled:NO];
-    [_cancelButton setEnabled:NO];
-    
-    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.saveButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    
-    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-}
-
--(void) enableAllButtons
-{
-    [_saveButton setEnabled:YES];
-    [_cancelButton setEnabled:YES];
-    
-    self.saveButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    self.cancelButton.layer.borderColor = [[UIColor colorWithRed:0.84 green:0.13 blue:0.15 alpha:1] CGColor];
-    [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
 
 - (IBAction)uploadPhotoTapped:(id)sender
@@ -789,23 +1303,24 @@
 
 - (IBAction)addButtonClicked:(id)sender
 {
-    _name.text = @"";
-    _price.text = @"";
-    _discount.text = @"";
-    _isVegButton.backgroundColor = [UIColor whiteColor];
-    _veg = FALSE;
-    _spiceSupportButton.backgroundColor = [UIColor whiteColor];
-    _spice = FALSE;
-    _detail.text = @"";
-    _typeLabel.text = @"Select";
-    _image.image = [UIImage imageNamed:@"biryanipotusa"];
-    [self enableAllButtons];
-    _status = @"add";
+    NSArray *indexes = [_menuCollectionView indexPathsForSelectedItems];
+    
+    if (indexes.count > 0)
+    {
+        _mode = @"ADD";
+        [self modeChanged];
+    }
+    else
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Please select a category"];
+    }
 }
 
 - (IBAction)saveButtonClicked:(id)sender
 {
-    if ([_status isEqualToString:@"add"])
+    if (![self isValidate]) return;
+    
+    if ([_mode isEqualToString:@"ADD"])
     {
         [self addItem];
     }
@@ -817,7 +1332,20 @@
 
 - (IBAction)cancelButtonClicked:(id)sender
 {
+    NSIndexPath *indexPath = [_itemTableView indexPathForSelectedRow];
     
+    if (indexPath.row > 0)
+    {
+        _mode = @"EDIT";
+        [self modeChanged];
+        
+        [_itemTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+    }
+    else
+    {
+        _mode = @"ADD";
+        [self modeChanged];
+    }
 }
 
 - (IBAction)deleteButtonClicked:(id)sender
@@ -827,6 +1355,12 @@
 
 - (IBAction)categorySearchStringChanged:(id)sender
 {
+    _itemDescriptionView.hidden = TRUE;
+    _itemTableView.hidden = TRUE;
+    _saveButton.hidden = TRUE;
+    _cancelButton.hidden = TRUE;
+    _itemSearchView.hidden = TRUE;
+    
     [_categorySearchArray removeAllObjects];
     NSString *searchString = [Validation trim:_categorySearchTextField.text];
     
@@ -855,6 +1389,10 @@
 
 - (IBAction)itemSearchStringChanged:(id)sender
 {
+    _itemDescriptionView.hidden = TRUE;
+    _saveButton.hidden = TRUE;
+    _cancelButton.hidden = TRUE;
+    
     [_itemSearchArray removeAllObjects];
     NSString *searchString = [Validation trim:_itemSearchTextField.text];
     
@@ -865,7 +1403,14 @@
             _itemSearchTextField.text = @"";
         }
         
+        NSArray <NSIndexPath *> *indexPathArray = _menuCollectionView.indexPathsForSelectedItems;
+        NSIndexPath *indexPath = indexPathArray[0];
+        
         Category *cat = _categoryArray[0];
+        
+        if (indexPath.row > 0)
+            cat = _categoryArray[indexPath.row];
+        
         [self getItem:cat.categoryId];
     }
     else
@@ -880,6 +1425,88 @@
     }
     
     [_itemTableView reloadData];
+}
+
+-(BOOL)isValidate
+{
+    if ([Validation isEmpty:_name])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Name Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_name thanMaxLength:30])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Name Field should not be more than 30 characters"];
+        return false;
+    }
+    
+    if ([Validation isEmpty:_price])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Price Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_price thanMaxLength:5])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Price Field should not be more than 4 digits"];
+        return false;
+    }
+    if ([Validation isDecimal:_price])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Price Field should contain numeric value"];
+        return false;
+    }
+    
+    if ([Validation isEmpty:_discount])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Discount Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_discount thanMaxLength:5])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Discount Field should not be more than 4 digits"];
+        return false;
+    }
+    if ([Validation isDecimal:_discount])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Discount Field should contain numeric value"];
+        return false;
+    }
+    
+    if ([[Validation trim:_detail.text] length] == 0)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Description Field should not be empty"];
+        return false;
+    }
+    if ([[Validation trim:_detail.text] length] > 250)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Description Field should not be more than 250 characters"];
+        return false;
+    }
+    
+    if ([_typeLabel.text isEqualToString:@"Select"])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Please Select Type"];
+        return false;
+    }
+    
+    
+    if ([Validation isEmpty:_loyaltyPoints])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Loyalty Points Field should not be empty"];
+        return false;
+    }
+    if ([Validation isMore:_loyaltyPoints thanMaxLength:3])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Loyalty Points Field should not be more than 3 digits"];
+        return false;
+    }
+    if ([Validation isNumber:_loyaltyPoints])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Loyalty Points Field should contain numeric value"];
+        return false;
+    }
+    
+    return true;
 }
 
 @end

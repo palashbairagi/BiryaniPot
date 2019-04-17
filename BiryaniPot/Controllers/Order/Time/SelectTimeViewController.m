@@ -44,25 +44,52 @@
 
 - (IBAction)yesButtonClicked:(id)sender
 {
-    NSString *estimatedTime = [NSString stringWithFormat:@"%@",_timeArray[[_timePicker selectedRowInComponent:0]]];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?order_id=%@&order_type_id=%@&est_time=%@", Constants.UPDATE_ESTIMATED_TIME_URL, _order.orderNo, _order.deliveryType, estimatedTime]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"POST"];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate getAllOrders];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [_delegate.queueTableView reloadData];
-            [_delegate.preparingTableView reloadData];
-        });
-    }];
-    [postDataTask resume];
+    @try
+    {
+        NSString *estimatedTime = [NSString stringWithFormat:@"%@",_timeArray[[_timePicker selectedRowInComponent:0]]];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?order_id=%@&order_type_id=%@&est_time=%@", Constants.UPDATE_ESTIMATED_TIME_URL, _order.orderNo, _order.deliveryType, estimatedTime]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPMethod:@"POST"];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self dismissViewControllerAnimated:YES completion:^{
+                    [_delegate loadData];
+                    [overlayView dismiss:YES];
+                }];
+            });
+        }];
+        [postDataTask resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"SelectTimeViewController [yesButtonClicked]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView

@@ -40,10 +40,6 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     [self initComponents];
     
     [self.navigationController setNavigationBarHidden:NO];
@@ -55,10 +51,6 @@
     backButton.tintColor = [UIColor colorWithRed:216.0/255.0 green:33.0/255.0 blue:42.0/255.0 alpha:1];
     
     self.navigationItem.backBarButtonItem = backButton;
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 -(void)initComponents
@@ -67,49 +59,414 @@
     _topSellersArray = [[NSMutableArray alloc]init];
     _offersArray = [[NSMutableArray alloc]init];
     
-    @try
-    {
-        [self totalOrders];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get total orders"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
+    [self totalOrders];
+    [self topSellers];
+    [self feedback];
+    [self offer];
+    [self plotGraph];
+}
+
+-(void)totalOrders
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
-        [self topSellers];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get top sellers"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", totalOrders);
+        
+        long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
+        double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
+            [overlayView dismiss:YES];
+        });
+        
     }
+    @catch(NSException *e)
+    {
+        DebugLog(@"DashboardViewController [totalOrders]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)topSellers
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
-        [self feedback];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        [_topSellersArray removeAllObjects];
+    
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
+    
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *topSellersDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", topSellersDic);
+        
+        NSArray *topSellersArray = [topSellersDic objectForKey:@"topSellers"];
+    
+        for(NSDictionary *topSeller in topSellersArray)
+        {
+            NSString *itemName = [topSeller objectForKey:@"itemName"];
+            NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
+            
+            Item *item = [[Item alloc]init];
+            item.name = itemName;
+            item.quantity = total;
+            
+            [_topSellersArray addObject:item];
+        }
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_topSellersTableView reloadData];
+            [overlayView dismiss:YES];
+        });
+        
     }
+    @catch(NSException *e)
+    {
+        DebugLog(@"DashboardViewController [topSellers]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)feedback
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
-        [self offer];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get offers"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", feedback);
+        
+        _happyValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"goodCount"] longValue]];
+        _sadValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"badCount"] longValue]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
     }
+    @catch(NSException *e)
+    {
+        DebugLog(@"DashboardViewController [feedback]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void)offer
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
-        [self plotGraph];
+        [_offersArray removeAllObjects];
+    
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
+    
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        
+        DebugLog(@"Request %@", url);
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", resultDic);
+        
+        _referralsLabel.text = [NSString stringWithFormat:@"%@", [resultDic objectForKey:@"referrals"]];
+        _activeOffersLabel.text = [NSString stringWithFormat:@"%@", [resultDic objectForKey:@"active"]];
+        _pointsRedeemedLabel.text = [NSString stringWithFormat:@"%@", [resultDic objectForKey:@"pointsRedeemed"] ];
+        
+        NSArray *offers = [resultDic objectForKey:@"offers"];
+        
+        for(NSDictionary *offer in offers)
+        {
+            NSString *codeName = [offer objectForKey:@"name"];
+            NSString *timesApplied = [NSString stringWithFormat:@"%@", [offer objectForKey:@"applied"]];
+            
+            Offer *of = [[Offer alloc]init];
+            of.name = codeName;
+            of.timesApplied = timesApplied;
+            
+            [_offersArray addObject:of];
+        }
+    
+        [_offersTableView reloadData];
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
     }@catch(NSException *e)
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order trend"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"DashboardViewController [offer]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+/*
+-(void)offerStatistics
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
+    
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *offerStatistics = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", offerStatistics);
+        
+        _activeOffersLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"activeOffers"]];
+        _pointsRedeemedLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"points"]];
+        _referralsLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"refferalCount"]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"DashboardViewController [offerStatistics]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+*/
+
+-(void)plotGraph
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        [_graphArray removeAllObjects];
+        
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GRAPH_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        [request setHTTPMethod:@"POST"];
+        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+        [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
+        [paramDict setValue:fromDate forKey:@"fromDate"];
+        [paramDict setValue:toDate forKey:@"toDate"];
+        
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
+        
+        [request setHTTPBody:data];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary *trends = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", trends);
+            
+            for(NSDictionary *trend in trends[@"trends"])
+            {
+                Graph *graph = [[Graph alloc]init];
+                
+                graph.orderDate = [trend valueForKey:@"date"];
+                graph.totalOrders = [[trend valueForKey:@"total"] intValue];
+                [self.graphArray addObject:graph];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self createBarChart];
+                [overlayView dismiss:YES];
+            });
+        }];
+        
+        [postDataTask resume];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"DashboardViewController [plotGraph]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Something went wrong"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
     }
 }
 
@@ -129,7 +486,6 @@
     [barChartView setTextFontSize:10];
     [barChartView setTextColor:[UIColor blackColor]];
     [barChartView setTextFont:[UIFont systemFontOfSize:barChartView.textFontSize]];
-    [barChartView setTextFont:[UIFont fontWithName:@"Roboto" size:10]];
         
     [barChartView setShowCustomMarkerView:TRUE];
 
@@ -212,157 +568,6 @@
     
     [view setFrame:label.frame];
     return view;
-}
-
--(void)totalOrders
-{
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOTAL_ORDER_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSDictionary *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    long orders = [[totalOrders objectForKey:@"totalOrders"] longValue];
-    double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
-    });
-}
-
--(void)topSellers
-{
-    [_topSellersArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.TOP_SELLERS_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSDictionary *topSellersDic = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    NSArray *topSellersArray = [topSellersDic objectForKey:@"topSellers"];
-    
-    for(NSDictionary *topSeller in topSellersArray)
-    {
-        NSString *itemName = [topSeller objectForKey:@"itemName"];
-        NSString *total = [NSString stringWithFormat:@"%@", [topSeller objectForKey:@"timesSold"]];
-
-        Item *item = [[Item alloc]init];
-        item.name = itemName;
-        item.quantity = total;
-        
-        [_topSellersArray addObject:item];
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_topSellersTableView reloadData];
-    });
-    
-}
-
--(void)feedback
-{
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    _happyValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"goodCount"] longValue]];
-    _sadValue.text = [NSString stringWithFormat:@"%ld%%",[[feedback[0] objectForKey:@"badCount"] longValue]];
-}
-
--(void)offer
-{
-    [_offersArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *offers = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for(NSDictionary *offer in offers)
-    {
-        NSString *codeName = [offer objectForKey:@"codeName"];
-        NSString *timesApplied = [NSString stringWithFormat:@"%@", [offer objectForKey:@"timesApplied"]];
-        
-        Offer *of = [[Offer alloc]init];
-        of.name = codeName;
-        of.timesApplied = timesApplied;
-        
-        [_offersArray addObject:of];
-    }
-    
-    [_offersTableView reloadData];
-    [self offerStatistics];
-}
-
--(void)offerStatistics
-{
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];;
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&from_date=%@&to_date=%@", Constants.OFFER_STATISTICS_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *offerStatistics = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    _activeOffersLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"activeOffers"]];
-    _pointsRedeemedLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"points"]];
-    _referralsLabel.text = [NSString stringWithFormat:@"%@",[offerStatistics[0] objectForKey:@"refferalCount"]];
-}
-
--(void)plotGraph
-{
-    [_graphArray removeAllObjects];
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSError *error;
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.GRAPH_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    [paramDict setValue:Constants.LOCATION_ID forKey:@"locId"];
-    [paramDict setValue:fromDate forKey:@"fromDate"];
-    [paramDict setValue:toDate forKey:@"toDate"];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:paramDict options:NSJSONWritingPrettyPrinted error:&error];
-    
-    [request setHTTPBody:data];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *trends = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-        for(NSDictionary *trend in trends[@"trends"])
-        {
-            Graph *graph = [[Graph alloc]init];
-            
-            graph.orderDate = [trend valueForKey:@"date"];
-            graph.totalOrders = [[trend valueForKey:@"total"] intValue];
-            [self.graphArray addObject:graph];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-                [self createBarChart];
-            });
-    }];
-    [postDataTask resume];
 }
 
 - (IBAction)totalOrdersTapped:(id)sender
@@ -460,10 +665,6 @@
 
 -(void)datesUpdated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
     [Constants SET_DASHBOARD_FROM_DATE:[_dateFrom currentTitle]];
     [Constants SET_DASHBOARD_TO_DATE:[_dateTo currentTitle]];
     
@@ -473,7 +674,7 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get total orders"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     
     @try
@@ -482,7 +683,7 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get top sellers"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     
     @try
@@ -491,7 +692,7 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     
     @try
@@ -500,7 +701,7 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get offers"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     
     @try
@@ -511,12 +712,9 @@
     }@catch(NSException *e)
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get order trend"];
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
 }
 
 @end

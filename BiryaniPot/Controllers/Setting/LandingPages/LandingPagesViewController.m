@@ -22,6 +22,52 @@
     [self initComponents];
 }
 
+-(void)getImages
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        [_landingImageArray removeAllObjects];
+        NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=%@",Constants.GET_LANDING_PAGES_URL, Constants.ORGANIZATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:pagesURL];
+        NSDictionary *pagesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        DebugLog(@"Request %@", pagesURL);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", pagesDictionary);
+        
+        for (NSDictionary *pageDictionary in pagesDictionary)
+        {
+            NSString *imageURLString = [pageDictionary objectForKey:@"imageUrl"];
+            LandingImage *landingImage = [[LandingImage alloc]init];
+            landingImage.imageURL = imageURLString;
+            [_landingImageArray addObject:landingImage];
+        }
+        
+        [overlayView dismiss:YES];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"LandingPagesViewController [getImages]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
+}
+
 -(void)initComponents
 {
     _imageQueue = [[NSOperationQueue alloc]init];
@@ -30,23 +76,6 @@
     [self getImages];
     
     [self.landingPageCollectionView registerNib:[UINib nibWithNibName:@"LandingPageCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"landingImageCell"];
-}
-
--(void)getImages
-{
-    [_landingImageArray removeAllObjects];
-    NSURL *pagesURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?org_id=%@",Constants.GET_LANDING_PAGES_URL, Constants.ORGANIZATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:pagesURL];
-    NSError *error = nil;
-    NSDictionary *pagesDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for (NSDictionary *pageDictionary in pagesDictionary)
-    {
-        NSString *imageURLString = [pageDictionary objectForKey:@"imageUrl"];
-        LandingImage *landingImage = [[LandingImage alloc]init];
-        landingImage.imageURL = imageURLString;
-        [_landingImageArray addObject:landingImage];
-    }
 }
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {

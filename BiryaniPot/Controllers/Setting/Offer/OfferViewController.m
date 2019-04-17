@@ -27,14 +27,7 @@
 {
     [super viewDidAppear:animated];
 
-    @try
-    {
-        [self getOffers];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Offers"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
+    [self getOffers];
 }
 
 -(void)initComponents
@@ -79,7 +72,7 @@
     
     Offer *offer = _offerArray[indexPath.row];
     
-    if (cell.offerImage.image == nil )
+    if (offer.image == nil )
     {
         NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
             
@@ -147,28 +140,72 @@
 
 -(void)getOffers
 {
-    [_offerArray removeAllObjects];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURL *offerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_OFFERS_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:offerURL];
-    NSError *error = nil;
-    NSDictionary *offersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for (NSDictionary *offerDictionary in offersDictionary)
+    @try
     {
-        Offer *offer = [[Offer alloc]init];
-        offer.offerId = [offerDictionary objectForKey:@"codeId"];
-        offer.name = [offerDictionary objectForKey:@"codeName"];
-        offer.offerValue = [offerDictionary objectForKey:@"couponPercent"];
-        offer.imageURL = [offerDictionary objectForKey:@"couponImgURL"];
-        offer.startFrom = [offerDictionary objectForKey:@"validFrom"];
-        offer.endAt = [offerDictionary objectForKey:@"validTill"];
-        offer.detail = [offerDictionary objectForKey:@"codeDescription"];
-        offer.maxDisc = [offerDictionary objectForKey:@"maxDisc"];
-        offer.maxTimes = [offerDictionary objectForKey:@"maxTimes"];
-        offer.minValue = [offerDictionary objectForKey:@"minValue"];
-        offer.maxUsageLimit = [offerDictionary objectForKey:@"couponUsageLimit"];
-        [_offerArray addObject:offer];
+        [_offerArray removeAllObjects];
+    
+        NSURL *offerURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_OFFERS_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:offerURL];
+        
+        DebugLog(@"Request %@", offerURL);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSDictionary *offersDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", offersDictionary);
+        
+        for (NSDictionary *offerDictionary in offersDictionary)
+        {
+            Offer *offer = [[Offer alloc]init];
+            offer.offerId = [offerDictionary objectForKey:@"codeId"];
+            offer.name = [offerDictionary objectForKey:@"codeName"];
+            offer.offerValue = [offerDictionary objectForKey:@"couponPercent"];
+            offer.imageURL = [offerDictionary objectForKey:@"couponImgURL"];
+            offer.startFrom = [offerDictionary objectForKey:@"validFrom"];
+            offer.endAt = [offerDictionary objectForKey:@"validTill"];
+            offer.detail = [offerDictionary objectForKey:@"codeDescription"];
+            offer.maxDisc = [offerDictionary objectForKey:@"maxDisc"];
+            offer.maxTimes = [offerDictionary objectForKey:@"maxTimes"];
+            offer.minValue = [offerDictionary objectForKey:@"minValue"];
+            offer.maxUsageLimit = [offerDictionary objectForKey:@"couponUsageLimit"];
+            offer.isPercent = [offerDictionary objectForKey:@"isPercentage"];
+            
+            [_offerArray addObject:offer];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"OfferViewController [getOffers]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
     }
 }
 
@@ -188,7 +225,7 @@
     }
     @catch(NSException *e)
     {
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     return convertedDate;
 }

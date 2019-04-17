@@ -11,7 +11,7 @@
 #import "Order.h"
 #import "Constants.h"
 
-@interface InvoiceViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface InvoiceViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPrintInteractionControllerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *orderNo;
 @property (weak, nonatomic) IBOutlet UILabel *customerName;
 @property (weak, nonatomic) IBOutlet UILabel *customerPhone;

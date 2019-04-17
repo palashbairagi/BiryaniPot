@@ -12,6 +12,7 @@
 @property (nonatomic, retain) NSString *orderNo;
 @property (nonatomic, retain) NSString *customerName;
 @property (nonatomic, retain) NSString *contactNumber;
+@property (nonatomic, retain) NSString *address;
 @property (nonatomic, retain) NSString *itemCount;
 @property (nonatomic, retain) NSString *orderTime;
 @property (nonatomic, retain) NSString *timeRemain;
@@ -25,4 +26,5 @@
 @property (nonatomic, retain) NSString *tax;
 @property (nonatomic, retain) NSString *subTotal;
 @property (nonatomic, retain) NSString *tip;
+@property (nonatomic, retain) NSString *paymentType;
 @end

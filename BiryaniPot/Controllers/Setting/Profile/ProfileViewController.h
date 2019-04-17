@@ -52,4 +52,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *friday;
 @property (weak, nonatomic) IBOutlet UILabel *saturday;
 
+-(void)getTime;
+
 @end

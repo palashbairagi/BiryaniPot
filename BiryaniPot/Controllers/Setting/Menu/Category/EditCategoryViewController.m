@@ -16,7 +16,126 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self initComponents];
+}
+
+-(void)updateRecord
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
+    @try
+    {
+        NSString *categoryName = _name.text;
+        NSString *nonVegSupport = [NSString stringWithFormat:@"%d", _isNonVeg];
+        
+        if(_extension == NULL) _extension = @"jpg";
+        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Picture must be in the jpg format"];
+        }
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_CATEGORY_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSMutableData *body = [NSMutableData data];
+        
+        NSDictionary *params = @{
+                                 @"category_id" : _category.categoryId,
+                                 @"category_name" : categoryName,
+                                 @"is_nonveg_supported" : nonVegSupport,
+                                 @"is_active" : @"1"
+                                 };
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
+        NSString *fieldName = @"file";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
+        NSString *imgName = [NSString stringWithFormat:@"%@.jpg",categoryName];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [_delegate getCategory];
+                [_delegate.menuCollectionView reloadData];
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                    [alertController dismissViewControllerAnimated:YES completion:nil];
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }];
+                
+                [alertController addAction:ok];
+                [overlayView dismiss:YES];
+                [self presentViewController:alertController animated:YES completion:nil];
+                
+            });
+            
+        }];
+        [task resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"EditCategoryViewController [updateProfile]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
+-(void) initComponents
+{
     CALayer *borderL1 = [CALayer layer];
     borderL1.borderColor = [[UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:1] CGColor];;
     borderL1.frame = CGRectMake(0, self.name.frame.size.height - 2, self.name.frame.size.width, self.name.frame.size.height);
@@ -45,7 +164,7 @@
     
     if (imgData == NULL)
     {
-        UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
+        UIImage * image = [UIImage imageNamed:@"biryanipot"];
         _image.image = image;
     }
     else
@@ -64,85 +183,6 @@
         _nonVegButton.backgroundColor = [UIColor colorWithRed:0.0 green:100.0/256 blue:1.0 alpha:1.0];
         _isNonVeg = TRUE;
     }
-}
-
--(void)updateRecord
-{
-    NSString *categoryName = _name.text;
-    NSString *nonVegSupport = [NSString stringWithFormat:@"%d", _isNonVeg];
-    
-    if(_extension == NULL) _extension = @"jpg";
-    else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Picture must be in the jpg format"];
-    }
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_CATEGORY_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    NSMutableData *body = [NSMutableData data];
-    
-    NSDictionary *params = @{
-                             @"category_id" : _category.categoryId,
-                             @"category_name" : categoryName,
-                             @"is_nonveg_supported" : nonVegSupport,
-                             @"is_active" : @"1"
-                             };
-    
-    NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:contentType forHTTPHeaderField:@"content-Type"];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
-    
-    NSData *imageData = UIImageJPEGRepresentation(_image.image, 1.0);
-    NSString *fieldName = @"file";
-    NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
-    NSString *imgName = [NSString stringWithFormat:@"%@.jpg",categoryName];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:imageData];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    request.HTTPBody = body;
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"error = %@", error);
-            return;
-        }
-        
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate getCategory];
-            [_delegate.menuCollectionView reloadData];
-            
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
-                [alertController dismissViewControllerAnimated:YES completion:nil];
-                [self dismissViewControllerAnimated:NO completion:nil];
-            }];
-            
-            [alertController addAction:ok];
-            
-            [self presentViewController:alertController animated:YES completion:nil];
-        });
-        
-    }];
-    [task resume];
 }
 
 - (IBAction)uploadPhotoTapped:(id)sender
@@ -181,6 +221,7 @@
 
 - (IBAction)updateButtonClicked:(id)sender
 {
+    if ([self isValidate])
     [self updateRecord];
 }
 

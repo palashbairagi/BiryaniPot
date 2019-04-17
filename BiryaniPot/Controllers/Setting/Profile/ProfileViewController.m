@@ -24,6 +24,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     [self getProfile];
     [self getTime];
 }
@@ -223,13 +224,38 @@
 
 -(void)getProfile
 {
-    NSURL *profileURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_RESTAURANT_PROFILE_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:profileURL];
-    NSError *error = nil;
-    NSArray *profileDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
     {
+        NSURL *profileURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@",Constants.GET_RESTAURANT_PROFILE_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:profileURL];
+        
+        DebugLog(@"Request %@ ", profileURL);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *profileDictionary = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+    
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", profileDictionary);
+        
         _addressLine1.text = [[profileDictionary objectAtIndex:0] objectForKey:@"address1"];
         _addressLine2.text = [[profileDictionary objectAtIndex:0] objectForKey:@"address2"];
         _city.text = [[profileDictionary objectAtIndex:0] objectForKey:@"city"];
@@ -238,52 +264,131 @@
         _phone2.text = [[profileDictionary objectAtIndex:0] objectForKey:@"phone2"];
         _state.text = [NSString stringWithFormat:@"%@", [[[profileDictionary objectAtIndex:0] objectForKey:@"state"] objectForKey:@"stateName"]];
         _zip.text = [NSString stringWithFormat:@"%@", [[profileDictionary objectAtIndex:0] objectForKey:@"zipCode"]];
-    }
-    @catch(NSException *ex)
+    
+        [overlayView dismiss:YES];
+        
+    }@catch(NSException *e)
     {
-        NSLog(@"%@ %@", ex.name, ex.reason);
+        DebugLog(@"ProfileViewController [getProfile]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
     }
 }
 
 -(void)updateProfile
 {
-    NSString *location = [NSString stringWithFormat:@"%@", _location.text];
-    NSString *address1 = [NSString stringWithFormat:@"%@", _addressLine1.text];
-    NSString *address2 = [NSString stringWithFormat:@"%@", _addressLine2.text];
-    NSString *city = [NSString stringWithFormat:@"%@", _city.text];
-    NSString *state = [NSString stringWithFormat:@"%@", _state.text];
-    NSString *zip = [NSString stringWithFormat:@"%@", _zip.text];
-    NSString *phone1 = [NSString stringWithFormat:@"%@", _phone1.text];
-    NSString *phone2 = [NSString stringWithFormat:@"%@", _phone2.text];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSString *post = [NSString stringWithFormat:@"loc_id=%@&loc_name=%@&address_lane1=%@&address_lane2=%@&zipcode=%@&city=%@&state_name=%@&phone1=%@&phone2=%@&is_active=1", Constants.LOCATION_ID, location, address1, address2, zip, city, state ,phone1, phone2];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_RESTAURANT_PROFILE_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-    }];
-    [postDataTask resume];
+    @try
+    {
+        NSString *location = [NSString stringWithFormat:@"%@", _location.text];
+        NSString *address1 = [NSString stringWithFormat:@"%@", _addressLine1.text];
+        NSString *address2 = [NSString stringWithFormat:@"%@", _addressLine2.text];
+        NSString *city = [NSString stringWithFormat:@"%@", _city.text];
+        NSString *state = [NSString stringWithFormat:@"%@", _state.text];
+        NSString *zip = [NSString stringWithFormat:@"%@", _zip.text];
+        NSString *phone1 = [NSString stringWithFormat:@"%@", _phone1.text];
+        NSString *phone2 = [NSString stringWithFormat:@"%@", _phone2.text];
+        
+        NSString *post = [NSString stringWithFormat:@"loc_id=%@&loc_name=%@&address_lane1=%@&address_lane2=%@&zipcode=%@&city=%@&state_name=%@&phone1=%@&phone2=%@&is_active=1", Constants.LOCATION_ID, location, address1, address2, zip, city, state ,phone1, phone2];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_RESTAURANT_PROFILE_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+       
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary * result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [overlayView dismiss:YES];
+            });
+            
+        }];
+        
+        [postDataTask resume];
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"ProfileViewController [updateProfile]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)getTime
 {
-    NSURL *timeURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@", Constants.GET_RESTAURANT_TIME_URL, Constants.LOCATION_ID]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:timeURL];
-    NSError *error = nil;
-    NSArray *timesArray = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-   
-    for (NSDictionary *timeDictionary in timesArray)
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
     {
-        @try
+        NSURL *timeURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@?loc_id=%@", Constants.GET_RESTAURANT_TIME_URL, Constants.LOCATION_ID]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:timeURL];
+        
+        DebugLog(@"Request %@", timeURL);
+        
+        if (error != nil)
         {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *timesArray = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+       
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", timesArray);
+        
+        for (NSDictionary *timeDictionary in timesArray)
+        {
+        
             NSString *day = [timeDictionary objectForKey:@"day"];
             NSString *from = [timeDictionary objectForKey:@"startTime"];
             NSString *to = [timeDictionary objectForKey:@"endTime"];
@@ -330,12 +435,20 @@
                 [_sat_from setTitle:from forState:UIControlStateNormal];
                 [_sat_to setTitle:to forState:UIControlStateNormal];
             }
-
         }
-        @catch(NSException *ex)
-        {
-            NSLog(@"%@ %@", ex.name, ex.reason);
-        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"ProfileViewController [getTime]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
     }
 }
 
@@ -357,12 +470,12 @@
     }
     if ([Validation isLess:_location thanMinLength:3])
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Location Field should should not be less than 3 characters"];
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Location Field should not be less than 3 characters"];
         return false;
     }
     if ([Validation isMore:_location thanMaxLength:20])
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Location Field should should not be more than 20 characters"];
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Location Field should not be more than 20 characters"];
         return false;
     }
     

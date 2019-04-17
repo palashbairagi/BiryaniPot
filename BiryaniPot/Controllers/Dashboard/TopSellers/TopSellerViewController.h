@@ -12,9 +12,6 @@
 
 @interface TopSellerViewController : BaseViewController <NSURLSessionDelegate, UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *waitView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
 @property (nonatomic, retain) SCRSidewaysBarGraph *graph;
 @property (nonatomic, retain) NSMutableArray *yAxisArray;
 @property (nonatomic, retain) NSMutableArray *xAxisArray;

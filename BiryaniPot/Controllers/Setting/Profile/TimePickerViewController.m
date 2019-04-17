@@ -37,116 +37,159 @@
 
 - (IBAction)doneButtonClicked:(id)sender
 {
-    self.time = [_timeFormat stringFromDate:self.timePicker.date];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSString *day = @"";
-    NSString *from = @"";
-    NSString *to = @"";
+    @try
+    {
+        self.time = [_timeFormat stringFromDate:self.timePicker.date];
     
-    if (_buttonClicked == _delegate.sun_to)
-    {
-        day = @"Sunday";
-        to = _time;
-        from = _delegate.sun_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.sun_from)
-    {
-        day = @"Sunday";
-        from = _time;
-        to = _delegate.sun_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.mon_to)
-    {
-        day = @"Monday";
-        to = _time;
-        from = _delegate.mon_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.mon_from)
-    {
-        day = @"Monday";
-        from = _time;
-        to = _delegate.mon_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.tue_to)
-    {
-        day = @"Tuesday";
-        to = _time;
-        from = _delegate.tue_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.tue_from)
-    {
-        day = @"Tuesday";
-        from = _time;
-        to = _delegate.tue_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.wed_to)
-    {
-        day = @"Wednesday";
-        to = _time;
-        from = _delegate.wed_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.wed_from)
-    {
-        day = @"Wednesday";
-        from = _time;
-        to = _delegate.wed_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.thu_to)
-    {
-        day = @"Thursday";
-        to = _time;
-        from = _delegate.thu_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.thu_from)
-    {
-        day = @"Thursday";
-        from = _time;
-        to = _delegate.thu_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.fri_to)
-    {
-        day = @"Friday";
-        to = _time;
-        from = _delegate.fri_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.fri_from)
-    {
-        day = @"Friday";
-        from = _time;
-        to = _delegate.fri_to.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.sat_to)
-    {
-        day = @"Saturday";
-        to = _time;
-        from = _delegate.sat_from.titleLabel.text;
-    }
-    else if (_buttonClicked == _delegate.sat_from)
-    {
-        day = @"Saturday";
-        from = _time;
-        to = _delegate.sat_to.titleLabel.text;
-    }
-    
-    NSString *post = [NSString stringWithFormat:@"loc_id=1&day=%@&starttime=%@&endtime=%@", day, from, to];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_RESTAURANT_TIME_URL]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSString *day = @"";
+        NSString *from = @"";
+        NSString *to = @"";
         
-    }];
-    [postDataTask resume];
+        if (_buttonClicked == _delegate.sun_to)
+        {
+            day = @"Sunday";
+            to = _time;
+            from = _delegate.sun_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.sun_from)
+        {
+            day = @"Sunday";
+            from = _time;
+            to = _delegate.sun_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.mon_to)
+        {
+            day = @"Monday";
+            to = _time;
+            from = _delegate.mon_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.mon_from)
+        {
+            day = @"Monday";
+            from = _time;
+            to = _delegate.mon_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.tue_to)
+        {
+            day = @"Tuesday";
+            to = _time;
+            from = _delegate.tue_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.tue_from)
+        {
+            day = @"Tuesday";
+            from = _time;
+            to = _delegate.tue_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.wed_to)
+        {
+            day = @"Wednesday";
+            to = _time;
+            from = _delegate.wed_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.wed_from)
+        {
+            day = @"Wednesday";
+            from = _time;
+            to = _delegate.wed_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.thu_to)
+        {
+            day = @"Thursday";
+            to = _time;
+            from = _delegate.thu_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.thu_from)
+        {
+            day = @"Thursday";
+            from = _time;
+            to = _delegate.thu_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.fri_to)
+        {
+            day = @"Friday";
+            to = _time;
+            from = _delegate.fri_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.fri_from)
+        {
+            day = @"Friday";
+            from = _time;
+            to = _delegate.fri_to.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.sat_to)
+        {
+            day = @"Saturday";
+            to = _time;
+            from = _delegate.sat_from.titleLabel.text;
+        }
+        else if (_buttonClicked == _delegate.sat_from)
+        {
+            day = @"Saturday";
+            from = _time;
+            to = _delegate.sat_to.titleLabel.text;
+        }
+        
+        NSString *post = [NSString stringWithFormat:@"loc_id=%@&day=%@&starttime=%@&endtime=%@", Constants.LOCATION_ID ,day, from, to];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_RESTAURANT_TIME_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:postDataTask];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSDictionary * result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [overlayView dismiss:YES];
+                [self dismissViewControllerAnimated:YES completion:^{
+                    [_delegate getTime];
+                }];
+            });
+            
+        }];
+        [postDataTask resume];
 
-    [self.buttonClicked setTitle:self.time forState:UIControlStateNormal];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"TimePickerViewController [doneButtonClicked]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)cancelButtonClicked:(id)sender

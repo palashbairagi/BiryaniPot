@@ -9,6 +9,7 @@
 #import "CalendarViewController.h"
 #import "RangePickerCell.h"
 #import "Validation.h"
+#import "Constants.h"
 
 @interface CalendarViewController ()
 
@@ -140,7 +141,7 @@
 
 - (void)calendar:(FSCalendar *)calendar didDeselectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition
 {
-    NSLog(@"did deselect date %@",[self.dateFormatter stringFromDate:date]);
+    DebugLog(@"did deselect date %@",[self.dateFormatter stringFromDate:date]);
     [self configureVisibleCells];
 }
 

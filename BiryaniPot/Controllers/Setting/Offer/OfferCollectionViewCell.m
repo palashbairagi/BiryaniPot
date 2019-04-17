@@ -33,6 +33,11 @@
 
 - (IBAction)deleteButtonClicked:(UIButton *)sender
 {
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.delegate.view animated:YES];
+    
+    @try
+    {
+        
     for (NSIndexPath *indexPath in self.delegate.offerCollectionView.indexPathsForSelectedItems)
     {
         [self.delegate.offerCollectionView deselectItemAtIndexPath:indexPath animated:NO];
@@ -95,21 +100,51 @@
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"error = %@", error);
+        
+        DebugLog(@"Request %@ Response %@", request, response);
+        [overlayView setModeAndProgressWithStateOfTask:task];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self.delegate withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
             return;
         }
         
         NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self.delegate withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", result);
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate getOffers];
             [_delegate.offerCollectionView reloadData];
-            
+            [overlayView dismiss:YES];
         });
-        
+
     }];
+        
     [task resume];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"OfferCollectionViewCell [deleteButtonClicked]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self.delegate withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
 }
 
 

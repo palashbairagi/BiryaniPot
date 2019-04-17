@@ -94,4 +94,19 @@
     }
 }
 
++(BOOL)isDecimal:(UITextField *)textField
+{
+    NSString *decimalRegEx = @"\\d*[.]?\\d+";
+    NSPredicate *decimalTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", decimalRegEx];
+    
+    if ([decimalTest evaluateWithObject:[self trim:textField.text]] == YES)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 @end

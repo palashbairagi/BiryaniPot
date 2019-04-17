@@ -8,6 +8,8 @@
 
 #import "Constants.h"
 #import "AppDelegate.h"
+#import "Order.h"
+#import "Item.h"
 
 @implementation Constants
 static NSString * fromDate;
@@ -32,7 +34,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     }
     @catch(NSException *e)
     {
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     return convertedDate;
 }
@@ -53,6 +55,17 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     return [appDelegate.userDefaults objectForKey:@"menuId"];
+}
+
++(NSString *) ACCESS_TOKEN
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    return [appDelegate.userDefaults objectForKey:@"accessToken"];
+}
+
++(NSString *) GET_LOCATION_DETAILS
+{
+    return [NSString stringWithFormat:@"%@rest/services/organization/getlocation", BASE_URL];
 }
 
 #pragma mark - Date
@@ -131,11 +144,6 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/authentication/getpassword", BASE_URL];
 }
 
-+(NSString *) FOOTER_STATISTICS_URL
-{
-    return [NSString stringWithFormat:@"%@rest/services/dashboard/footerstatistics",BASE_URL];
-}
-
 #pragma mark - Dashboard
 
 +(NSString *) TOTAL_ORDER_URL
@@ -176,11 +184,13 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 +(NSString *) OFFER_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/organization/dashboardoffers", BASE_URL];
+    //return [NSString stringWithFormat:@"http://www.mocky.io/v2/5b3db0d13100007d006de0f7"];
 }
 
 +(NSString *) OFFER_STATISTICS_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/dashboardofferstatistics", BASE_URL];
+    //return [NSString stringWithFormat:@"http://www.mocky.io/v2/5b3ef54e3000003a06abc7f3"];
+    return [NSString stringWithFormat:@"%@rest/services/dashboard/dashboardofferstatistics", BASE_URL];
 }
 
 +(NSString *) GRAPH_URL
@@ -286,6 +296,11 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     return [NSString stringWithFormat:@"%@rest/services/menu/updatecategory", BASE_URL];
 }
 
++(NSString *) DELETE_CATEGORY_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/deletecategory", BASE_URL];
+}
+
 +(NSString *) GET_ITEMS_BY_CATEGORY_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/menu/provideritems", BASE_URL];
@@ -293,13 +308,34 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) INSERT_ITEM_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/menu/insertitem", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/menu/additem", BASE_URL];
 }
 
 +(NSString *) UPDATE_ITEM_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/menu/updateitem", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/menu/updatemenuitem", BASE_URL];
 }
+
++(NSString *) DELETE_ITEM_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/deleteitem", BASE_URL];
+}
+
++(NSString *) GET_RECOMMENDED_ITEMS_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/addons", BASE_URL];
+}
+
++(NSString *) ADD_RECOMMENDED_ITEMS_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/updaterecommendeditem", BASE_URL];
+}
+
++(NSString *) REMOVE_RECOMMENDED_ITEMS_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/menu/updaterecommendeditem", BASE_URL];
+}
+
 
 #pragma mark - Landing Images
 
@@ -315,6 +351,11 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 #pragma mark - Orders
 
++(NSString *) FOOTER_STATISTICS_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/dashboard/footerstatistics",BASE_URL];
+}
+
 +(NSString *) GET_ALL_ORDERS_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/orders/getorders", BASE_URL];
@@ -323,6 +364,11 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 +(NSString *) GET_ITEMS_BY_ORDER_URL
 {
     return [NSString stringWithFormat:@"%@rest/services/dashboard/dashboardorderdetails", BASE_URL];
+}
+
++(NSString *) UPDATE_ORDER_DETAIL
+{
+     return [NSString stringWithFormat:@"%@rest/services/orders/updateorderdetails", BASE_URL];
 }
 
 +(NSString *) UPDATE_ORDER_STATUS_URL
@@ -354,28 +400,91 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) CHANGE_PASSWORD
 {
-    return [NSString stringWithFormat:@"%@rest/services/organization/changemanagerpw", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/manager/changepassword", BASE_URL];
 }
 
+#pragma mark - Print
+
++(void) printInvoice: (Print *) print
+{
+    Order *order = print.order;
+    NSArray *itemArray = print.itemArray;
+    
+    if(order.customerName == NULL)order.customerName = @"";
+    if(order.contactNumber == NULL)order.contactNumber = @"";
+    
+    NSMutableString *htmlString = [[NSMutableString alloc] init];
+    
+    [htmlString appendFormat:@"<table width='100%%'>"];
+    [htmlString appendFormat:@"<tr><td colspan='3'><center><h1>Biryani Pot</h1></center></td></tr>"];
+    [htmlString appendFormat:@"<td style='line-height:20px;' colspan=3>&nbsp;</td>"];
+    [htmlString appendFormat:@"<tr><td colspan='2'><strong>%@</strong></td><td align='right'><strong>#%@</strong></td></tr>", order.customerName, order.orderNo];
+    [htmlString appendFormat:@"<tr><td colspan='2'><strong>%@</strong></td><td align='right'><strong>%@</strong></td></tr>", order.contactNumber, order.orderTime];
+    [htmlString appendFormat:@"<td style='line-height:20px;' colspan=3>&nbsp;</td>"];
+    
+    for (int i = 0; i < itemArray.count; i++)
+    {
+        Item *item = itemArray[i];
+        [htmlString appendFormat:@"<tr><td width='65%%'>%@</td><td width='15%%' align = 'right'>%@</td><td width='20%%' align = 'right'>%.2f</td></tr>", item.name, item.quantity, ([item.price floatValue] * [item.quantity intValue])];
+    }
+    
+    [htmlString appendFormat:@"<td style='line-height:10px;' colspan=3>&nbsp;</td>"];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Sub Total</b></td><td align='right'><b>$%@</b></td></tr>", order.subTotal];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Delivery Fee</b></td><td align='right'><b>$%@</b></td></tr>", order.deliveryFee];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tip</b></td><td align='right'><b>$%@</b></td></tr>", order.tip];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tax</b></td><td align='right'><b>$%@</b></td></tr>", order.tax];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Total</b></td><td align='right'><b>$%@</b></td></tr>", order.grandTotal];
+    [htmlString appendFormat:@"<td style='line-height:40px;' colspan=3>&nbsp;</td>"];
+    [htmlString appendFormat:@"<tr><td colspan = '3' align = 'center'><h3>%@</h3></td></tr>", order.deliveryType];
+    [htmlString appendFormat:@"</table>"];
+    
+    UIPrintInteractionController *pic = [UIPrintInteractionController sharedPrintController];
+    
+    //pic.delegate = self;
+    
+    UIPrintInfo *printInfo = [UIPrintInfo printInfo];
+    printInfo.outputType = UIPrintInfoOutputGeneral;
+    printInfo.jobName = @"PrintJob";
+    pic.printInfo = printInfo;
+    
+    UIMarkupTextPrintFormatter *formatter = [[UIMarkupTextPrintFormatter alloc] initWithMarkupText:htmlString];
+    formatter.contentInsets = UIEdgeInsetsMake(0,0,0,0); // 1" margins
+    
+    pic.printFormatter = formatter;
+    [pic setShowsNumberOfCopies:false];
+    
+    void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error) {
+        
+        if (!completed && error) {
+            
+            DebugLog(@"Printing could not complete because of error: %@", error);
+            
+        }
+        
+    };
+    
+    [pic presentAnimated:YES completionHandler:completionHandler];
+}
 
 #pragma mark - Payment
-+(NSString *) MERCHANTID
+
++(NSString *) CARD_CONNECT_BASE_URL
 {
-    return @"496160873888";
+    return @"https://fts.cardconnect.com:6443/";
 }
 
-+(NSString *) PAYMENT_URL
++(NSString *) AUTHORIZATION_STRING
 {
-    return @"fts.cardconnect.com:6443";
-}
-
-+(NSString *) PAYMENT_USERNAME_PASSWORD
-{
-    return @"testing:testing123";
+    return @"Basic dGVzdGluZzp0ZXN0aW5nMTIz";
 }
 
 +(NSString *) REFUND_URL
 {
-    return [NSString stringWithFormat:@"https://%@/cardconnect/rest/void", Constants.PAYMENT_URL];
+    return [NSString stringWithFormat:@"%@cardconnect/rest/void", Constants.CARD_CONNECT_BASE_URL];
+}
+
++(NSString *) GET_PAYMENT_DETAIL_URL
+{
+    return [NSString stringWithFormat:@"%@rest/services/receipt/getPayments", BASE_URL];
 }
 @end

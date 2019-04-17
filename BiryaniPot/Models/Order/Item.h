@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface Item : NSObject
+@interface Item : NSObject <NSCopying>
 @property (nonatomic, retain) NSString *itemId;
 @property (nonatomic, retain) NSString *categoryId;
 @property (nonatomic, retain) NSString *name;
@@ -23,4 +23,5 @@
 @property (nonatomic, retain) NSString *quantity;
 @property (nonatomic, retain) NSString *spiceLevel;
 @property (nonatomic, retain) NSString *itemTypeId;
+@property (nonatomic, retain) NSString *pointsRequired;
 @end

@@ -23,6 +23,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *maxDiscount;
 @property (weak, nonatomic) IBOutlet UITextField *limitPerCustomer;
 @property (weak, nonatomic) IBOutlet UITextField *maxUsageLimit;
+@property (weak, nonatomic) IBOutlet UIButton *isPercentButton;
+@property BOOL isPercent;
+
 @property (nonatomic, retain) NSString *extension;
 
 @property (weak, nonatomic) IBOutlet UIButton *fromButton;

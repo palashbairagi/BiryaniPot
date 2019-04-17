@@ -14,8 +14,8 @@
 #import "CalendarViewController.h"
 
 @interface FeedbackViewController ()
-@property (nonatomic, retain) NSString *searchString;
-@property (nonatomic, retain) NSMutableArray *searchResultArray;
+    @property (nonatomic, retain) NSString *searchString;
+    @property (nonatomic, retain) NSMutableArray *searchResultArray;
 @end
 
 @implementation FeedbackViewController
@@ -32,49 +32,10 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
-    
-    @try
-    {
-        [self initComponents];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to Initialize Components"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    @try
-    {
-        [self feedbackTags];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback Tags"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    @try
-    {
-        [self feedback];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    @try
-    {
-        [self totalOrdersList];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get orders with feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
+    [self initComponents];
+    [self feedbackTags];
+    [self feedback];
+    [self totalOrdersList];
 }
 
 -(void)initComponents
@@ -275,132 +236,249 @@
 
 -(void)totalOrdersList
 {
-    [_feedbackArray removeAllObjects];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for(NSDictionary *totalOrder in totalOrders)
+    @try
     {
-        NSString *smiley = [totalOrder objectForKey:@"feedbackType"];
-        NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
-        NSString *orderType = [totalOrder objectForKey:@"orderType"];
-        NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-        NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
-        NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
-        NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
-        NSString *orderDate = [self convertDate:[totalOrder objectForKey:@"orderDate"]];
-        
-        Feedback *feedback = [[Feedback alloc]init];
-        feedback.smiley = smiley;
-        feedback.orderNo = orderId;
-        feedback.orderType = orderType;
-        feedback.paymentType = paymentType;
-        feedback.amount = totalAmount;
-        feedback.email = userEmail;
-        feedback.contactNumber = userMobile;
-        feedback.orderDate = orderDate;
-        
-        [_feedbackArray addObject:feedback];
-    }
+        [_feedbackArray removeAllObjects];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_feedbackTableView reloadData];
-    });
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.TOTAL_ORDER_LIST_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *totalOrders = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", totalOrders);
+        
+        for(NSDictionary *totalOrder in totalOrders)
+        {
+            NSString *smiley = [totalOrder objectForKey:@"feedbackType"];
+            NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
+            NSString *orderType = [totalOrder objectForKey:@"orderType"];
+            NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
+            NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
+            NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
+            NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
+            NSString *orderDate = [self convertDate:[totalOrder objectForKey:@"orderDate"]];
+            
+            Feedback *feedback = [[Feedback alloc]init];
+            feedback.smiley = smiley;
+            feedback.orderNo = orderId;
+            feedback.orderType = orderType;
+            feedback.paymentType = paymentType;
+            feedback.amount = totalAmount;
+            feedback.email = userEmail;
+            feedback.contactNumber = userMobile;
+            feedback.orderDate = orderDate;
+            
+            [_feedbackArray addObject:feedback];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_feedbackTableView reloadData];
+            [overlayView dismiss:YES];
+        });
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"FeedbackViewController [totalOrdersList]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)feedbackTags
 {
-    _positiveTaste = 0;
-    _positiveQuality = 0;
-    _positiveQuantity = 0;
-    _positiveDelivery = 0;
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    _negativeTaste = 0;
-    _negativeQuality = 0;
-    _negativeQuantity = 0;
-    _negativeTaste = 0;
-    
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_TAG_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *feedbackTags = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    for(NSDictionary *feedbackTag in feedbackTags)
+    @try
     {
-        NSString *tagName = [feedbackTag objectForKey:@"tagName"];
-        NSString *tagType = [feedbackTag objectForKey:@"tagType"];
-        NSNumber *tagCount = [NSNumber numberWithFloat:[[feedbackTag objectForKey:@"tagCount"] floatValue]];
+        _positiveTaste = 0;
+        _positiveQuality = 0;
+        _positiveQuantity = 0;
+        _positiveDelivery = 0;
+        
+        _negativeTaste = 0;
+        _negativeQuality = 0;
+        _negativeQuantity = 0;
+        _negativeTaste = 0;
+        
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_TAG_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+    
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *feedbackTags = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", feedbackTags);
+        
+        for(NSDictionary *feedbackTag in feedbackTags)
+        {
+            NSString *tagName = [feedbackTag objectForKey:@"tagName"];
+            NSString *tagType = [feedbackTag objectForKey:@"tagType"];
+            NSNumber *tagCount = [NSNumber numberWithFloat:[[feedbackTag objectForKey:@"tagCount"] floatValue]];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([tagType isEqualToString:@"Good"])
+                {
+                    if ([tagName isEqualToString:@"Food Quality"])
+                    {
+                        _positiveQuality = tagCount;
+                    }
+                    else if ([tagName isEqualToString:@"Food Quantity"])
+                    {
+                        _positiveQuantity = tagCount;
+                    }
+                    else if ([tagName isEqualToString:@"Taste"])
+                    {
+                        _positiveTaste = tagCount;
+                    }
+                    else
+                    {
+                        _positiveDelivery = tagCount;
+                    }
+                }
+                else
+                {
+                    if ([tagName isEqualToString:@"Food Quality"])
+                    {
+                        _negativeQuality = tagCount;
+                    }
+                    else if ([tagName isEqualToString:@"Food Quantity"])
+                    {
+                        _negativeQuantity = tagCount;
+                    }
+                    else if ([tagName isEqualToString:@"Taste"])
+                    {
+                        _negativeTaste = tagCount;
+                    }
+                    else
+                    {
+                        _negativeDelivery = tagCount;
+                    }
+                }
+                
+            });
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if ([tagType isEqualToString:@"Good"])
-            {
-                if ([tagName isEqualToString:@"Food Quality"])
-                {
-                    _positiveQuality = tagCount;
-                }
-                else if ([tagName isEqualToString:@"Food Quantity"])
-                {
-                    _positiveQuantity = tagCount;
-                }
-                else if ([tagName isEqualToString:@"Taste"])
-                {
-                    _positiveTaste = tagCount;
-                }
-                else
-                {
-                    _positiveDelivery = tagCount;
-                }
-            }
-            else
-            {
-                if ([tagName isEqualToString:@"Food Quality"])
-                {
-                    _negativeQuality = tagCount;
-                }
-                else if ([tagName isEqualToString:@"Food Quantity"])
-                {
-                    _negativeQuantity = tagCount;
-                }
-                else if ([tagName isEqualToString:@"Taste"])
-                {
-                    _negativeTaste = tagCount;
-                }
-                else
-                {
-                    _negativeDelivery = tagCount;
-                }
-            }
-            
+            [self createPieChart];
+            [overlayView dismiss:YES];
         });
+        
+    }@catch(NSException *e)
+    {
+        DebugLog(@"FeedbackViewController [feedbackTags]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
     }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self createPieChart];
-    });
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 -(void)feedback
 {
-    NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
-    NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
-    NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
-    NSError *error = nil;
-    NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
-    
-    _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
-    _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
+    @try
+    {
+        NSString *fromDate = [Constants changeDateFormatForAPI:_dateFrom.currentTitle];
+        NSString *toDate = [Constants changeDateFormatForAPI:_dateTo.currentTitle];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?loc_id=%@&fromdate=%@&todate=%@", Constants.FEEDBACK_URL, Constants.LOCATION_ID, fromDate, toDate]];
+        NSError *error = nil;
+        NSData *responseJSONData = [NSData dataWithContentsOfURL:url];
+        
+        DebugLog(@"Request %@", url);
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        NSArray *feedback = [NSJSONSerialization JSONObjectWithData:responseJSONData options:0 error:&error];
+        
+        if (error != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                [overlayView dismiss:YES];
+            });
+            return;
+        }
+        
+        DebugLog(@"%@", feedback);
+        
+        _happyValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"goodCount"]];
+        _sadValue.text = [NSString stringWithFormat:@"%@%%",[feedback[0] objectForKey:@"badCount"]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [overlayView dismiss:YES];
+        });
+        
+    }
+    @catch(NSException *e)
+    {
+        DebugLog(@"FeedbackViewController [feedback]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+    }
+    @finally
+    {
+        [overlayView dismiss:YES];
+    }
 }
 
 - (IBAction)dateButtonClicked:(id)sender
@@ -423,49 +501,18 @@
 
 -(void)datesUpdated
 {
-    [_waitView setHidden:FALSE];
-    [_activityIndicator setHidden:FALSE];
-    [_activityIndicator startAnimating];
+    _searchTextField.text = @"";
+    [_positiveFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    [_positiveFeedbackView addSubview: _happySmiley];
+    [_positiveFeedbackView addSubview: _happyValue];
     
-    @try
-    {
-        _searchTextField.text = @"";
-        [_positiveFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-        [_positiveFeedbackView addSubview: _happySmiley];
-        [_positiveFeedbackView addSubview: _happyValue];
-        
-        [_negativeFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-        [_negativeFeedbackView addSubview: _sadSmiley];
-        [_negativeFeedbackView addSubview: _sadValue];
-        
-        [self feedbackTags];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback Tags"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
+    [_negativeFeedbackView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    [_negativeFeedbackView addSubview: _sadSmiley];
+    [_negativeFeedbackView addSubview: _sadValue];
     
-    @try
-    {
-        [self feedback];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get Feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    @try
-    {
-        [self totalOrdersList];
-    }@catch(NSException *e)
-    {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Unable to get orders with feedback"];
-        NSLog(@"%@ %@", e.name, e.reason);
-    }
-    
-    [_activityIndicator stopAnimating];
-    [_activityIndicator setHidden:TRUE];
-    [_waitView setHidden:TRUE];
+    [self feedbackTags];
+    [self feedback];
+    [self totalOrdersList];
 }
 
 - (IBAction)searchButtonClicked:(id)sender

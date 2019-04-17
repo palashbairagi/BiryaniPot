@@ -20,6 +20,133 @@
     [self initComponents];
 }
 
+-(void) updateRecord
+{
+    MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    
+    @try
+    {
+        NSString *promoCode = [NSString stringWithFormat:@"%@", _offerName.text];
+        NSString *offerDescription = [NSString stringWithFormat:@"%@", _offerDescription.text];
+        NSString *validFrom = [Constants changeDateFormatForAPI:_fromButton.titleLabel.text];
+        NSString *validTill = [Constants changeDateFormatForAPI:_toButton.titleLabel.text];
+        NSString *minValue = [NSString stringWithFormat:@"%@", _minimumOrder.text];
+        NSString *maxDiscount = [NSString stringWithFormat:@"%@", _maxDiscount.text];
+        NSString *maxTimes = [NSString stringWithFormat:@"%@", _limitPerCustomer.text];
+        NSString *usageLimit = [NSString stringWithFormat:@"%@", _maxUsageLimit.text];
+        
+        if(_extension == NULL) _extension = @"jpg";
+        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
+        {
+            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
+        }
+        
+        NSString *imgName = [NSString stringWithFormat:@"%@.%@", promoCode, _extension];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_OFFER_URL]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+        
+        NSMutableData *body = [NSMutableData data];
+        
+        NSDictionary *params = @{@"code_id" : _offer.offerId,
+                                 @"codename" : promoCode,
+                                 @"code_description" : offerDescription,
+                                 @"validfrom" : validFrom,
+                                 @"validtill" : validTill,
+                                 @"minvalue"  : minValue,
+                                 @"maxdisc"   : maxDiscount,
+                                 @"maxtimes"  : maxTimes,
+                                 @"usage_limit" : usageLimit,
+                                 @"is_active"  : @"1",
+                                 @"loc_id"    : Constants.LOCATION_ID
+                                 };
+        
+        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
+        
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        NSData *imageData = UIImageJPEGRepresentation(_offerImageView.image, 1.0);
+        NSString *fieldName = @"coupon_image";
+        NSString *mimetype  = [NSString stringWithFormat:@"image/%@", _extension];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            DebugLog(@"Request %@ Response %@", request, response);
+            [overlayView setModeAndProgressWithStateOfTask:task];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Connect"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+                    [overlayView dismiss:YES];
+                });
+                return;
+            }
+            
+            DebugLog(@"%@", result);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate getOffers];
+                [_delegate.offerCollectionView reloadData];
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                    [alertController dismissViewControllerAnimated:YES completion:nil];
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }];
+                
+                [alertController addAction:ok];
+                
+                [self presentViewController:alertController animated:YES completion:^{
+                    [overlayView dismiss:YES];
+                }];
+            });
+        }];
+        
+        [task resume];
+    }@catch(NSException *e)
+    {
+        DebugLog(@"EditOfferViewController [updateRecord]: %@ %@",e.name, e.reason);
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Unable to Process"];
+        [overlayView dismiss:YES];
+    }
+    @finally
+    {
+        
+    }
+}
+
 -(void)initComponents
 {
     self.headerView.layer.borderWidth = 1;
@@ -118,6 +245,17 @@
     _limitPerCustomer.text = [NSString stringWithFormat:@"%@", _offer.maxTimes];
     _maxUsageLimit.text = [NSString stringWithFormat:@"%@", _offer.maxUsageLimit];
     
+    if([_offer.isPercent intValue] == 1)
+    {
+        [_isPercentButton setTitle:[NSString stringWithFormat:@"%C", 0xf00c] forState:UIControlStateNormal];
+        _isPercentButton.backgroundColor = [UIColor colorWithRed:0.0 green:100.0/256 blue:1.0 alpha:1.0];
+        
+    }
+    else
+    {
+        _isPercentButton.backgroundColor = [UIColor whiteColor];
+    }
+    
     if (_offer.image == nil )
     {
         NSBlockOperation * op = [NSBlockOperation blockOperationWithBlock:^{
@@ -151,94 +289,7 @@
 {
     if([self isValidate])
     {
-        NSString *promoCode = [NSString stringWithFormat:@"%@", _offerName.text];
-        NSString *offerDescription = [NSString stringWithFormat:@"%@", _offerDescription.text];
-        NSString *validFrom = [Constants changeDateFormatForAPI:_fromButton.titleLabel.text];
-        NSString *validTill = [Constants changeDateFormatForAPI:_toButton.titleLabel.text];
-        NSString *minValue = [NSString stringWithFormat:@"%@", _minimumOrder.text];
-        NSString *maxDiscount = [NSString stringWithFormat:@"%@", _maxDiscount.text];
-        NSString *maxTimes = [NSString stringWithFormat:@"%@", _limitPerCustomer.text];
-        NSString *usageLimit = [NSString stringWithFormat:@"%@", _maxUsageLimit.text];
-        
-        if(_extension == NULL) _extension = @"jpg";
-        else if(!([_extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame))
-        {
-            [Validation showSimpleAlertOnViewController:self withTitle:@"Error" andMessage:@"Promo Picture must be in the jpg format"];
-        }
-        
-        NSString *imgName = [NSString stringWithFormat:@"%@.%@", promoCode, _extension];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", Constants.UPDATE_OFFER_URL]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-        
-        NSMutableData *body = [NSMutableData data];
-        
-        NSDictionary *params = @{@"code_id" : _offer.offerId,
-                                 @"codename" : promoCode,
-                                 @"code_description" : offerDescription,
-                                 @"validfrom" : validFrom,
-                                 @"validtill" : validTill,
-                                 @"minvalue"  : minValue,
-                                 @"maxdisc"   : maxDiscount,
-                                 @"maxtimes"  : maxTimes,
-                                 @"usage_limit" : usageLimit,
-                                 @"is_active"  : @"1",
-                                 @"loc_id"    : Constants.LOCATION_ID
-                                 };
-        
-        NSString *boundary = [NSString stringWithFormat:@"---------------------------14737809831466499882746641449"];
-        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-        
-        [request setHTTPMethod:@"POST"];
-        [request setValue:contentType forHTTPHeaderField:@"content-Type"];
-        
-        [params enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-        }];
-        
-        NSData *imageData = UIImageJPEGRepresentation(_offerImageView.image, 1.0);
-        NSString *fieldName = @"coupon_image";
-        NSString *mimetype  = [NSString stringWithFormat:@"image/%@", _extension];
-        
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:imageData];
-        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        request.HTTPBody = body;
-        
-        NSURLSession *session = [NSURLSession sharedSession];
-        NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                NSLog(@"error = %@", error);
-                return;
-            }
-            
-            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate getOffers];
-                [_delegate.offerCollectionView reloadData];
-                
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:result preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
-                    [alertController dismissViewControllerAnimated:YES completion:nil];
-                    [self dismissViewControllerAnimated:NO completion:nil];
-                }];
-                
-                [alertController addAction:ok];
-                
-                [self presentViewController:alertController animated:YES completion:nil];
-            });
-            
-        }];
-        [task resume];
+        [self updateRecord];
     }
 }
 
@@ -304,11 +355,6 @@
 
 -(BOOL)isValidate
 {
-    [_offerName resignFirstResponder];
-    [_offerValue resignFirstResponder];
-    [_minimumOrder resignFirstResponder];
-    [_offerDescription resignFirstResponder];
-    
     if([Validation isEmpty:_offerName])
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Code Field should not be empty"];
@@ -325,15 +371,14 @@
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not be empty"];
         return false;
     }
-    if([Validation isMore:_offerValue thanMaxLength:5])
+    if([Validation isMore:_offerValue thanMaxLength:2])
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not exceed 5 characters"];
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should not exceed 2 digits"];
         return false;
     }
-    
-    if([Validation isMore:_minimumOrder thanMaxLength:5])
+    if ([Validation isNumber:_offerValue])
     {
-        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not exceed 5 characters"];
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Promo Value Field should be a number"];
         return false;
     }
     
@@ -348,9 +393,79 @@
         return false;
     }
     
+    if ([Validation isEmpty:_minimumOrder])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not be empty"];
+        return false;
+    }
+    if ([Validation isNumber:_minimumOrder])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should contain numbers only"];
+        return false;
+    }
+    if([Validation isMore:_minimumOrder thanMaxLength:3])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Minimum Order Field should not be more than 999"];
+        return false;
+    }
+    
+    if ([Validation isEmpty:_maxDiscount])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Discount Field should not be empty"];
+        return false;
+    }
+    if ([Validation isNumber:_maxDiscount])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Discount Field should contain numbers only"];
+        return false;
+    }
+    if([Validation isMore:_maxDiscount thanMaxLength:2])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Discount Field should not be more than 99"];
+        return false;
+    }
+    
+    if ([Validation isEmpty:_limitPerCustomer])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Limit Per Customer Field should not be empty"];
+        return false;
+    }
+    if ([Validation isNumber:_limitPerCustomer])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Limit Per Customer Field should contain numbers only"];
+        return false;
+    }
+    if([Validation isMore:_limitPerCustomer thanMaxLength:4])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Limit Per Customer Field should not be more than 9999"];
+        return false;
+    }
+    
+    if ([Validation isEmpty:_maxUsageLimit])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Usage Limit Field should not be empty"];
+        return false;
+    }
+    if ([Validation isNumber:_maxUsageLimit])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Usage Limit Field should contain numbers only"];
+        return false;
+    }
+    if([Validation isMore:_maxUsageLimit thanMaxLength:4])
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Maximum Usage Limit Field should not be more than 9999"];
+        return false;
+    }
+    
     if([_fromButton.titleLabel.text isEqualToString:@"Select"] || [_toButton.titleLabel.text isEqualToString:@"Select"])
     {
         [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"Date range should not be empty"];
+        return false;
+    }
+    
+    if(_offerImageView.image == nil)
+    {
+        [Validation showSimpleAlertOnViewController:self withTitle:@"Alert" andMessage:@"No Image"];
         return false;
     }
     
@@ -373,7 +488,7 @@
     }
     @catch(NSException *e)
     {
-        NSLog(@"%@ %@", e.name, e.reason);
+        DebugLog(@"%@ %@", e.name, e.reason);
     }
     return convertedDate;
 }
