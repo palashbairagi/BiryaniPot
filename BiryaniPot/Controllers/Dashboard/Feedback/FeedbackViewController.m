@@ -67,7 +67,7 @@
     [_positiveChart setShowValueOnPieSlice:TRUE];
     [_positiveChart setShowCustomMarkerView:TRUE];
     
-    [_positiveChart drawPieChart:_positiveChart];
+    [_positiveChart drawPieChart];
     [self.positiveFeedbackView addSubview:_positiveChart];
     
     _negativeChart = [[PieChart alloc] initWithFrame:CGRectMake(100, 10, self.negativeFeedbackView.bounds.size.width-80, self.negativeFeedbackView.bounds.size.height-20)];
@@ -83,7 +83,7 @@
     [_negativeChart setShowValueOnPieSlice:TRUE];
     [_negativeChart setShowCustomMarkerView:TRUE];
     
-    [_negativeChart drawPieChart:_negativeChart];
+    [_negativeChart drawPieChart];
     [self.negativeFeedbackView addSubview:_negativeChart];
 }
 

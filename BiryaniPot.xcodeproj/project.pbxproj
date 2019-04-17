@@ -1015,7 +1015,6 @@
 				E5F358E51FEDCEC700470842 /* Sources */,
 				E5F358E61FEDCEC700470842 /* Frameworks */,
 				E5F358E71FEDCEC700470842 /* Resources */,
-				067E74A33B28B7E10EB3464B /* [CP] Embed Pods Frameworks */,
 				2EB5D7DEEE2436D0B06CAC77 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -1035,8 +1034,6 @@
 				E5F358FD1FEDCEC700470842 /* Sources */,
 				E5F358FE1FEDCEC700470842 /* Frameworks */,
 				E5F358FF1FEDCEC700470842 /* Resources */,
-				19ED407787C901C1F45DD85F /* [CP] Embed Pods Frameworks */,
-				904119EF75136BA721AAD400 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1056,8 +1053,6 @@
 				E5F359081FEDCEC700470842 /* Sources */,
 				E5F359091FEDCEC700470842 /* Frameworks */,
 				E5F3590A1FEDCEC700470842 /* Resources */,
-				40FC567482455225D6261D17 /* [CP] Embed Pods Frameworks */,
-				FC6690918A2A0A2992986C5A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1205,51 +1200,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		067E74A33B28B7E10EB3464B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
-				"${BUILT_PRODUCTS_DIR}/MDCalendarSelector/MDCalendarSelector.framework",
-				"${BUILT_PRODUCTS_DIR}/MKDropdownMenu/MKDropdownMenu.framework",
-				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
-				"${BUILT_PRODUCTS_DIR}/SCRSidewaysBarGraph/SCRSidewaysBarGraph.framework",
-				"${BUILT_PRODUCTS_DIR}/SSMaterialCalendarPicker/SSMaterialCalendarPicker.framework",
-				"${BUILT_PRODUCTS_DIR}/drCharts/drCharts.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDCalendarSelector.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MKDropdownMenu.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCRSidewaysBarGraph.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSMaterialCalendarPicker.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/drCharts.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		19ED407787C901C1F45DD85F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2EB5D7DEEE2436D0B06CAC77 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1261,7 +1211,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IQKeyboardManager.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1286,36 +1236,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		40FC567482455225D6261D17 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		904119EF75136BA721AAD400 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		BBE794C8BCB412DC6CDF1648 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1332,21 +1252,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FC6690918A2A0A2992986C5A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
