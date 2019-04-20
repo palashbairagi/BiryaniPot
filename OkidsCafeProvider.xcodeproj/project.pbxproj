@@ -718,10 +718,51 @@
 		E5B89789226BA16D00F9A595 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				E5B89790226BBF3000F9A595 /* Config */,
+				E5B8978F226BBF1E00F9A595 /* Validation */,
+				E5B8978E226BBF1200F9A595 /* Constants */,
+				E5768AD620075E8400A60EC7 /* BaseViewController.h */,
+				E5768AD720075E8400A60EC7 /* BaseViewController.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		E5B8978D226BBD0400F9A595 /* Gradient */ = {
+			isa = PBXGroup;
+			children = (
+				E5D4259C1FEF181C002003D2 /* RadialGradientView.h */,
+				E5D4259D1FEF181C002003D2 /* RadialGradientView.m */,
+				E5768AD9200769E100A60EC7 /* CALayer+UIColor.h */,
+				E5768ADA200769E100A60EC7 /* CALayer+UIColor.m */,
+			);
+			path = Gradient;
+			sourceTree = "<group>";
+		};
+		E5B8978E226BBF1200F9A595 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				E5E628C920001B0F00ADC67C /* Constants.h */,
+				E5E628CA20001B0F00ADC67C /* Constants.m */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		E5B8978F226BBF1E00F9A595 /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				E50227B42030F93C00A51792 /* Validation.h */,
+				E50227B52030F93C00A51792 /* Validation.m */,
+			);
+			path = Validation;
+			sourceTree = "<group>";
+		};
+		E5B89790226BBF3000F9A595 /* Config */ = {
+			isa = PBXGroup;
+			children = (
 				E5B8978A226BA19F00F9A595 /* AppConfig.h */,
 				E5B8978B226BA19F00F9A595 /* AppConfig.m */,
 			);
-			path = Common;
+			path = Config;
 			sourceTree = "<group>";
 		};
 		E5BCA97B1FF42FB200D28878 /* Order */ = {
@@ -905,8 +946,6 @@
 		E5F358EB1FEDCEC700470842 /* OkidsCafeProvider */ = {
 			isa = PBXGroup;
 			children = (
-				E5B89789226BA16D00F9A595 /* Common */,
-				E5D425A11FEF93DB002003D2 /* Fonts */,
 				E5F359211FEDD9DA00470842 /* SupportFiles */,
 				E5F359201FEDD98400470842 /* Models */,
 				E5F3591F1FEDD97C00470842 /* Views */,
@@ -975,22 +1014,15 @@
 		E5F359211FEDD9DA00470842 /* SupportFiles */ = {
 			isa = PBXGroup;
 			children = (
+				E5D425A11FEF93DB002003D2 /* Fonts */,
+				E5B89789226BA16D00F9A595 /* Common */,
+				E5B8978D226BBD0400F9A595 /* Gradient */,
 				E57BE9F120AA91AB0060F079 /* Calendar */,
 				E5F358EC1FEDCEC700470842 /* AppDelegate.h */,
 				E5F358ED1FEDCEC700470842 /* AppDelegate.m */,
 				E5F358F51FEDCEC700470842 /* Assets.xcassets */,
 				E5F358FA1FEDCEC700470842 /* Info.plist */,
 				E5F358FB1FEDCEC700470842 /* main.m */,
-				E5D4259C1FEF181C002003D2 /* RadialGradientView.h */,
-				E5D4259D1FEF181C002003D2 /* RadialGradientView.m */,
-				E5E628C920001B0F00ADC67C /* Constants.h */,
-				E5E628CA20001B0F00ADC67C /* Constants.m */,
-				E5768AD620075E8400A60EC7 /* BaseViewController.h */,
-				E5768AD720075E8400A60EC7 /* BaseViewController.m */,
-				E5768AD9200769E100A60EC7 /* CALayer+UIColor.h */,
-				E5768ADA200769E100A60EC7 /* CALayer+UIColor.m */,
-				E50227B42030F93C00A51792 /* Validation.h */,
-				E50227B52030F93C00A51792 /* Validation.m */,
 			);
 			path = SupportFiles;
 			sourceTree = "<group>";
