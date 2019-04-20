@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LegendView.h"
 
+@class PieChart;
+
 @protocol PieChartDelegate <NSObject>
 
 - (void)didTapOnPieChartWithValue:(NSString *)value;
@@ -28,7 +30,7 @@
 //Set Title for each item in a Pie Chart
 //Default Title is Empty String
 
-- (NSNumber *)valueInPieChartWithIndex:(NSInteger)index;
+- (NSNumber *)valueInPieChartWithIndex:(NSInteger)index inPieChart:(PieChart *)pieChart;
 //Set Value for each item in a Pie Chart
 //Default Value is 0
 
@@ -65,9 +67,11 @@
 @property (nonatomic) BOOL showCustomMarkerView; //Default is FALSE
 
 //To draw the graph
-- (void)drawPieChart;
+- (void)getDataFromDataSourceForPieChart:(PieChart *)pieChart;
 
 //To reload data on the graph
-- (void)reloadPieChart;
+- (void)reloadPieChart:(PieChart *)pieChart;
+
+- (void)drawPieChart:(PieChart *)pieChart;
 
 @end

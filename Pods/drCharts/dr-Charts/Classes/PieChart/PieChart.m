@@ -61,12 +61,12 @@
 }
 
 #pragma mark Get Data From Data Source
-- (void)getDataFromDataSource{
+- (void)getDataFromDataSourceForPieChart:(PieChart *)pieChart{
     for(int i = 0; i <[self.dataSource numberOfValuesForPieChart] ; i++){
         PieChartDataRenderer *data = [[PieChartDataRenderer alloc] init];
         [data setColor:[self.dataSource colorForValueInPieChartWithIndex:i]];
         [data setTitle:[self.dataSource titleForValueInPieChartWithIndex:i]];
-        [data setValue:[self.dataSource valueInPieChartWithIndex:i]];
+        [data setValue:[self.dataSource valueInPieChartWithIndex:i inPieChart:pieChart]];
         
         [self.dataArray addObject:data];
         
@@ -80,8 +80,8 @@
 }
 
 #pragma mark Draw Graph
-- (void)drawPieChart{
-    [self getDataFromDataSource];
+- (void)drawPieChart:(PieChart *)pieChart{
+    [self getDataFromDataSourceForPieChart:pieChart];
     
     height = HEIGHT(self) - 2*INNER_PADDING;
     
@@ -99,7 +99,7 @@
     center = self.pieView.center;
     
     startAngle = 0;
-
+    
     for (PieChartDataRenderer *data in self.dataArray) {
         [self drawPathWithValue:data.value.floatValue color:data.color];
     }
@@ -119,7 +119,7 @@
     [shapeLayer setOpacity:0.7f];
     [shapeLayer setLineWidth:1.0f];
     [shapeLayer setValue:[NSString stringWithFormat:@"%0.2f",value] forKey:@"data"];
-
+    
     [CATransaction begin];
     
     CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -142,7 +142,7 @@
     CGRect layerRect = CGPathGetBoundingBox(shapeLayer.path);
     NSAttributedString *attrString = [LegendView getAttributedString:text withFont:self.textFont];
     CGSize size = [attrString boundingRectWithSize:CGSizeMake(WIDTH(self), MAXFLOAT) options:NSStringDrawingUsesFontLeading|NSStringDrawingUsesLineFragmentOrigin context:nil].size;
-
+    
     if (size.height < layerRect.size.height/2 && size.width < layerRect.size.width/2 && self.showValueOnPieSlice) {
         CGRect frame = CGRectMake(layerRect.origin.x + layerRect.size.width/2 - size.width/2, layerRect.origin.y + layerRect.size.height/2 - size.height/2, size.width, size.height);
         
@@ -169,7 +169,7 @@
 
 - (UIBezierPath *)drawArcWithValue:(CGFloat)value{
     CGFloat endAngle = startAngle + (value/self.totalCount.floatValue)*360;
-
+    
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:center];
     [path addLineToPoint:CGPointMake(center.x + radius * cosf(DEG2RAD(startAngle)), center.y + radius *sinf(DEG2RAD(startAngle)))];
@@ -326,11 +326,11 @@
 }
 
 #pragma mark Reload Chart
-- (void)reloadPieChart{
+- (void)reloadPieChart:(PieChart *)pieChart{
     [self.pieView removeFromSuperview];
     [self.legendView removeFromSuperview];
     
-    [self drawPieChart];
+    [self drawPieChart:pieChart];
 }
 
 @end
