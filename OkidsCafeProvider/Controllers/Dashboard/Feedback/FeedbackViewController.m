@@ -277,7 +277,7 @@
             NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
             NSString *orderType = [totalOrder objectForKey:@"orderType"];
             NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-            NSString *totalAmount = [NSString stringWithFormat:@"$%@",[totalOrder objectForKey:@"totalOrdersAmount"]];
+            NSString *totalAmount = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, [totalOrder objectForKey:@"totalOrdersAmount"]];
             NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
             NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
             NSString *orderDate = [self convertDate:[totalOrder objectForKey:@"orderDate"]];

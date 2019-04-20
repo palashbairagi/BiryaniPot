@@ -54,6 +54,7 @@
 		E5B1CE9E2005F9DF003B816C /* MenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5B1CE9C2005F9DF003B816C /* MenuViewController.xib */; };
 		E5B1CEA22006016A003B816C /* MenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B1CEA02006016A003B816C /* MenuCollectionViewCell.m */; };
 		E5B1CEA32006016A003B816C /* MenuCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5B1CEA12006016A003B816C /* MenuCollectionViewCell.xib */; };
+		E5B8978C226BA19F00F9A595 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B8978B226BA19F00F9A595 /* AppConfig.m */; };
 		E5BCA97E1FF431DC00D28878 /* Order.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BCA97D1FF431DC00D28878 /* Order.m */; };
 		E5BCA9821FF4A7D500D28878 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BCA9801FF4A7D500D28878 /* UserTableViewCell.m */; };
 		E5BCA9831FF4A7D500D28878 /* UserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5BCA9811FF4A7D500D28878 /* UserTableViewCell.xib */; };
@@ -226,6 +227,8 @@
 		E5B1CE9F2006016A003B816C /* MenuCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuCollectionViewCell.h; sourceTree = "<group>"; };
 		E5B1CEA02006016A003B816C /* MenuCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuCollectionViewCell.m; sourceTree = "<group>"; };
 		E5B1CEA12006016A003B816C /* MenuCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuCollectionViewCell.xib; sourceTree = "<group>"; };
+		E5B8978A226BA19F00F9A595 /* AppConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
+		E5B8978B226BA19F00F9A595 /* AppConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		E5BCA97C1FF431DC00D28878 /* Order.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Order.h; sourceTree = "<group>"; };
 		E5BCA97D1FF431DC00D28878 /* Order.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Order.m; sourceTree = "<group>"; };
 		E5BCA97F1FF4A7D500D28878 /* UserTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserTableViewCell.h; sourceTree = "<group>"; };
@@ -712,6 +715,15 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
+		E5B89789226BA16D00F9A595 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				E5B8978A226BA19F00F9A595 /* AppConfig.h */,
+				E5B8978B226BA19F00F9A595 /* AppConfig.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		E5BCA97B1FF42FB200D28878 /* Order */ = {
 			isa = PBXGroup;
 			children = (
@@ -893,6 +905,7 @@
 		E5F358EB1FEDCEC700470842 /* OkidsCafeProvider */ = {
 			isa = PBXGroup;
 			children = (
+				E5B89789226BA16D00F9A595 /* Common */,
 				E5D425A11FEF93DB002003D2 /* Fonts */,
 				E5F359211FEDD9DA00470842 /* SupportFiles */,
 				E5F359201FEDD98400470842 /* Models */,
@@ -1333,6 +1346,7 @@
 				E5B1CEA22006016A003B816C /* MenuCollectionViewCell.m in Sources */,
 				E5F359251FEDDF6500470842 /* LoginViewController.m in Sources */,
 				E5BF89151FF37CD5007209A2 /* ReadyToPickUpTableViewCell.m in Sources */,
+				E5B8978C226BA19F00F9A595 /* AppConfig.m in Sources */,
 				E5F3592D1FEDEDEE00470842 /* ProfileViewController.m in Sources */,
 				E5E9D2282003769500B25E19 /* FeedbackViewController.m in Sources */,
 			);

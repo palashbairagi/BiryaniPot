@@ -244,7 +244,7 @@
         _pickedUp.text = [NSString stringWithFormat:@"%d", [[result objectForKey:@"pickedup"] intValue]];
         _delivered.text  = [NSString stringWithFormat:@"%d", [[result objectForKey:@"delivered"] intValue]];
         _outForDelivery.text = [NSString stringWithFormat:@"%d", [[result objectForKey:@"delivering"] intValue]];
-        _totalOrders.text = [NSString stringWithFormat:@"%d of $%.2f", [[result objectForKey:@"totalOrders"] intValue], [[result objectForKey:@"totalPrice"] doubleValue]];
+        _totalOrders.text = [NSString stringWithFormat:@"%d of %@%.2f", [[result objectForKey:@"totalOrders"] intValue], AppConfig.currencySymbol,[[result objectForKey:@"totalPrice"] doubleValue]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
         });

@@ -73,7 +73,7 @@
         item = _delegate.updatedItemArray[_negativeButton.tag];
         item.quantity = _quantity.text;
         
-        _price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
+        _price.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, ([item.price floatValue] * [item.quantity intValue])];
         
         if (_addItemDelegate == NULL)
         {
@@ -101,7 +101,7 @@
     }
     
     item.quantity = _quantity.text;
-    _price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
+    _price.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, ([item.price floatValue] * [item.quantity intValue])];
     
     if(_addItemDelegate != NULL)
     {
@@ -114,7 +114,7 @@
             _delegate.updatedItemArray[index] = item;
         }
         
-        _addItemDelegate.revisedItemTotal.text = [NSString stringWithFormat:@"$%.2f", [_delegate getTotal]];
+        _addItemDelegate.revisedItemTotal.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, [_delegate getTotal]];
     }
     else
     {
@@ -175,7 +175,7 @@
         _quantity.text = @"0";
     }
     
-    _price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
+    _price.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, ([item.price floatValue] * [item.quantity intValue])];
     
     if (item.isSpiceSupported)
     {

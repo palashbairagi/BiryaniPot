@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MRProgress/MRProgressOverlayView+AFNetworking.h>
 #import "Print.h"
+#import "AppConfig.h"
 
 #if DEBUG == 1
 #define DebugLog(...)

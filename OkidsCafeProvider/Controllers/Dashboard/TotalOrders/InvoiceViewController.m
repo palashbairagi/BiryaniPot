@@ -120,11 +120,11 @@
     _paymentType.text = _delegate.paymentType;
     
     _orderDate.text = [self convertDate:_order.orderTime];
-    _subTotal.text = [NSString stringWithFormat:@"$%@", _order.subTotal];
-    _tax.text = [NSString stringWithFormat:@"$%@", _order.tax];
-    _tip.text = [NSString stringWithFormat:@"$%@", _order.tip];
-    _deliveryFee.text = [NSString stringWithFormat:@"$%@", _order.deliveryFee];
-    _total.text = [NSString stringWithFormat:@"$%@", _order.grandTotal];
+    _subTotal.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.subTotal];
+    _tax.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.tax];
+    _tip.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.tip];
+    _deliveryFee.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.deliveryFee];
+    _total.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.grandTotal];
     
     _deliveryType.text = _order.deliveryType;
 }
@@ -140,7 +140,7 @@
     Item * item = _itemArray[indexPath.row];
     cell.itemName.text = item.name;
     cell.quantity.text = [NSString stringWithFormat:@"X%@", item.quantity];
-    cell.price.text = [NSString stringWithFormat:@"$%.2f", ([item.price floatValue] * [item.quantity intValue])];
+    cell.price.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, ([item.price floatValue] * [item.quantity intValue])];
     return cell;
 }
 

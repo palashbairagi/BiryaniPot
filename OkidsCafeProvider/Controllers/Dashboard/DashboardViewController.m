@@ -107,7 +107,7 @@
         double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
+            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of %@%.2f", orders, AppConfig.currencySymbol, amount];
             [overlayView dismiss:YES];
         });
         

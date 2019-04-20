@@ -38,10 +38,10 @@
     _contactNo.text = order.contactNumber;
     
     _itemCount.text = [NSString stringWithFormat:@"%d Items", _delegate.noOfItems];
-    _total.text = [NSString stringWithFormat:@"$%.2f", [order.grandTotal floatValue]];
+    _total.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, [order.grandTotal floatValue]];
     
     _revisedItemCount.text = [NSString stringWithFormat:@"%d Items", _delegate.noOfItems];
-    _revisedItemTotal.text = [NSString stringWithFormat:@"$%.2f", [_delegate getTotal]];
+    _revisedItemTotal.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, [_delegate getTotal]];
 
     _categoryArray = [[NSMutableArray alloc]init];
     _itemArray1 = [[NSMutableArray alloc]init];

@@ -102,7 +102,7 @@
             NSString *orderId = [NSString stringWithFormat:@"%@", [totalOrder objectForKey:@"orderId"]];
             NSString *orderType = [totalOrder objectForKey:@"orderType"];
             NSString *paymentType = [totalOrder objectForKey:@"paymentType"];
-            NSString *totalAmount = [NSString stringWithFormat:@"$%.2f",[[totalOrder objectForKey:@"totalOrdersAmount"] floatValue]];
+            NSString *totalAmount = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, [[totalOrder objectForKey:@"totalOrdersAmount"] floatValue]];
             NSString *userEmail = [totalOrder objectForKey:@"userEmail"];
             NSString *userMobile = [totalOrder objectForKey:@"userPhone"];
             
@@ -175,7 +175,7 @@
         double amount = [[totalOrders objectForKey:@"totalPrice"] doubleValue];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of $%.2f", orders, amount];
+            _totalOrdersLabel.text = [NSString stringWithFormat:@"%ld of %@%.2f", orders, AppConfig.currencySymbol, amount];
             [overlayView dismiss:YES];
         });
     }@catch(NSException *e)

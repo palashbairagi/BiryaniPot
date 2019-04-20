@@ -542,9 +542,9 @@
     tax = (subTotal/100) * tax;
     total = subTotal + deliveryFee + tip + tax;
     
-    _subTotal.text = [NSString stringWithFormat:@"$%.2f", subTotal];
-    _tax.text = [NSString stringWithFormat:@"$%.2f", tax];
-    _grandTotal.text = [NSString stringWithFormat:@"$%.2f", total];
+    _subTotal.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol ,subTotal];
+    _tax.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, tax];
+    _grandTotal.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, total];
     
     _itemCount.text = [NSString stringWithFormat:@"%d", count];
     
@@ -555,11 +555,11 @@
 
 -(void)setOrderDetails
 {
-    _subTotal.text = [NSString stringWithFormat:@"$%@", _order.subTotal];
-    _tax.text = [NSString stringWithFormat:@"$%@", _order.tax];
-    _tip.text = [NSString stringWithFormat:@"$%@", _order.tip];
-    _deliveryFee.text = [NSString stringWithFormat:@"$%@", _order.deliveryFee];
-    _grandTotal.text = [NSString stringWithFormat:@"$%@", _order.grandTotal];
+    _subTotal.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol ,_order.subTotal];
+    _tax.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.tax];
+    _tip.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.tip];
+    _deliveryFee.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.deliveryFee];
+    _grandTotal.text = [NSString stringWithFormat:@"%@%@", AppConfig.currencySymbol, _order.grandTotal];
     
     _deliveryType.text = _order.deliveryType;
 }

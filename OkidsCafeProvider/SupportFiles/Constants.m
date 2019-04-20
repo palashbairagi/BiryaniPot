@@ -429,11 +429,11 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
     }
     
     [htmlString appendFormat:@"<td style='line-height:10px;' colspan=3>&nbsp;</td>"];
-    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Sub Total</b></td><td align='right'><b>$%@</b></td></tr>", order.subTotal];
-    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Delivery Fee</b></td><td align='right'><b>$%@</b></td></tr>", order.deliveryFee];
-    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tip</b></td><td align='right'><b>$%@</b></td></tr>", order.tip];
-    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tax</b></td><td align='right'><b>$%@</b></td></tr>", order.tax];
-    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Total</b></td><td align='right'><b>$%@</b></td></tr>", order.grandTotal];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Sub Total</b></td><td align='right'><b>%@%@</b></td></tr>", AppConfig.currencySymbol, order.subTotal];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Delivery Fee</b></td><td align='right'><b>%@%@</b></td></tr>", AppConfig.currencySymbol, order.deliveryFee];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tip</b></td><td align='right'><b>%@%@</b></td></tr>", AppConfig.currencySymbol, order.tip];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Tax</b></td><td align='right'><b>%@%@</b></td></tr>", AppConfig.currencySymbol, order.tax];
+    [htmlString appendFormat:@"<tr><td></td><td align = 'right'><b>Total</b></td><td align='right'><b>%@%@</b></td></tr>", AppConfig.currencySymbol, order.grandTotal];
     [htmlString appendFormat:@"<td style='line-height:40px;' colspan=3>&nbsp;</td>"];
     [htmlString appendFormat:@"<tr><td colspan = '3' align = 'center'><h3>%@</h3></td></tr>", order.deliveryType];
     [htmlString appendFormat:@"</table>"];
