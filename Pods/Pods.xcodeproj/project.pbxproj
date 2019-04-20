@@ -10,7 +10,6 @@
 		0201B0056F48FB0165EA09D6E959DC29 /* FSCalendarTransitionCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 618F5F75410837B3D5282B7529D2F190 /* FSCalendarTransitionCoordinator.m */; };
 		02A51608A52D2BCDBAF38A07AF29A2A3 /* UIActivityIndicatorView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AE11EA4799291BB8BC74CDDB4A6FC5D /* UIActivityIndicatorView+AFNetworking.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		04C65208F2EE17A136706AEEA6071428 /* BarChart.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D24464F61513A973A35FE0D046601F2 /* BarChart.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		06ADCB0025E148104FCE1CC750CC515E /* SCRSidewaysBarGraph-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B79350F3F1563AFCA03CB703BF1300A9 /* SCRSidewaysBarGraph-dummy.m */; };
 		0740A8BB84476DD3F2132E33A495B090 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFBFDF5D451F2522F5EE981A1450EDA8 /* Accelerate.framework */; };
 		087255C688560F8D7330BADB6919F27F /* FSCalendarCollectionViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D49E3A784BDA54DCC622290C6A41FDEA /* FSCalendarCollectionViewLayout.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		08D1FE07C659A38B034933336E50156F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0712458256D181720F9A722926AC2432 /* MobileCoreServices.framework */; };
@@ -23,7 +22,7 @@
 		0F76E4B482C6CD6516DC3FD8FEA234C9 /* UIAlertView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 119041057EA7BCFDFFC577A39F3BE7EE /* UIAlertView+AFNetworking.m */; };
 		109E1E89839A779B18761AAE3CBB2F01 /* BarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C73A44C0DCD7B8F5A4E0A12B169672 /* BarChart.m */; };
 		11F7AAAD3B7AF99EB30F7EB85741D7EE /* FSCalendarCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4545018259902DD242646AC945FE666D /* FSCalendarCell.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		120011765A9E2F58619F59AC454A8BC9 /* Pods-BiryaniPot-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 09FD578BC1F7F6E2A91554D7902B7366 /* Pods-BiryaniPot-dummy.m */; };
+		12877F92F4D06CF9272B3D05CC51958B /* Pods-OkidsCafeProviderTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BBB8C3DE8A80594FC7510508B9E8E4E6 /* Pods-OkidsCafeProviderTests-dummy.m */; };
 		137B9D8473CD5C845B7EDDAD5459C061 /* IQKeyboardManagerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E361DD58C2F21388AB7BCAAF94F43894 /* IQKeyboardManagerConstants.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		148207AD18DE0E90BE0535E226A531B8 /* MRProgressOverlayView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C3A18021FF28AC060F64DA0CD4E0E2 /* MRProgressOverlayView+AFNetworking.m */; };
 		14FF60AD058BD055B770A65F41D140F3 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C30F421E6E22C3B7A0BC393A52F40014 /* UIProgressView+AFNetworking.m */; };
@@ -45,6 +44,7 @@
 		2E834F96183A579DC6622D01B4DE3D73 /* IQBarButtonItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C36A0FCBD65940A8E729AFFDF3F2C5B /* IQBarButtonItem.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		2ED58266DCC9CF9F8E3440B5F8F706E6 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B3CC4AFAC4DFC8D78AB0B7056AC9205 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		2EF7DBF9086D93075CB12E9093EE2359 /* IQKeyboardReturnKeyHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A546369B07197D78FD21DE3440C71C4 /* IQKeyboardReturnKeyHandler.m */; };
+		33B00E7CB4DCB0BA37FDAA782D41FF65 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DEE404512D144594E24F394D24998C3 /* QuartzCore.framework */; };
 		33DE6D39EEEDCB55735EEDDB2C43477B /* MRProgress-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A8CD106E31D55E08A6D1E4B9AB8C1071 /* MRProgress-dummy.m */; };
 		36C7E4D9A0F8A322E79094EC69C2B6DF /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4646E0F8B45078594CEF6AD8E541E295 /* AFHTTPSessionManager.m */; };
 		37EED68012F3B52B734ABCD0B5C65A44 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DEE404512D144594E24F394D24998C3 /* QuartzCore.framework */; };
@@ -52,7 +52,6 @@
 		3C7A16CFAA23EB7D233054D2B685E8C8 /* FSCalendarCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 514BF1D71C8285AEF975DAB9E5AB7D3E /* FSCalendarCollectionViewLayout.m */; };
 		3CF7506C6DC178DEA2CE7876B374FA21 /* IQPreviousNextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFB5B63975F55FD4A8F7FA538E29B4ED /* IQPreviousNextView.m */; };
 		3F1859E721F87C7E8C94AE32B041CC27 /* IQUIWindow+Hierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = FB6B07A428063EBD55B8622F684EBC1D /* IQUIWindow+Hierarchy.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		419B0A02E8E65FE19D21AA640B5EB941 /* SCRSidewaysBarGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = A8946986EFFCDCF58D43D714641A935A /* SCRSidewaysBarGraph.m */; };
 		42F18F71BC3050349507D109954C6BFA /* AFNetworking-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FA2275A470FDE387514A2D594797370 /* AFNetworking-dummy.m */; };
 		4324ED5A3BC65B4CCFAC11008B256721 /* MRProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B6BD98842A061C287224FE2AE6D833 /* MRProgressView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		4334F35A7B4A106D22C538EBC43732BA /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5A4A0A3EC3BC6302A9C8D3B407B458 /* AFURLSessionManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -72,6 +71,7 @@
 		5446391EE9E96C1E25470D5AA3C74C37 /* MRStopButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DE7E03E903D769076CF1A48EB3575676 /* MRStopButton.m */; };
 		54862E0F0CDCC8C73D042824802868FF /* FSCalendarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FE21BE69742B693E2D717924EEF00C /* FSCalendarAppearance.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		54AE56A8819E982343285C8D4AB6CF82 /* IQToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 05EFCE372AC853D75EEE1CC6BFABA1E4 /* IQToolbar.m */; };
+		5563730A9D8A275D5ECEFFEFE626D084 /* SCRSidewaysBarGraph-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B79350F3F1563AFCA03CB703BF1300A9 /* SCRSidewaysBarGraph-dummy.m */; };
 		57313A3D23DFE49820F0883B6A9C1635 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA05C399FCAF495EA58889E49D1951 /* AFURLSessionManager.m */; };
 		5B0291E5DD7EE8EE138D443E709803B8 /* FSCalendarExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 85DC1FDF639B28466BC51B176ECC6641 /* FSCalendarExtensions.m */; };
 		5BEF8132A14E414A23A351A2008A0965 /* IQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B92F75A4D650C7F081C77507F9F3E2C /* IQTextView.m */; };
@@ -84,6 +84,7 @@
 		6313F1E35F06433897BBD912B5FFE295 /* AFURLResponseSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A477FEE4DDBB7D469C01943DEB6EE90 /* AFURLResponseSerialization.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		63BA7B9AA66567A282EA2B537B4186B5 /* IQUIView+Hierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 9ABFCD67E17F9D67C4957A400BC56C73 /* IQUIView+Hierarchy.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		656686A667D475B1A356A19D4F7FC26D /* IQTitleBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FABB88066E58C3B9C892611F8D6090 /* IQTitleBarButtonItem.m */; };
+		674A085EEAF74E57DCDD764B14FC71EB /* SCRSidewaysBarGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 323A13CA7E445B06625077E5ACD29760 /* SCRSidewaysBarGraph.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		68AA27ACC0DA8A3F6FAD1AC53198D4A6 /* IQToolbar.h in Headers */ = {isa = PBXBuildFile; fileRef = F2B1DAE4A96F6D410132DE044199ECC0 /* IQToolbar.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		6F1D69D15CB7CA67A5F3E48DDB26C2F8 /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 83BE5F7147F24EAD61191711D92AB6BA /* IQNSArray+Sort.m */; };
 		6FB2CA56FD9F4BA24D4363D74870A827 /* MKDropdownMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = C2408D81C7562652BF7F4B291F4136AD /* MKDropdownMenu.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -94,17 +95,14 @@
 		747BC56BEFD5D6F6ED8B29BA1D70C232 /* IQUIScrollView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FEC1C54D23F180A798CE9D975CD8CE /* IQUIScrollView+Additions.m */; };
 		75BCA72D0F405BDBA0B2534DAD9B3672 /* IQUIWindow+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 096DD6445CC0D1DD90BB251284D89671 /* IQUIWindow+Hierarchy.m */; };
 		76BEB81E62423E04D326B378687B7ADC /* MRStopableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 530D0087E270A15C6A4A9223193DCCFD /* MRStopableView.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7C3822736D19D6E522275EE5F152CA61 /* Pods-BiryaniPotUITests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DAD6CB2C29EB5525CE4BD30CCDF82C6 /* Pods-BiryaniPotUITests-dummy.m */; };
-		7D5EEC0E021AF29BE3E88560AD05704A /* Pods-BiryaniPotTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF93614D330FC03FCF859954ACA8341 /* Pods-BiryaniPotTests-dummy.m */; };
 		7E9ACE4F4452BFA7E83C87EF5EC02CC7 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E959D994460BC74FB9C9D0BB647128B7 /* AFNetworkReachabilityManager.m */; };
 		7FB6DCAA56C23F13A445ECEB4EA58941 /* MRMethodCopier.h in Headers */ = {isa = PBXBuildFile; fileRef = 263039370D5808D6979D45620122C347 /* MRMethodCopier.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		7FC0EE3A2F9511F4C45B4DF7344A8C06 /* HorizontalStackBarChart.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F54F24E6C63434FFFB16AAC5D44D504 /* HorizontalStackBarChart.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		80AE783AAD50537DA56EB5B09FF1DE20 /* SCRSidewaysBarGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 323A13CA7E445B06625077E5ACD29760 /* SCRSidewaysBarGraph.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		81D91F300349E09EE779B74135F8EA85 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DEE404512D144594E24F394D24998C3 /* QuartzCore.framework */; };
 		84A2AA6B02E70812649E9C2068E06E02 /* MRBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 057B871663CB31AC5D7B019C0F6DF16F /* MRBlurView.m */; };
 		86CDBBCE1EE91420D4B06B017159CA8F /* FSCalendar+Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84D1C0BB1F8ED780E602F462788D00 /* FSCalendar+Deprecated.m */; };
 		88C4A6B01991749E568D72A81A379332 /* IQKeyboardManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7E424EC2E6F966B6A864268164E436 /* IQKeyboardManager-dummy.m */; };
 		89FF50499B0E7A746A858947D12FFD72 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F38EE21199B23E5FFE793DE2B0E91239 /* AFHTTPRequestOperation.m */; };
+		8B651B0F4B357F3ECCDBDE0158DEFD27 /* SCRSidewaysBarGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = A8946986EFFCDCF58D43D714641A935A /* SCRSidewaysBarGraph.m */; };
 		8E52A6653E496F9A5EE62B0AE0375F3A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20B0695F550BADEA9EC6C3A1AC853741 /* UIKit.framework */; };
 		9310F338A5087699CBE89338E5B5165E /* FSCalendarHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 54EDA35F5ED76E80F82D75CDF9ECAB1B /* FSCalendarHeaderView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		9401E7FD71B12F87CA440B1703CDBDB7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DEE404512D144594E24F394D24998C3 /* QuartzCore.framework */; };
@@ -146,6 +144,7 @@
 		C80A2E4A3BE824BC95236ADB6D13C04F /* UIProgressView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 3254255F47F29F0318D0B54475B24C07 /* UIProgressView+AFNetworking.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		C86BB79C027AA3061AFC8C00AB1DD49B /* MultiLineGraphView.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D1742EE6D3B11F77B548B527F3D163 /* MultiLineGraphView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		CF5164BE45DA5D81C5EED3667CB9E186 /* MRActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADA132EB024375942F85E8FA76701D32 /* MRActivityIndicatorView.m */; };
+		D0ADB86DA41A7B6624FAB74B7A44B366 /* Pods-OkidsCafeProvider-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 51AD95195FBEB395930ABE7AE340F5B8 /* Pods-OkidsCafeProvider-dummy.m */; };
 		D0BEDBCF54A937CE2D8CB57FABDB0A09 /* DRScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BF8D13C55D2354B42ADAA5294A9E76F /* DRScrollView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		D0F3969751F9F9EBAABEE573AB1F4E92 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C1422E61584C17975CAD849B0495462 /* SystemConfiguration.framework */; };
 		D191D9EB70F623E315AEB12487B86D4B /* UIImage+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = D1F0A7CACEBDACC229380166DD11289C /* UIImage+AFNetworking.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -157,6 +156,7 @@
 		E03170892B4627BC4EA724D6FF49276E /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34694B3D0A155BAADDA506A308305C8F /* AFURLConnectionOperation.m */; };
 		E07097C5EB50958B03291F83701A7F8B /* PieChart.h in Headers */ = {isa = PBXBuildFile; fileRef = 67F07F557BCCA678F303A57C659D4B14 /* PieChart.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		E0F530A328EC5B4530E17093F346A1A1 /* FSCalendarWeekdayView.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E0A177CD3BC8549DEB39C9E822F042 /* FSCalendarWeekdayView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E2934FD7E163F7D773510471A4071858 /* Pods-OkidsCafeProviderUITests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAEFA3D7FD878E4E3C93450A58B0C70 /* Pods-OkidsCafeProviderUITests-dummy.m */; };
 		E37611C6FD3C13B57F7740812F7D8732 /* MRActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8371764AC75186892FBC0203A0A040F8 /* MRActivityIndicatorView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		E387BC9FC1829F3076405C6A46703B56 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77D68F1D6B825B57EEFFBB7F9B6CD0BF /* CoreGraphics.framework */; };
 		E4B319430DCD755DBA725E6409E5CCF1 /* MRProgressView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CE254C9360CB8DDB0F2C42807360780 /* MRProgressView+AFNetworking.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -185,26 +185,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0458D237997E10E85ED959E845D06F64 /* PBXContainerItemProxy */ = {
+		714D44D3442B25F7A434D6FC0C950646 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 31644BA2F80BE18D3E50E903A1FE1770;
-			remoteInfo = FSCalendar;
-		};
-		0A5DB52444678A2CCC84ABEAB5BC579F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 16F09DB4BBCFEEF164D4421F7CF69486;
-			remoteInfo = "Pods-BiryaniPot";
-		};
-		6EA0153BB4712449748F04DD426D6893 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 16F09DB4BBCFEEF164D4421F7CF69486;
-			remoteInfo = "Pods-BiryaniPot";
+			remoteGlobalIDString = BB996730DE20C255F904B9738A34F11D;
+			remoteInfo = IQKeyboardManager;
 		};
 		7674ED72911F7CB81292FDA5A3CD0A4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -213,56 +199,68 @@
 			remoteGlobalIDString = 011908E03EB31E25560BF5093C2BA7EE;
 			remoteInfo = AFNetworking;
 		};
-		7AD899DDA65C70DB8C8D5711CC312C12 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 354F0E5643BB20EE1816970FD284FE03;
-			remoteInfo = MRProgress;
-		};
-		9E68C5E7A30C1847B6EE58355E9199BE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BB996730DE20C255F904B9738A34F11D;
-			remoteInfo = IQKeyboardManager;
-		};
-		A3D11FB382BECACAC2939EDDBB5091FE /* PBXContainerItemProxy */ = {
+		B21C8FE6C919EFA9A7C934F6C122F8C6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7370D110C24111D20F92F10B2D34C2C3;
 			remoteInfo = drCharts;
 		};
-		AD7D7196D2AD23B077AC84F3ECFD829D /* PBXContainerItemProxy */ = {
+		BD0BD7299ADDA4E5BF8B53CAA3624F49 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 239CA89C292075949B64533C7065050A;
+			remoteGlobalIDString = 99FBDAF6ACBE9F0C8A5CCE2A1C3EE983;
 			remoteInfo = SCRSidewaysBarGraph;
 		};
-		B92CA6CD772F6B4C7B99DB34DC2E1A25 /* PBXContainerItemProxy */ = {
+		C21F28577995B3C8BFE3FEEF11C9AEBB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 011908E03EB31E25560BF5093C2BA7EE;
-			remoteInfo = AFNetworking;
+			remoteGlobalIDString = 31644BA2F80BE18D3E50E903A1FE1770;
+			remoteInfo = FSCalendar;
 		};
-		CE1A8869972280A673D88586345DBF6C /* PBXContainerItemProxy */ = {
+		C36D984CD3749A914B5B8C14916A5748 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ED7E5E1766F897889AAEAE12F1953AB;
+			remoteInfo = "Pods-OkidsCafeProvider";
+		};
+		F0BBF95A5DDA593BFB3193281A8E3AB4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 1DE1B132B9924C9AA4070842F2F895E1;
 			remoteInfo = MKDropdownMenu;
 		};
+		F84726A5B3DBF34985EF2D235DDE90B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 354F0E5643BB20EE1816970FD284FE03;
+			remoteInfo = MRProgress;
+		};
+		FB2E289A13C21082652DB752DFF5622C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ED7E5E1766F897889AAEAE12F1953AB;
+			remoteInfo = "Pods-OkidsCafeProvider";
+		};
+		FB9603A9D7FC7DF25AF0A1F9D46428D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 011908E03EB31E25560BF5093C2BA7EE;
+			remoteInfo = AFNetworking;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		01CCC5E8489DD521D5B3AB04E4ABBD16 /* MKDropdownMenu.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MKDropdownMenu.m; path = MKDropdownMenu/MKDropdownMenu.m; sourceTree = "<group>"; };
 		01DDF09E757006DC5A7BB62D296D7FE1 /* FSCalendar.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendar.h; path = FSCalendar/FSCalendar.h; sourceTree = "<group>"; };
-		030EC99CFAB03EC24B30308D3C10979E /* libFSCalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFSCalendar.a; path = libFSCalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		039180F62AB19C722F4831E31456BC66 /* CircularChart.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CircularChart.m; path = "dr-Charts/Classes/CircularChart/CircularChart.m"; sourceTree = "<group>"; };
-		03D99354EB64788D9D4338270938FA35 /* libPods-BiryaniPot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-BiryaniPot.a"; path = "libPods-BiryaniPot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057B871663CB31AC5D7B019C0F6DF16F /* MRBlurView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRBlurView.m; path = src/Blur/MRBlurView.m; sourceTree = "<group>"; };
 		05C5D59B8AC6B54282198F6EA390DA48 /* IQUIViewController+Additions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUIViewController+Additions.m"; path = "IQKeyboardManager/Categories/IQUIViewController+Additions.m"; sourceTree = "<group>"; };
 		05EFCE372AC853D75EEE1CC6BFABA1E4 /* IQToolbar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQToolbar.m; path = IQKeyboardManager/IQToolbar/IQToolbar.m; sourceTree = "<group>"; };
@@ -272,16 +270,15 @@
 		07F6025DDBE857EA243DF438D0E1CE52 /* IQUIView+IQKeyboardToolbar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUIView+IQKeyboardToolbar.m"; path = "IQKeyboardManager/IQToolbar/IQUIView+IQKeyboardToolbar.m"; sourceTree = "<group>"; };
 		094696951D5E2AA9C74D0B4C4464008C /* FSCalendarStickyHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarStickyHeader.m; path = FSCalendar/FSCalendarStickyHeader.m; sourceTree = "<group>"; };
 		096DD6445CC0D1DD90BB251284D89671 /* IQUIWindow+Hierarchy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUIWindow+Hierarchy.m"; path = "IQKeyboardManager/Categories/IQUIWindow+Hierarchy.m"; sourceTree = "<group>"; };
-		09FD578BC1F7F6E2A91554D7902B7366 /* Pods-BiryaniPot-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BiryaniPot-dummy.m"; sourceTree = "<group>"; };
 		0A1EFF1EFB4166E2161B495F0C22D68D /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIRefreshControl+AFNetworking.m"; path = "UIKit+AFNetworking/UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		0A546369B07197D78FD21DE3440C71C4 /* IQKeyboardReturnKeyHandler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQKeyboardReturnKeyHandler.m; path = IQKeyboardManager/IQKeyboardReturnKeyHandler.m; sourceTree = "<group>"; };
 		0ACE352F288B9D9C19A6A1BFD8164783 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkActivityIndicatorManager.h; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h"; sourceTree = "<group>"; };
 		0B3CC4AFAC4DFC8D78AB0B7056AC9205 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+AFNetworking.h"; path = "UIKit+AFNetworking/UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		0B7499BB1D549C1CCD425B127D5BEC94 /* Pods-OkidsCafeProviderTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProviderTests-resources.sh"; sourceTree = "<group>"; };
 		0BBD046DBEFAE363457CC51D8E17544C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		0C43EC6D47F258FBA31A690047F688B9 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIWebView+AFNetworking.m"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
 		0D810388CB67BCCB46C57095775FBABE /* FSCalendarDelegationProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarDelegationProxy.h; path = FSCalendar/FSCalendarDelegationProxy.h; sourceTree = "<group>"; };
 		0F3C7912BA920BFEC904D11553E612CF /* Constants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = "dr-Charts/Classes/Constants.h"; sourceTree = "<group>"; };
-		0FF9A1091010292FF8D60BAB9446C839 /* Pods-BiryaniPotTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPotTests-frameworks.sh"; sourceTree = "<group>"; };
 		1075889C45C171196D1679E4EB548E3D /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkReachabilityManager.h; path = AFNetworking/AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		119041057EA7BCFDFFC577A39F3BE7EE /* UIAlertView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+AFNetworking.m"; path = "UIKit+AFNetworking/UIAlertView+AFNetworking.m"; sourceTree = "<group>"; };
 		15F6AFFF3A5F055F161C6DEFBE63EC82 /* MRStopButton.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRStopButton.h; path = src/Components/MRStopButton.h; sourceTree = "<group>"; };
@@ -290,15 +287,19 @@
 		1796A234774F0818811ED89729F166D3 /* AFNetworking.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AFNetworking.xcconfig; sourceTree = "<group>"; };
 		19826D56845D22A3919ECDC5DA0BFA06 /* FSCalendarExtensions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarExtensions.h; path = FSCalendar/FSCalendarExtensions.h; sourceTree = "<group>"; };
 		1A038A278C1A8868D08FEEDAD05E13A9 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperation.h; path = AFNetworking/AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		1BAEFA3D7FD878E4E3C93450A58B0C70 /* Pods-OkidsCafeProviderUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-OkidsCafeProviderUITests-dummy.m"; sourceTree = "<group>"; };
 		1BF8D13C55D2354B42ADAA5294A9E76F /* DRScrollView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DRScrollView.h; path = "dr-Charts/Classes/DRScrollView.h"; sourceTree = "<group>"; };
 		1E2A53B99762141EAE55D417F3812A65 /* DrGraphs.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DrGraphs.h; path = "dr-Charts/Classes/DrGraphs.h"; sourceTree = "<group>"; };
 		208CF134571D1CF2E9142D6094F779B8 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		20B0695F550BADEA9EC6C3A1AC853741 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		22620D272DB9BCDC2F80BDE0CBE5ED2D /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libAFNetworking.a; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		228582D12BA85EA7952DB3CD23D18DC4 /* libdrCharts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdrCharts.a; path = libdrCharts.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F6DF279518A8B5162EF4250B61ABBB /* FSCalendarHeaderView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarHeaderView.m; path = FSCalendar/FSCalendarHeaderView.m; sourceTree = "<group>"; };
 		248564D0564ADA8FF1BF9BF092B1C909 /* MRProgressOverlayView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRProgressOverlayView.m; path = src/Components/MRProgressOverlayView.m; sourceTree = "<group>"; };
 		263039370D5808D6979D45620122C347 /* MRMethodCopier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRMethodCopier.h; path = src/Utils/MRMethodCopier.h; sourceTree = "<group>"; };
 		26B9FCED2052437A153619A39EE10395 /* FSCalendarDelegationFactory.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarDelegationFactory.m; path = FSCalendar/FSCalendarDelegationFactory.m; sourceTree = "<group>"; };
 		26B9FE8B0172716731EC1CC39C625F5B /* FSCalendarScopeHandle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarScopeHandle.h; path = FSCalendar/FSCalendarScopeHandle.h; sourceTree = "<group>"; };
+		297ACBABAE713C8E49AE1BE50ED6E9C6 /* Pods-OkidsCafeProviderUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProviderUITests.release.xcconfig"; sourceTree = "<group>"; };
 		2A94366933C33AE9442CEC6F87397510 /* FSCalendar.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FSCalendar.xcconfig; sourceTree = "<group>"; };
 		2D24464F61513A973A35FE0D046601F2 /* BarChart.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = BarChart.h; path = "dr-Charts/Classes/BarChart/BarChart.h"; sourceTree = "<group>"; };
 		2E84D1C0BB1F8ED780E602F462788D00 /* FSCalendar+Deprecated.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "FSCalendar+Deprecated.m"; path = "FSCalendar/FSCalendar+Deprecated.m"; sourceTree = "<group>"; };
@@ -306,91 +307,92 @@
 		2EC0CC3201DF7EF1CD6095AD58A1ECF2 /* HorizontalStackBarChart.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = HorizontalStackBarChart.m; path = "dr-Charts/Classes/HorizontalStackChart/HorizontalStackBarChart.m"; sourceTree = "<group>"; };
 		2F54F24E6C63434FFFB16AAC5D44D504 /* HorizontalStackBarChart.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = HorizontalStackBarChart.h; path = "dr-Charts/Classes/HorizontalStackChart/HorizontalStackBarChart.h"; sourceTree = "<group>"; };
 		2FAA6C440B1A34AAD7621F1B83DCCAEE /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperationManager.h; path = AFNetworking/AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
+		2FD80AEB6E258535B8713FCD526A24D3 /* Pods-OkidsCafeProviderTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-OkidsCafeProviderTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		319BF8B0B89206222F9C1CFE15FD1516 /* SCRSidewaysBarGraph-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SCRSidewaysBarGraph-prefix.pch"; sourceTree = "<group>"; };
 		323A13CA7E445B06625077E5ACD29760 /* SCRSidewaysBarGraph.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SCRSidewaysBarGraph.h; path = src/SCRSidewaysBarGraph.h; sourceTree = "<group>"; };
 		3254255F47F29F0318D0B54475B24C07 /* UIProgressView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIProgressView+AFNetworking.h"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.h"; sourceTree = "<group>"; };
 		3258D47730924F3E05C015FAE2D14FA9 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFNetworkActivityIndicatorManager.m; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m"; sourceTree = "<group>"; };
 		34694B3D0A155BAADDA506A308305C8F /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFURLConnectionOperation.m; path = AFNetworking/AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		370F0417D8EDC4F2CC58852B7FB5329A /* libPods-OkidsCafeProviderTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-OkidsCafeProviderTests.a"; path = "libPods-OkidsCafeProviderTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		396FDFC99D547412DBFD8B9CF4913819 /* CircularChart.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CircularChart.h; path = "dr-Charts/Classes/CircularChart/CircularChart.h"; sourceTree = "<group>"; };
 		39FEC1C54D23F180A798CE9D975CD8CE /* IQUIScrollView+Additions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUIScrollView+Additions.m"; path = "IQKeyboardManager/Categories/IQUIScrollView+Additions.m"; sourceTree = "<group>"; };
 		3AE11EA4799291BB8BC74CDDB4A6FC5D /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIActivityIndicatorView+AFNetworking.h"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
-		3B27363019EE12CA374DA4F9181DC773 /* Pods-BiryaniPotTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-BiryaniPotTests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		3E8589AB37B3A7ED63DF3BA6C2650912 /* Pods-BiryaniPotUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BiryaniPotUITests-acknowledgements.plist"; sourceTree = "<group>"; };
-		40A59A0AEEFA11E2E51CB385CC10FE9F /* libPods-BiryaniPotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-BiryaniPotTests.a"; path = "libPods-BiryaniPotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E9ABB72FD03545BE209B442E003DE42 /* libIQKeyboardManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libIQKeyboardManager.a; path = libIQKeyboardManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		41044D63BF040042858E1950A171270F /* Pods-OkidsCafeProviderUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProviderUITests-frameworks.sh"; sourceTree = "<group>"; };
 		425507666B6E15D3434320E8E8D97DD6 /* IQKeyboardManager-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "IQKeyboardManager-prefix.pch"; sourceTree = "<group>"; };
+		42A415BB492207CE9473CB1A27A0C693 /* Pods-OkidsCafeProviderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProviderTests.release.xcconfig"; sourceTree = "<group>"; };
 		42FFE391921012DFC288FC533B819718 /* UIAlertView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+AFNetworking.h"; path = "UIKit+AFNetworking/UIAlertView+AFNetworking.h"; sourceTree = "<group>"; };
 		4380DA69058D9AAC85819360DCACD755 /* FSCalendarStickyHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarStickyHeader.h; path = FSCalendar/FSCalendarStickyHeader.h; sourceTree = "<group>"; };
-		443B3B823B18E4056424383DBA031650 /* Pods-BiryaniPotUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPotUITests-frameworks.sh"; sourceTree = "<group>"; };
 		447BD743F3ECA4DAAECE44787CD29312 /* MRProgressOverlayView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRProgressOverlayView.h; path = src/Components/MRProgressOverlayView.h; sourceTree = "<group>"; };
-		449702AAA030D63C718943E6709F7BE6 /* Pods-BiryaniPot-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BiryaniPot-acknowledgements.plist"; sourceTree = "<group>"; };
 		4545018259902DD242646AC945FE666D /* FSCalendarCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarCell.h; path = FSCalendar/FSCalendarCell.h; sourceTree = "<group>"; };
 		4646E0F8B45078594CEF6AD8E541E295 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
 		47E134B03D340019AC00C9D24BEDD5A6 /* UIImage+MRImageEffects.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MRImageEffects.h"; path = "src/Blur/UIImage+MRImageEffects.h"; sourceTree = "<group>"; };
 		4C7E424EC2E6F966B6A864268164E436 /* IQKeyboardManager-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "IQKeyboardManager-dummy.m"; sourceTree = "<group>"; };
 		4D6CF97B14A80786C18BB3FE7E1F295E /* MRNavigationBarProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRNavigationBarProgressView.m; path = src/Components/MRNavigationBarProgressView.m; sourceTree = "<group>"; };
 		4D935458DA85BB4E79702FE723D8FB28 /* FSCalendarDelegationFactory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarDelegationFactory.h; path = FSCalendar/FSCalendarDelegationFactory.h; sourceTree = "<group>"; };
-		4DAD6CB2C29EB5525CE4BD30CCDF82C6 /* Pods-BiryaniPotUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BiryaniPotUITests-dummy.m"; sourceTree = "<group>"; };
 		4E5A4A0A3EC3BC6302A9C8D3B407B458 /* AFURLSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
 		4ED9E524077812AF88DB2D2A59AF6EE1 /* LineGraphMarker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LineGraphMarker.m; path = "dr-Charts/Classes/LineChart/LineGraphMarker.m"; sourceTree = "<group>"; };
-		4F67642A6E959CB606F542FC6D3F5AE1 /* libSCRSidewaysBarGraph.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSCRSidewaysBarGraph.a; path = libSCRSidewaysBarGraph.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		514BF1D71C8285AEF975DAB9E5AB7D3E /* FSCalendarCollectionViewLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCollectionViewLayout.m; path = FSCalendar/FSCalendarCollectionViewLayout.m; sourceTree = "<group>"; };
-		51522C846E6771A1FF47A58A8F3FCDAD /* libPods-BiryaniPotUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-BiryaniPotUITests.a"; path = "libPods-BiryaniPotUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51AD95195FBEB395930ABE7AE340F5B8 /* Pods-OkidsCafeProvider-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-OkidsCafeProvider-dummy.m"; sourceTree = "<group>"; };
+		5280FADA2C09AA0F609AED8CAA08CCE4 /* Pods-OkidsCafeProviderTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-OkidsCafeProviderTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		530D0087E270A15C6A4A9223193DCCFD /* MRStopableView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRStopableView.h; path = src/Components/MRStopableView.h; sourceTree = "<group>"; };
 		53CBE590831D9B7E19407E110A689E9B /* FSCalendar-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FSCalendar-dummy.m"; sourceTree = "<group>"; };
 		54DCD518A77C029B5EA2B182D9752FB8 /* IQKeyboardManagerConstantsInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQKeyboardManagerConstantsInternal.h; path = IQKeyboardManager/Constants/IQKeyboardManagerConstantsInternal.h; sourceTree = "<group>"; };
 		54EDA35F5ED76E80F82D75CDF9ECAB1B /* FSCalendarHeaderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarHeaderView.h; path = FSCalendar/FSCalendarHeaderView.h; sourceTree = "<group>"; };
 		54FE82E5FA899D3497AB6F3A7F240067 /* drCharts-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "drCharts-prefix.pch"; sourceTree = "<group>"; };
 		582E3A6CC6EB1F3054A8E8F9D2B1E8F2 /* MRCircularProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRCircularProgressView.h; path = src/Components/MRCircularProgressView.h; sourceTree = "<group>"; };
+		5872DF5CC19B4313EBB0D47AA75A7EA6 /* libSCRSidewaysBarGraph.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSCRSidewaysBarGraph.a; path = libSCRSidewaysBarGraph.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		591785A20DF6D8807AAD79897F91A19A /* Pods-OkidsCafeProvider-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-OkidsCafeProvider-acknowledgements.markdown"; sourceTree = "<group>"; };
 		5934710A98D8E55EBD113EE0A09CA56B /* FSCalendar.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendar.m; path = FSCalendar/FSCalendar.m; sourceTree = "<group>"; };
 		599384C615637EB35CF99107B0C682C3 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIKit+AFNetworking.h"; path = "UIKit+AFNetworking/UIKit+AFNetworking.h"; sourceTree = "<group>"; };
-		5AC579C51AFC9EAD0F5CD6E708D34D80 /* libMRProgress.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMRProgress.a; path = libMRProgress.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		59E0DA53BA116270DD7D2F0585B6B1AC /* Pods-OkidsCafeProvider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProvider.release.xcconfig"; sourceTree = "<group>"; };
 		5AE78DE307BE3060D15C2F588ACE2BD7 /* UIButton+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+AFNetworking.h"; path = "UIKit+AFNetworking/UIButton+AFNetworking.h"; sourceTree = "<group>"; };
 		5B63ED93489367A83D38C87CE32F04D4 /* IQKeyboardManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQKeyboardManager.m; path = IQKeyboardManager/IQKeyboardManager.m; sourceTree = "<group>"; };
 		5B92F75A4D650C7F081C77507F9F3E2C /* IQTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQTextView.m; path = IQKeyboardManager/IQTextView/IQTextView.m; sourceTree = "<group>"; };
-		5BEA089E1EB8EA92D600627273F1AF41 /* Pods-BiryaniPot-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-BiryaniPot-acknowledgements.markdown"; sourceTree = "<group>"; };
 		5C3FE669DAC2F240817A78294C6CF0A2 /* IQTitleBarButtonItem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQTitleBarButtonItem.h; path = IQKeyboardManager/IQToolbar/IQTitleBarButtonItem.h; sourceTree = "<group>"; };
-		5EF93614D330FC03FCF859954ACA8341 /* Pods-BiryaniPotTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BiryaniPotTests-dummy.m"; sourceTree = "<group>"; };
+		5C60346507C3C83BF9ED8FE786ECDD75 /* libPods-OkidsCafeProvider.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-OkidsCafeProvider.a"; path = "libPods-OkidsCafeProvider.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6054C42513C54C18EBC24F56C7A631AC /* FSCalendarConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarConstants.m; path = FSCalendar/FSCalendarConstants.m; sourceTree = "<group>"; };
-		615B1C537000D30263C31666939D9987 /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libAFNetworking.a; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		618F5F75410837B3D5282B7529D2F190 /* FSCalendarTransitionCoordinator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarTransitionCoordinator.m; path = FSCalendar/FSCalendarTransitionCoordinator.m; sourceTree = "<group>"; };
 		63345FAF77C79E524171966B63AB080E /* IQUITextFieldView+Additions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQUITextFieldView+Additions.h"; path = "IQKeyboardManager/Categories/IQUITextFieldView+Additions.h"; sourceTree = "<group>"; };
 		6604DB143F7C82F2BF8FE0956D0CF7AA /* MKDropdownMenu.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MKDropdownMenu.xcconfig; sourceTree = "<group>"; };
 		66C72C9F7B1576DAD2BB5E9351E21DF3 /* AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
+		67741EEF2CD5212187389E57016D9B65 /* libFSCalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFSCalendar.a; path = libFSCalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		67F07F557BCCA678F303A57C659D4B14 /* PieChart.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PieChart.h; path = "dr-Charts/Classes/PieChart/PieChart.h"; sourceTree = "<group>"; };
-		695C2B5510FCDBEF6ED2B2F71A2B15BA /* Pods-BiryaniPotTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BiryaniPotTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		6A3623EE7470A7483CA3D375325CDD78 /* MRProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRProgressView.m; path = src/Components/MRProgressView.m; sourceTree = "<group>"; };
 		6A9DFF17223C5989BF3F43E7C981781B /* MRProgress.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRProgress.h; path = src/MRProgress.h; sourceTree = "<group>"; };
-		6BBD100290E3DFD795A2B72D5AE79C9C /* Pods-BiryaniPot-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPot-resources.sh"; sourceTree = "<group>"; };
 		6C1422E61584C17975CAD849B0495462 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
-		6CC280C0A9A28B5AA5AFF79DF24EDB32 /* Pods-BiryaniPot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPot.debug.xcconfig"; sourceTree = "<group>"; };
 		6DB06B75BA89025E7A70386E1D945725 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AFNetworking.h"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		6F0567945A3ED506387158F94B6C8FD9 /* DRScrollView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DRScrollView.m; path = "dr-Charts/Classes/DRScrollView.m"; sourceTree = "<group>"; };
 		6FE08737E0822E4D0F71726AC8CA72C1 /* FSCalendarScopeHandle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarScopeHandle.m; path = FSCalendar/FSCalendarScopeHandle.m; sourceTree = "<group>"; };
 		6FEB68450A1C3036849112D9FADE492E /* AFNetworking-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AFNetworking-prefix.pch"; sourceTree = "<group>"; };
+		73B45C71116F25755C8184ECE334DA77 /* Pods-OkidsCafeProvider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProvider.debug.xcconfig"; sourceTree = "<group>"; };
 		750C272C5F211CD0B7900DF0C8F68761 /* LineGraphMarker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LineGraphMarker.h; path = "dr-Charts/Classes/LineChart/LineGraphMarker.h"; sourceTree = "<group>"; };
 		7687AA38DD0D697B71A1E4A890B0B66B /* MRProgress.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MRProgress.xcconfig; sourceTree = "<group>"; };
 		76A9A20414C873F00FDF1C0B60AE3D7A /* IQUIViewController+Additions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQUIViewController+Additions.h"; path = "IQKeyboardManager/Categories/IQUIViewController+Additions.h"; sourceTree = "<group>"; };
 		77D68F1D6B825B57EEFFBB7F9B6CD0BF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		7906034E12D6B2D479C6E3976120D896 /* IQKeyboardReturnKeyHandler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQKeyboardReturnKeyHandler.h; path = IQKeyboardManager/IQKeyboardReturnKeyHandler.h; sourceTree = "<group>"; };
+		7B80870C78214B8DAF360CC34BF5EE48 /* libMKDropdownMenu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMKDropdownMenu.a; path = libMKDropdownMenu.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BE383D99F22D57D964A431EB81D60ED /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+AFNetworking.m"; path = "UIKit+AFNetworking/UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		7CD81CF287DC172D081E9F7F2FC58877 /* MRProgress-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MRProgress-prefix.pch"; sourceTree = "<group>"; };
 		7CE254C9360CB8DDB0F2C42807360780 /* MRProgressView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MRProgressView+AFNetworking.h"; path = "src/Support/AFNetworking/MRProgressView+AFNetworking.h"; sourceTree = "<group>"; };
+		81610FA8ECF8000AD32F11D34805612A /* Pods-OkidsCafeProviderUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-OkidsCafeProviderUITests-acknowledgements.plist"; sourceTree = "<group>"; };
 		8371764AC75186892FBC0203A0A040F8 /* MRActivityIndicatorView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRActivityIndicatorView.h; path = src/Components/MRActivityIndicatorView.h; sourceTree = "<group>"; };
 		83BE5F7147F24EAD61191711D92AB6BA /* IQNSArray+Sort.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQNSArray+Sort.m"; path = "IQKeyboardManager/Categories/IQNSArray+Sort.m"; sourceTree = "<group>"; };
 		84C3A18021FF28AC060F64DA0CD4E0E2 /* MRProgressOverlayView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "MRProgressOverlayView+AFNetworking.m"; path = "src/Support/AFNetworking/MRProgressOverlayView+AFNetworking.m"; sourceTree = "<group>"; };
 		85DC1FDF639B28466BC51B176ECC6641 /* FSCalendarExtensions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarExtensions.m; path = FSCalendar/FSCalendarExtensions.m; sourceTree = "<group>"; };
 		868B79F45968409C3ABDB81C9CD3541E /* drCharts-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "drCharts-dummy.m"; sourceTree = "<group>"; };
+		87525285B70C683358A20E1AAAF12DA6 /* Pods-OkidsCafeProvider-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProvider-resources.sh"; sourceTree = "<group>"; };
 		88FABB88066E58C3B9C892611F8D6090 /* IQTitleBarButtonItem.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQTitleBarButtonItem.m; path = IQKeyboardManager/IQToolbar/IQTitleBarButtonItem.m; sourceTree = "<group>"; };
 		89712522170F7E01C55EFA2D389E587C /* IQTextView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQTextView.h; path = IQKeyboardManager/IQTextView/IQTextView.h; sourceTree = "<group>"; };
 		8A477FEE4DDBB7D469C01943DEB6EE90 /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		8F1371C950F9E0C557B8E638CF51DE9D /* Pods-OkidsCafeProviderUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-OkidsCafeProviderUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		9285806B0E385491D04121F7D39A4146 /* IQBarButtonItem.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQBarButtonItem.m; path = IQKeyboardManager/IQToolbar/IQBarButtonItem.m; sourceTree = "<group>"; };
-		930FD29B8F50066717532BFF59DC9687 /* Pods-BiryaniPotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		93D1742EE6D3B11F77B548B527F3D163 /* MultiLineGraphView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MultiLineGraphView.h; path = "dr-Charts/Classes/LineChart/MultiLineGraphView.h"; sourceTree = "<group>"; };
-		952493EAFF8BFDB56DDD6EAF7F761637 /* Pods-BiryaniPotUITests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPotUITests-resources.sh"; sourceTree = "<group>"; };
+		95D877BCB6572025F20358458CEB29A5 /* libMRProgress.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMRProgress.a; path = libMRProgress.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		961DDFE59B2868A7C4435D51C3F5A39A /* IQPreviousNextView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQPreviousNextView.h; path = IQKeyboardManager/IQToolbar/IQPreviousNextView.h; sourceTree = "<group>"; };
+		97A78A7FDEA10742F0743817AA0973C3 /* Pods-OkidsCafeProviderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProviderTests.debug.xcconfig"; sourceTree = "<group>"; };
 		97FE21BE69742B693E2D717924EEF00C /* FSCalendarAppearance.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarAppearance.h; path = FSCalendar/FSCalendarAppearance.h; sourceTree = "<group>"; };
-		996BD36E0AF1619657A78795E763A44A /* Pods-BiryaniPot-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPot-frameworks.sh"; sourceTree = "<group>"; };
 		9ABFCD67E17F9D67C4957A400BC56C73 /* IQUIView+Hierarchy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQUIView+Hierarchy.h"; path = "IQKeyboardManager/Categories/IQUIView+Hierarchy.h"; sourceTree = "<group>"; };
 		9B2D50DFFAD163FAA0E6810AD04B365A /* FSCalendarCollectionView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarCollectionView.h; path = FSCalendar/FSCalendarCollectionView.h; sourceTree = "<group>"; };
 		9C36A0FCBD65940A8E729AFFDF3F2C5B /* IQBarButtonItem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQBarButtonItem.h; path = IQKeyboardManager/IQToolbar/IQBarButtonItem.h; sourceTree = "<group>"; };
@@ -400,43 +402,42 @@
 		9FA2275A470FDE387514A2D594797370 /* AFNetworking-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AFNetworking-dummy.m"; sourceTree = "<group>"; };
 		A26236697AF629E4D8579A1BBD0E9BD8 /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationManager.m; path = AFNetworking/AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
 		A2E0A177CD3BC8549DEB39C9E822F042 /* FSCalendarWeekdayView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarWeekdayView.h; path = FSCalendar/FSCalendarWeekdayView.h; sourceTree = "<group>"; };
-		A2E40EC6992945FDC328482E6959F9CC /* libIQKeyboardManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libIQKeyboardManager.a; path = libIQKeyboardManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A42A8F1500EC051484DC1F29DBC68CD6 /* IQUIView+IQKeyboardToolbar.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQUIView+IQKeyboardToolbar.h"; path = "IQKeyboardManager/IQToolbar/IQUIView+IQKeyboardToolbar.h"; sourceTree = "<group>"; };
 		A67951EBF0B38C1BBC66A590D2519B70 /* MKDropdownMenu-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MKDropdownMenu-dummy.m"; sourceTree = "<group>"; };
 		A74E6CAB5899C9E037045024D4AB2E80 /* MRNavigationBarProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRNavigationBarProgressView.h; path = src/Components/MRNavigationBarProgressView.h; sourceTree = "<group>"; };
 		A80FFEA71B18DE4A49E49DC0DFFC3B68 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		A8946986EFFCDCF58D43D714641A935A /* SCRSidewaysBarGraph.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SCRSidewaysBarGraph.m; path = src/SCRSidewaysBarGraph.m; sourceTree = "<group>"; };
 		A8CD106E31D55E08A6D1E4B9AB8C1071 /* MRProgress-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MRProgress-dummy.m"; sourceTree = "<group>"; };
+		AA2A42142C43B94C9ECF5C0A5AD9802D /* Pods-OkidsCafeProvider-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProvider-frameworks.sh"; sourceTree = "<group>"; };
 		ACEE3D18C60CC893DA17BBDB337E0C79 /* MRProgressHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRProgressHelper.h; path = src/Utils/MRProgressHelper.h; sourceTree = "<group>"; };
 		ADA132EB024375942F85E8FA76701D32 /* MRActivityIndicatorView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRActivityIndicatorView.m; path = src/Components/MRActivityIndicatorView.m; sourceTree = "<group>"; };
 		ADA6F7ACFA2E193D081B111A50C9E29E /* MRActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MRActivityIndicatorView+AFNetworking.h"; path = "src/Support/AFNetworking/MRActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
 		AFBFDF5D451F2522F5EE981A1450EDA8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		B00361F4D1F5FB957303C643DE536FBC /* UIImage+MRImageEffects.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MRImageEffects.m"; path = "src/Blur/UIImage+MRImageEffects.m"; sourceTree = "<group>"; };
-		B193C76E1CDC0C844B94A8D05EA597A8 /* libMKDropdownMenu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMKDropdownMenu.a; path = libMKDropdownMenu.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B2F39B897644D1B56BB4CDA4F2D025BF /* Pods-BiryaniPotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B4F561196174C8FFF945A24F6900135E /* MRCircularProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRCircularProgressView.m; path = src/Components/MRCircularProgressView.m; sourceTree = "<group>"; };
 		B591F3C9BB8B82EF6A03670E6197194C /* FSCalendarCalculator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarCalculator.h; path = FSCalendar/FSCalendarCalculator.h; sourceTree = "<group>"; };
-		B5BACEC87D71F41DD49290262738EAD6 /* libdrCharts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdrCharts.a; path = libdrCharts.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B79350F3F1563AFCA03CB703BF1300A9 /* SCRSidewaysBarGraph-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SCRSidewaysBarGraph-dummy.m"; sourceTree = "<group>"; };
 		B8B6BD98842A061C287224FE2AE6D833 /* MRProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRProgressView.h; path = src/Components/MRProgressView.h; sourceTree = "<group>"; };
 		BBA2378B0C4F003E2841DA641EC3FD60 /* MRIconView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRIconView.m; path = src/Components/MRIconView.m; sourceTree = "<group>"; };
 		BBB828EFF55F45ADF2AB30CE72EC77C7 /* IQKeyboardManager.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = IQKeyboardManager.xcconfig; sourceTree = "<group>"; };
+		BBB8C3DE8A80594FC7510508B9E8E4E6 /* Pods-OkidsCafeProviderTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-OkidsCafeProviderTests-dummy.m"; sourceTree = "<group>"; };
 		BD0C5219FC217D77BA6DDD12D304EC85 /* SCRSidewaysBarGraph.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SCRSidewaysBarGraph.xcconfig; sourceTree = "<group>"; };
 		BD7213D3F11DCBE0167C4F350DF302E7 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
 		BF9D668F284AF613B1472FB24986B534 /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+AFNetworking.m"; path = "UIKit+AFNetworking/UIButton+AFNetworking.m"; sourceTree = "<group>"; };
 		C2408D81C7562652BF7F4B291F4136AD /* MKDropdownMenu.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MKDropdownMenu.h; path = MKDropdownMenu/MKDropdownMenu.h; sourceTree = "<group>"; };
 		C30F421E6E22C3B7A0BC393A52F40014 /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIProgressView+AFNetworking.m"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
-		C4BE321420F13F5D9A0FD1493465922E /* Pods-BiryaniPot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPot.release.xcconfig"; sourceTree = "<group>"; };
 		C7544B75080AF230F5781073D886FAAE /* MRBlurView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRBlurView.h; path = src/Blur/MRBlurView.h; sourceTree = "<group>"; };
 		C9A19BA0AE0E2FACDE8F3749D1843B04 /* FSCalendarDynamicHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarDynamicHeader.h; path = FSCalendar/FSCalendarDynamicHeader.h; sourceTree = "<group>"; };
 		CA6C0780AE6475EAAD9D181FCAAF1A1B /* IQUIView+Hierarchy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUIView+Hierarchy.m"; path = "IQKeyboardManager/Categories/IQUIView+Hierarchy.m"; sourceTree = "<group>"; };
+		CBBC49CBDABC9190ADC9B85A20077EA0 /* Pods-OkidsCafeProvider-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-OkidsCafeProvider-acknowledgements.plist"; sourceTree = "<group>"; };
 		CC265640B3AF25F05C15B5036199C9BA /* MRIconView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MRIconView.h; path = src/Components/MRIconView.h; sourceTree = "<group>"; };
+		CC5D28E46738024DD78F2FFACB533976 /* Pods-OkidsCafeProviderUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OkidsCafeProviderUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		CC9A3DBFDD3AD8F8F4920B2ED28AEAB7 /* MKDropdownMenu-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MKDropdownMenu-prefix.pch"; sourceTree = "<group>"; };
+		CF6743781230C1CFF9C20AF7FA9773E4 /* libPods-OkidsCafeProviderUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-OkidsCafeProviderUITests.a"; path = "libPods-OkidsCafeProviderUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D115A27C8C930D90BC2A604DED6CB694 /* FSCalendarConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarConstants.h; path = FSCalendar/FSCalendarConstants.h; sourceTree = "<group>"; };
 		D1F0A7CACEBDACC229380166DD11289C /* UIImage+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+AFNetworking.h"; path = "UIKit+AFNetworking/UIImage+AFNetworking.h"; sourceTree = "<group>"; };
 		D49E3A784BDA54DCC622290C6A41FDEA /* FSCalendarCollectionViewLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarCollectionViewLayout.h; path = FSCalendar/FSCalendarCollectionViewLayout.h; sourceTree = "<group>"; };
 		D53602F66D743EF56076301128FD0D1C /* FSCalendarCalculator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCalculator.m; path = FSCalendar/FSCalendarCalculator.m; sourceTree = "<group>"; };
-		D85543EEA60A7A123C43986E8DC6559D /* Pods-BiryaniPotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPotTests.release.xcconfig"; sourceTree = "<group>"; };
 		D9158C3F524B07F203C95029F81378C3 /* FSCalendarAppearance.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarAppearance.m; path = FSCalendar/FSCalendarAppearance.m; sourceTree = "<group>"; };
 		D92146E7161C69C034C09014118E71E0 /* drCharts.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = drCharts.xcconfig; sourceTree = "<group>"; };
 		DA69671E70D4F58B7CBC2B2B4D2C71C4 /* UIActivityIndicatorView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIActivityIndicatorView+AFNetworking.m"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.m"; sourceTree = "<group>"; };
@@ -449,14 +450,12 @@
 		DF93988D4C2E80A7F493E0CF3988B5E1 /* FSCalendar-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FSCalendar-prefix.pch"; sourceTree = "<group>"; };
 		E0D3D124D9A6E095BDF7999D4DA954D2 /* IQUITextFieldView+Additions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "IQUITextFieldView+Additions.m"; path = "IQKeyboardManager/Categories/IQUITextFieldView+Additions.m"; sourceTree = "<group>"; };
 		E361DD58C2F21388AB7BCAAF94F43894 /* IQKeyboardManagerConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQKeyboardManagerConstants.h; path = IQKeyboardManager/Constants/IQKeyboardManagerConstants.h; sourceTree = "<group>"; };
-		E3A87987202AA5172B8D05C53170BDAF /* Pods-BiryaniPotUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-BiryaniPotUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E6CB6E043B0EEF3ECE3FB8D0C1FC061D /* AFSecurityPolicy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
+		E71B09062982F49C3A806CBD78F72B3C /* Pods-OkidsCafeProviderUITests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProviderUITests-resources.sh"; sourceTree = "<group>"; };
 		E7E08C62243DCBE642D6C424E1B0E0E1 /* MRMethodCopier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MRMethodCopier.m; path = src/Utils/MRMethodCopier.m; sourceTree = "<group>"; };
-		E8247B08E230DAA865AD7F5FFAE0237A /* Pods-BiryaniPotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BiryaniPotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		E91A28CF393E369E1082716660346061 /* UIRefreshControl+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIRefreshControl+AFNetworking.h"; path = "UIKit+AFNetworking/UIRefreshControl+AFNetworking.h"; sourceTree = "<group>"; };
 		E959D994460BC74FB9C9D0BB647128B7 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		EB3501CABF90386AA6C5F47EA0F145E6 /* FSCalendarCollectionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCollectionView.m; path = FSCalendar/FSCalendarCollectionView.m; sourceTree = "<group>"; };
-		EE2BE695471FB6A5BEAFABE6F4890357 /* Pods-BiryaniPotTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BiryaniPotTests-resources.sh"; sourceTree = "<group>"; };
 		EFB5B63975F55FD4A8F7FA538E29B4ED /* IQPreviousNextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = IQPreviousNextView.m; path = IQKeyboardManager/IQToolbar/IQPreviousNextView.m; sourceTree = "<group>"; };
 		F17B4E55A85A5D861CE6E9BC946011F8 /* PieChart.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PieChart.m; path = "dr-Charts/Classes/PieChart/PieChart.m"; sourceTree = "<group>"; };
 		F244D1594504A77A83C3C147647D7EEA /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
@@ -465,6 +464,7 @@
 		F38EE21199B23E5FFE793DE2B0E91239 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperation.m; path = AFNetworking/AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		F3B87844C3B7E9010C296EE84BB77AAC /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
 		F532A7EC4821961CA5EDBCED7D7D56A4 /* IQKeyboardManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = IQKeyboardManager.h; path = IQKeyboardManager/IQKeyboardManager.h; sourceTree = "<group>"; };
+		F79BEFAA556D04F373A3C8F8B0D5439A /* Pods-OkidsCafeProviderTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OkidsCafeProviderTests-frameworks.sh"; sourceTree = "<group>"; };
 		F7BC110136728A981631D92466A85CCC /* MRProgressOverlayView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MRProgressOverlayView+AFNetworking.h"; path = "src/Support/AFNetworking/MRProgressOverlayView+AFNetworking.h"; sourceTree = "<group>"; };
 		FB6B07A428063EBD55B8622F684EBC1D /* IQUIWindow+Hierarchy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQUIWindow+Hierarchy.h"; path = "IQKeyboardManager/Categories/IQUIWindow+Hierarchy.h"; sourceTree = "<group>"; };
 		FD272334BCDC0C9A517E183A98949677 /* IQNSArray+Sort.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "IQNSArray+Sort.h"; path = "IQKeyboardManager/Categories/IQNSArray+Sort.h"; sourceTree = "<group>"; };
@@ -495,17 +495,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		36F87467CEAB275A4A33B12C44D8D9E7 /* Frameworks */ = {
+		321B50BE7D40730629EC40F1E7D5D127 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		76188E1385B738AC04E8C84E3E564A81 /* Frameworks */ = {
+		454FD2A0F2B0C7063025163321014307 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33B00E7CB4DCB0BA37FDAA782D41FF65 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		987E3A77B3A8CF66D5571B63A743CAFD /* Frameworks */ = {
+		99C2C1825E54855B8048CB23F1FE1AAD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -543,18 +544,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DE4C521BD6ED52CE5238C3D27DFDDAFF /* Frameworks */ = {
+		BF8BA629E057D6CC81995213245A1208 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E7E065860B81F8DF56F7AB96854F0E8B /* Frameworks */ = {
+		DE4C521BD6ED52CE5238C3D27DFDDAFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81D91F300349E09EE779B74135F8EA85 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +675,23 @@
 			name = Security;
 			sourceTree = "<group>";
 		};
+		242465FCA135762B21972DAC865CF5AD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22620D272DB9BCDC2F80BDE0CBE5ED2D /* libAFNetworking.a */,
+				228582D12BA85EA7952DB3CD23D18DC4 /* libdrCharts.a */,
+				67741EEF2CD5212187389E57016D9B65 /* libFSCalendar.a */,
+				3E9ABB72FD03545BE209B442E003DE42 /* libIQKeyboardManager.a */,
+				7B80870C78214B8DAF360CC34BF5EE48 /* libMKDropdownMenu.a */,
+				95D877BCB6572025F20358458CEB29A5 /* libMRProgress.a */,
+				5C60346507C3C83BF9ED8FE786ECDD75 /* libPods-OkidsCafeProvider.a */,
+				370F0417D8EDC4F2CC58852B7FB5329A /* libPods-OkidsCafeProviderTests.a */,
+				CF6743781230C1CFF9C20AF7FA9773E4 /* libPods-OkidsCafeProviderUITests.a */,
+				5872DF5CC19B4313EBB0D47AA75A7EA6 /* libSCRSidewaysBarGraph.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2D239535102CBF541F52E86D190E376D /* NSURLSession */ = {
 			isa = PBXGroup;
 			children = (
@@ -693,6 +710,21 @@
 				E7E08C62243DCBE642D6C424E1B0E0E1 /* MRMethodCopier.m */,
 			);
 			name = MethodCopier;
+			sourceTree = "<group>";
+		};
+		2FCBB98FE248850DC1EC603222D9F6DF /* Pods-OkidsCafeProviderTests */ = {
+			isa = PBXGroup;
+			children = (
+				2FD80AEB6E258535B8713FCD526A24D3 /* Pods-OkidsCafeProviderTests-acknowledgements.markdown */,
+				5280FADA2C09AA0F609AED8CAA08CCE4 /* Pods-OkidsCafeProviderTests-acknowledgements.plist */,
+				BBB8C3DE8A80594FC7510508B9E8E4E6 /* Pods-OkidsCafeProviderTests-dummy.m */,
+				F79BEFAA556D04F373A3C8F8B0D5439A /* Pods-OkidsCafeProviderTests-frameworks.sh */,
+				0B7499BB1D549C1CCD425B127D5BEC94 /* Pods-OkidsCafeProviderTests-resources.sh */,
+				97A78A7FDEA10742F0743817AA0973C3 /* Pods-OkidsCafeProviderTests.debug.xcconfig */,
+				42A415BB492207CE9473CB1A27A0C693 /* Pods-OkidsCafeProviderTests.release.xcconfig */,
+			);
+			name = "Pods-OkidsCafeProviderTests";
+			path = "Target Support Files/Pods-OkidsCafeProviderTests";
 			sourceTree = "<group>";
 		};
 		31D1F3B02410636A35945F74AABFDE65 /* MRProgress */ = {
@@ -838,24 +870,19 @@
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				785553737B06AFC3DA711DDEB7D56194 /* Frameworks */,
 				C5D0A8F7BDE3331428466004A6EB495C /* Pods */,
-				AEEC60CE2C618BE96B6FB4A8354D5ED6 /* Products */,
-				D4C7DDEB7851D0EB2D10313B6E28DB4D /* Targets Support Files */,
+				242465FCA135762B21972DAC865CF5AD /* Products */,
+				8D2F641481B84A33B4002935582F83C8 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		882E8090767B837BD57C22BE14C1C324 /* Pods-BiryaniPot */ = {
+		8D2F641481B84A33B4002935582F83C8 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				5BEA089E1EB8EA92D600627273F1AF41 /* Pods-BiryaniPot-acknowledgements.markdown */,
-				449702AAA030D63C718943E6709F7BE6 /* Pods-BiryaniPot-acknowledgements.plist */,
-				09FD578BC1F7F6E2A91554D7902B7366 /* Pods-BiryaniPot-dummy.m */,
-				996BD36E0AF1619657A78795E763A44A /* Pods-BiryaniPot-frameworks.sh */,
-				6BBD100290E3DFD795A2B72D5AE79C9C /* Pods-BiryaniPot-resources.sh */,
-				6CC280C0A9A28B5AA5AFF79DF24EDB32 /* Pods-BiryaniPot.debug.xcconfig */,
-				C4BE321420F13F5D9A0FD1493465922E /* Pods-BiryaniPot.release.xcconfig */,
+				F81EBCCB8021A22284058473407B2868 /* Pods-OkidsCafeProvider */,
+				2FCBB98FE248850DC1EC603222D9F6DF /* Pods-OkidsCafeProviderTests */,
+				AF20869A681FDE91280448CB4D40E510 /* Pods-OkidsCafeProviderUITests */,
 			);
-			name = "Pods-BiryaniPot";
-			path = "Target Support Files/Pods-BiryaniPot";
+			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
 		9780FA6C6F08F0C86699B8F8089AF2EF /* Blur */ = {
@@ -880,21 +907,19 @@
 			path = "../Target Support Files/MRProgress";
 			sourceTree = "<group>";
 		};
-		AEEC60CE2C618BE96B6FB4A8354D5ED6 /* Products */ = {
+		AF20869A681FDE91280448CB4D40E510 /* Pods-OkidsCafeProviderUITests */ = {
 			isa = PBXGroup;
 			children = (
-				615B1C537000D30263C31666939D9987 /* libAFNetworking.a */,
-				B5BACEC87D71F41DD49290262738EAD6 /* libdrCharts.a */,
-				030EC99CFAB03EC24B30308D3C10979E /* libFSCalendar.a */,
-				A2E40EC6992945FDC328482E6959F9CC /* libIQKeyboardManager.a */,
-				B193C76E1CDC0C844B94A8D05EA597A8 /* libMKDropdownMenu.a */,
-				5AC579C51AFC9EAD0F5CD6E708D34D80 /* libMRProgress.a */,
-				03D99354EB64788D9D4338270938FA35 /* libPods-BiryaniPot.a */,
-				40A59A0AEEFA11E2E51CB385CC10FE9F /* libPods-BiryaniPotTests.a */,
-				51522C846E6771A1FF47A58A8F3FCDAD /* libPods-BiryaniPotUITests.a */,
-				4F67642A6E959CB606F542FC6D3F5AE1 /* libSCRSidewaysBarGraph.a */,
+				8F1371C950F9E0C557B8E638CF51DE9D /* Pods-OkidsCafeProviderUITests-acknowledgements.markdown */,
+				81610FA8ECF8000AD32F11D34805612A /* Pods-OkidsCafeProviderUITests-acknowledgements.plist */,
+				1BAEFA3D7FD878E4E3C93450A58B0C70 /* Pods-OkidsCafeProviderUITests-dummy.m */,
+				41044D63BF040042858E1950A171270F /* Pods-OkidsCafeProviderUITests-frameworks.sh */,
+				E71B09062982F49C3A806CBD78F72B3C /* Pods-OkidsCafeProviderUITests-resources.sh */,
+				CC5D28E46738024DD78F2FFACB533976 /* Pods-OkidsCafeProviderUITests.debug.xcconfig */,
+				297ACBABAE713C8E49AE1BE50ED6E9C6 /* Pods-OkidsCafeProviderUITests.release.xcconfig */,
 			);
-			name = Products;
+			name = "Pods-OkidsCafeProviderUITests";
+			path = "Target Support Files/Pods-OkidsCafeProviderUITests";
 			sourceTree = "<group>";
 		};
 		AF31A84A068EDC8F7B7703863E5619A0 /* Overlay */ = {
@@ -1003,21 +1028,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		C79116065902033C6BC03CD0B4833D93 /* Pods-BiryaniPotTests */ = {
-			isa = PBXGroup;
-			children = (
-				3B27363019EE12CA374DA4F9181DC773 /* Pods-BiryaniPotTests-acknowledgements.markdown */,
-				695C2B5510FCDBEF6ED2B2F71A2B15BA /* Pods-BiryaniPotTests-acknowledgements.plist */,
-				5EF93614D330FC03FCF859954ACA8341 /* Pods-BiryaniPotTests-dummy.m */,
-				0FF9A1091010292FF8D60BAB9446C839 /* Pods-BiryaniPotTests-frameworks.sh */,
-				EE2BE695471FB6A5BEAFABE6F4890357 /* Pods-BiryaniPotTests-resources.sh */,
-				930FD29B8F50066717532BFF59DC9687 /* Pods-BiryaniPotTests.debug.xcconfig */,
-				D85543EEA60A7A123C43986E8DC6559D /* Pods-BiryaniPotTests.release.xcconfig */,
-			);
-			name = "Pods-BiryaniPotTests";
-			path = "Target Support Files/Pods-BiryaniPotTests";
-			sourceTree = "<group>";
-		};
 		C8F15906D9B4D72E92D8240415402C73 /* ProgressBaseClass */ = {
 			isa = PBXGroup;
 			children = (
@@ -1060,16 +1070,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		D4C7DDEB7851D0EB2D10313B6E28DB4D /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				882E8090767B837BD57C22BE14C1C324 /* Pods-BiryaniPot */,
-				C79116065902033C6BC03CD0B4833D93 /* Pods-BiryaniPotTests */,
-				DAE48BC1A39D862270BD8D8FCA0A668A /* Pods-BiryaniPotUITests */,
-			);
-			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
 		D9683E05804E3E791DFAB075AADA8A81 /* drCharts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1095,21 +1095,6 @@
 			);
 			name = drCharts;
 			path = drCharts;
-			sourceTree = "<group>";
-		};
-		DAE48BC1A39D862270BD8D8FCA0A668A /* Pods-BiryaniPotUITests */ = {
-			isa = PBXGroup;
-			children = (
-				E3A87987202AA5172B8D05C53170BDAF /* Pods-BiryaniPotUITests-acknowledgements.markdown */,
-				3E8589AB37B3A7ED63DF3BA6C2650912 /* Pods-BiryaniPotUITests-acknowledgements.plist */,
-				4DAD6CB2C29EB5525CE4BD30CCDF82C6 /* Pods-BiryaniPotUITests-dummy.m */,
-				443B3B823B18E4056424383DBA031650 /* Pods-BiryaniPotUITests-frameworks.sh */,
-				952493EAFF8BFDB56DDD6EAF7F761637 /* Pods-BiryaniPotUITests-resources.sh */,
-				E8247B08E230DAA865AD7F5FFAE0237A /* Pods-BiryaniPotUITests.debug.xcconfig */,
-				B2F39B897644D1B56BB4CDA4F2D025BF /* Pods-BiryaniPotUITests.release.xcconfig */,
-			);
-			name = "Pods-BiryaniPotUITests";
-			path = "Target Support Files/Pods-BiryaniPotUITests";
 			sourceTree = "<group>";
 		};
 		E7DCD0895C9F92B7ECEFC09237881D81 /* Resources */ = {
@@ -1138,6 +1123,21 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/IQKeyboardManager";
+			sourceTree = "<group>";
+		};
+		F81EBCCB8021A22284058473407B2868 /* Pods-OkidsCafeProvider */ = {
+			isa = PBXGroup;
+			children = (
+				591785A20DF6D8807AAD79897F91A19A /* Pods-OkidsCafeProvider-acknowledgements.markdown */,
+				CBBC49CBDABC9190ADC9B85A20077EA0 /* Pods-OkidsCafeProvider-acknowledgements.plist */,
+				51AD95195FBEB395930ABE7AE340F5B8 /* Pods-OkidsCafeProvider-dummy.m */,
+				AA2A42142C43B94C9ECF5C0A5AD9802D /* Pods-OkidsCafeProvider-frameworks.sh */,
+				87525285B70C683358A20E1AAAF12DA6 /* Pods-OkidsCafeProvider-resources.sh */,
+				73B45C71116F25755C8184ECE334DA77 /* Pods-OkidsCafeProvider.debug.xcconfig */,
+				59E0DA53BA116270DD7D2F0585B6B1AC /* Pods-OkidsCafeProvider.release.xcconfig */,
+			);
+			name = "Pods-OkidsCafeProvider";
+			path = "Target Support Files/Pods-OkidsCafeProvider";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1174,32 +1174,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		30F80B8A1696BAFC071280DBAE671B3A /* Headers */ = {
+		76EBE1398CE3FD2667498A0E8E825B09 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		686042AB0AB6E82D3A0A3189F12F4D83 /* Headers */ = {
+		8B8FDCFE215669A3E08F7CBADDF18876 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				674A085EEAF74E57DCDD764B14FC71EB /* SCRSidewaysBarGraph.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AC79F3EFAF0CA31F2D47FD760EEF739B /* Headers */ = {
+		A4EAAB980866E5D25B0DDC5A4C5BF9FC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DBCD4414FA0F7BE26A954257E5EBE729 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				80AE783AAD50537DA56EB5B09FF1DE20 /* SCRSidewaysBarGraph.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1270,6 +1263,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F36AB1FAB0BDFECFF73163599DAE1475 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA27BBC169DF9FC678D52EE33A5D57A0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1310,31 +1310,7 @@
 			);
 			name = AFNetworking;
 			productName = AFNetworking;
-			productReference = 615B1C537000D30263C31666939D9987 /* libAFNetworking.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		16F09DB4BBCFEEF164D4421F7CF69486 /* Pods-BiryaniPot */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 28BCDBA45806F3E57D1843347A7484F4 /* Build configuration list for PBXNativeTarget "Pods-BiryaniPot" */;
-			buildPhases = (
-				686042AB0AB6E82D3A0A3189F12F4D83 /* Headers */,
-				BD901C556C0A57D15AAF19D153099DB7 /* Sources */,
-				987E3A77B3A8CF66D5571B63A743CAFD /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B0AFCCFCC7E5695C7EB04DCC416BC039 /* PBXTargetDependency */,
-				9A89A1918C54008C08A35A62819E580A /* PBXTargetDependency */,
-				6109C96C96AD737ACE61211CD540A423 /* PBXTargetDependency */,
-				54D1F34A62ED701F525ADE431B1B3FB6 /* PBXTargetDependency */,
-				A8FD510559A919128F3FF152048F3BB7 /* PBXTargetDependency */,
-				B2D4BD5D978E7D73AF559A00391AD908 /* PBXTargetDependency */,
-				A2AE1341E23D2D3B55C857D85B7CB511 /* PBXTargetDependency */,
-			);
-			name = "Pods-BiryaniPot";
-			productName = "Pods-BiryaniPot";
-			productReference = 03D99354EB64788D9D4338270938FA35 /* libPods-BiryaniPot.a */;
+			productReference = 22620D272DB9BCDC2F80BDE0CBE5ED2D /* libAFNetworking.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		1DE1B132B9924C9AA4070842F2F895E1 /* MKDropdownMenu */ = {
@@ -1351,24 +1327,7 @@
 			);
 			name = MKDropdownMenu;
 			productName = MKDropdownMenu;
-			productReference = B193C76E1CDC0C844B94A8D05EA597A8 /* libMKDropdownMenu.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		239CA89C292075949B64533C7065050A /* SCRSidewaysBarGraph */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FE5C7121E51167CBC1783DAA7AD6829F /* Build configuration list for PBXNativeTarget "SCRSidewaysBarGraph" */;
-			buildPhases = (
-				DBCD4414FA0F7BE26A954257E5EBE729 /* Headers */,
-				048444F9975DE867325DF88082762D20 /* Sources */,
-				E7E065860B81F8DF56F7AB96854F0E8B /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SCRSidewaysBarGraph;
-			productName = SCRSidewaysBarGraph;
-			productReference = 4F67642A6E959CB606F542FC6D3F5AE1 /* libSCRSidewaysBarGraph.a */;
+			productReference = 7B80870C78214B8DAF360CC34BF5EE48 /* libMKDropdownMenu.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		31644BA2F80BE18D3E50E903A1FE1770 /* FSCalendar */ = {
@@ -1385,7 +1344,7 @@
 			);
 			name = FSCalendar;
 			productName = FSCalendar;
-			productReference = 030EC99CFAB03EC24B30308D3C10979E /* libFSCalendar.a */;
+			productReference = 67741EEF2CD5212187389E57016D9B65 /* libFSCalendar.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		354F0E5643BB20EE1816970FD284FE03 /* MRProgress */ = {
@@ -1403,7 +1362,31 @@
 			);
 			name = MRProgress;
 			productName = MRProgress;
-			productReference = 5AC579C51AFC9EAD0F5CD6E708D34D80 /* libMRProgress.a */;
+			productReference = 95D877BCB6572025F20358458CEB29A5 /* libMRProgress.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5ED7E5E1766F897889AAEAE12F1953AB /* Pods-OkidsCafeProvider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43AE9AC81A652BD09CF4226FE5B09E59 /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProvider" */;
+			buildPhases = (
+				F36AB1FAB0BDFECFF73163599DAE1475 /* Headers */,
+				4183D457A4204B279128FB67A479CA1C /* Sources */,
+				99C2C1825E54855B8048CB23F1FE1AAD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8AB788E7C736E3F79416B7CC67EC0320 /* PBXTargetDependency */,
+				690358B844B7DE973722FA5FF258AE66 /* PBXTargetDependency */,
+				E7787BF9985FC6F906F3156D554C7B5E /* PBXTargetDependency */,
+				F39C3C5050905BEE42ADE5FA443EA5B3 /* PBXTargetDependency */,
+				6DF343EC391F550E2515C5D9C47CFE6F /* PBXTargetDependency */,
+				5D13C96A00717E51AC9AFC3CFA4772DE /* PBXTargetDependency */,
+				549CAF02BE04CDEBDED47948D3A5A211 /* PBXTargetDependency */,
+			);
+			name = "Pods-OkidsCafeProvider";
+			productName = "Pods-OkidsCafeProvider";
+			productReference = 5C60346507C3C83BF9ED8FE786ECDD75 /* libPods-OkidsCafeProvider.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		7370D110C24111D20F92F10B2D34C2C3 /* drCharts */ = {
@@ -1420,43 +1403,24 @@
 			);
 			name = drCharts;
 			productName = drCharts;
-			productReference = B5BACEC87D71F41DD49290262738EAD6 /* libdrCharts.a */;
+			productReference = 228582D12BA85EA7952DB3CD23D18DC4 /* libdrCharts.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		9EBA00DD2203105424DDFDB082A18B5D /* Pods-BiryaniPotUITests */ = {
+		99FBDAF6ACBE9F0C8A5CCE2A1C3EE983 /* SCRSidewaysBarGraph */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 05F4E288DB83F188351F87605730DA3F /* Build configuration list for PBXNativeTarget "Pods-BiryaniPotUITests" */;
+			buildConfigurationList = 0C1BF0815FAA4B7B6F247933610CB060 /* Build configuration list for PBXNativeTarget "SCRSidewaysBarGraph" */;
 			buildPhases = (
-				30F80B8A1696BAFC071280DBAE671B3A /* Headers */,
-				D80E88B4F13FE77BFF294C7A9756312E /* Sources */,
-				76188E1385B738AC04E8C84E3E564A81 /* Frameworks */,
+				8B8FDCFE215669A3E08F7CBADDF18876 /* Headers */,
+				161413426E40880288DF32AA94527661 /* Sources */,
+				454FD2A0F2B0C7063025163321014307 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				AFE607F02C52AABC7F46AC6A6060408A /* PBXTargetDependency */,
 			);
-			name = "Pods-BiryaniPotUITests";
-			productName = "Pods-BiryaniPotUITests";
-			productReference = 51522C846E6771A1FF47A58A8F3FCDAD /* libPods-BiryaniPotUITests.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		A673C239E991E57F86FA71F8AC8161EE /* Pods-BiryaniPotTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0905F99238008A0DF652F683F2AC79AD /* Build configuration list for PBXNativeTarget "Pods-BiryaniPotTests" */;
-			buildPhases = (
-				AC79F3EFAF0CA31F2D47FD760EEF739B /* Headers */,
-				9699D48BFB79504CBC7BFFEEB51869AD /* Sources */,
-				36F87467CEAB275A4A33B12C44D8D9E7 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C7ADB40A2DEDDF96F1C4FA95097765A0 /* PBXTargetDependency */,
-			);
-			name = "Pods-BiryaniPotTests";
-			productName = "Pods-BiryaniPotTests";
-			productReference = 40A59A0AEEFA11E2E51CB385CC10FE9F /* libPods-BiryaniPotTests.a */;
+			name = SCRSidewaysBarGraph;
+			productName = SCRSidewaysBarGraph;
+			productReference = 5872DF5CC19B4313EBB0D47AA75A7EA6 /* libSCRSidewaysBarGraph.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		BB996730DE20C255F904B9738A34F11D /* IQKeyboardManager */ = {
@@ -1473,7 +1437,43 @@
 			);
 			name = IQKeyboardManager;
 			productName = IQKeyboardManager;
-			productReference = A2E40EC6992945FDC328482E6959F9CC /* libIQKeyboardManager.a */;
+			productReference = 3E9ABB72FD03545BE209B442E003DE42 /* libIQKeyboardManager.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D31F73B6AED4C8B254F8B16B9926A2D3 /* Pods-OkidsCafeProviderUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 049E526899AC10E69642FCEA8D0F1B47 /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProviderUITests" */;
+			buildPhases = (
+				76EBE1398CE3FD2667498A0E8E825B09 /* Headers */,
+				D3D4617B66AD8D363A40694A8C98A365 /* Sources */,
+				321B50BE7D40730629EC40F1E7D5D127 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BE5F9CE69C2EB7BA94E88208163A9B2F /* PBXTargetDependency */,
+			);
+			name = "Pods-OkidsCafeProviderUITests";
+			productName = "Pods-OkidsCafeProviderUITests";
+			productReference = CF6743781230C1CFF9C20AF7FA9773E4 /* libPods-OkidsCafeProviderUITests.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		DF9ACD010C0A4B50CCE5B56D19235F85 /* Pods-OkidsCafeProviderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FEDCF574B9E9CD20972EF06F9423F2B /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProviderTests" */;
+			buildPhases = (
+				A4EAAB980866E5D25B0DDC5A4C5BF9FC /* Headers */,
+				9022E0CDE39E67B2F3EB2ADE47B26D8B /* Sources */,
+				BF8BA629E057D6CC81995213245A1208 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				14C63121DC4456BF093CFFB4E0B059C3 /* PBXTargetDependency */,
+			);
+			name = "Pods-OkidsCafeProviderTests";
+			productName = "Pods-OkidsCafeProviderTests";
+			productReference = 370F0417D8EDC4F2CC58852B7FB5329A /* libPods-OkidsCafeProviderTests.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -1493,7 +1493,7 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = AEEC60CE2C618BE96B6FB4A8354D5ED6 /* Products */;
+			productRefGroup = 242465FCA135762B21972DAC865CF5AD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1503,21 +1503,21 @@
 				BB996730DE20C255F904B9738A34F11D /* IQKeyboardManager */,
 				1DE1B132B9924C9AA4070842F2F895E1 /* MKDropdownMenu */,
 				354F0E5643BB20EE1816970FD284FE03 /* MRProgress */,
-				16F09DB4BBCFEEF164D4421F7CF69486 /* Pods-BiryaniPot */,
-				A673C239E991E57F86FA71F8AC8161EE /* Pods-BiryaniPotTests */,
-				9EBA00DD2203105424DDFDB082A18B5D /* Pods-BiryaniPotUITests */,
-				239CA89C292075949B64533C7065050A /* SCRSidewaysBarGraph */,
+				5ED7E5E1766F897889AAEAE12F1953AB /* Pods-OkidsCafeProvider */,
+				DF9ACD010C0A4B50CCE5B56D19235F85 /* Pods-OkidsCafeProviderTests */,
+				D31F73B6AED4C8B254F8B16B9926A2D3 /* Pods-OkidsCafeProviderUITests */,
+				99FBDAF6ACBE9F0C8A5CCE2A1C3EE983 /* SCRSidewaysBarGraph */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		048444F9975DE867325DF88082762D20 /* Sources */ = {
+		161413426E40880288DF32AA94527661 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06ADCB0025E148104FCE1CC750CC515E /* SCRSidewaysBarGraph-dummy.m in Sources */,
-				419B0A02E8E65FE19D21AA640B5EB941 /* SCRSidewaysBarGraph.m in Sources */,
+				5563730A9D8A275D5ECEFFEFE626D084 /* SCRSidewaysBarGraph-dummy.m in Sources */,
+				8B651B0F4B357F3ECCDBDE0158DEFD27 /* SCRSidewaysBarGraph.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1545,6 +1545,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4183D457A4204B279128FB67A479CA1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0ADB86DA41A7B6624FAB74B7A44B366 /* Pods-OkidsCafeProvider-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7ABDFEA879A47F4FD48D444B9135003F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1554,11 +1562,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9699D48BFB79504CBC7BFFEEB51869AD /* Sources */ = {
+		9022E0CDE39E67B2F3EB2ADE47B26D8B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D5EEC0E021AF29BE3E88560AD05704A /* Pods-BiryaniPotTests-dummy.m in Sources */,
+				12877F92F4D06CF9272B3D05CC51958B /* Pods-OkidsCafeProviderTests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1609,19 +1617,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BD901C556C0A57D15AAF19D153099DB7 /* Sources */ = {
+		D3D4617B66AD8D363A40694A8C98A365 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				120011765A9E2F58619F59AC454A8BC9 /* Pods-BiryaniPot-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D80E88B4F13FE77BFF294C7A9756312E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7C3822736D19D6E522275EE5F152CA61 /* Pods-BiryaniPotUITests-dummy.m in Sources */,
+				E2934FD7E163F7D773510471A4071858 /* Pods-OkidsCafeProviderUITests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1665,91 +1665,69 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		14C63121DC4456BF093CFFB4E0B059C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-OkidsCafeProvider";
+			target = 5ED7E5E1766F897889AAEAE12F1953AB /* Pods-OkidsCafeProvider */;
+			targetProxy = C36D984CD3749A914B5B8C14916A5748 /* PBXContainerItemProxy */;
+		};
 		4F15F4002335FEFC3FBCCD50DC9C4D2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AFNetworking;
 			target = 011908E03EB31E25560BF5093C2BA7EE /* AFNetworking */;
 			targetProxy = 7674ED72911F7CB81292FDA5A3CD0A4A /* PBXContainerItemProxy */;
 		};
-		54D1F34A62ED701F525ADE431B1B3FB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MKDropdownMenu;
-			target = 1DE1B132B9924C9AA4070842F2F895E1 /* MKDropdownMenu */;
-			targetProxy = CE1A8869972280A673D88586345DBF6C /* PBXContainerItemProxy */;
-		};
-		6109C96C96AD737ACE61211CD540A423 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = IQKeyboardManager;
-			target = BB996730DE20C255F904B9738A34F11D /* IQKeyboardManager */;
-			targetProxy = 9E68C5E7A30C1847B6EE58355E9199BE /* PBXContainerItemProxy */;
-		};
-		9A89A1918C54008C08A35A62819E580A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FSCalendar;
-			target = 31644BA2F80BE18D3E50E903A1FE1770 /* FSCalendar */;
-			targetProxy = 0458D237997E10E85ED959E845D06F64 /* PBXContainerItemProxy */;
-		};
-		A2AE1341E23D2D3B55C857D85B7CB511 /* PBXTargetDependency */ = {
+		549CAF02BE04CDEBDED47948D3A5A211 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = drCharts;
 			target = 7370D110C24111D20F92F10B2D34C2C3 /* drCharts */;
-			targetProxy = A3D11FB382BECACAC2939EDDBB5091FE /* PBXContainerItemProxy */;
+			targetProxy = B21C8FE6C919EFA9A7C934F6C122F8C6 /* PBXContainerItemProxy */;
 		};
-		A8FD510559A919128F3FF152048F3BB7 /* PBXTargetDependency */ = {
+		5D13C96A00717E51AC9AFC3CFA4772DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SCRSidewaysBarGraph;
+			target = 99FBDAF6ACBE9F0C8A5CCE2A1C3EE983 /* SCRSidewaysBarGraph */;
+			targetProxy = BD0BD7299ADDA4E5BF8B53CAA3624F49 /* PBXContainerItemProxy */;
+		};
+		690358B844B7DE973722FA5FF258AE66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FSCalendar;
+			target = 31644BA2F80BE18D3E50E903A1FE1770 /* FSCalendar */;
+			targetProxy = C21F28577995B3C8BFE3FEEF11C9AEBB /* PBXContainerItemProxy */;
+		};
+		6DF343EC391F550E2515C5D9C47CFE6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = MRProgress;
 			target = 354F0E5643BB20EE1816970FD284FE03 /* MRProgress */;
-			targetProxy = 7AD899DDA65C70DB8C8D5711CC312C12 /* PBXContainerItemProxy */;
+			targetProxy = F84726A5B3DBF34985EF2D235DDE90B1 /* PBXContainerItemProxy */;
 		};
-		AFE607F02C52AABC7F46AC6A6060408A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Pods-BiryaniPot";
-			target = 16F09DB4BBCFEEF164D4421F7CF69486 /* Pods-BiryaniPot */;
-			targetProxy = 6EA0153BB4712449748F04DD426D6893 /* PBXContainerItemProxy */;
-		};
-		B0AFCCFCC7E5695C7EB04DCC416BC039 /* PBXTargetDependency */ = {
+		8AB788E7C736E3F79416B7CC67EC0320 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AFNetworking;
 			target = 011908E03EB31E25560BF5093C2BA7EE /* AFNetworking */;
-			targetProxy = B92CA6CD772F6B4C7B99DB34DC2E1A25 /* PBXContainerItemProxy */;
+			targetProxy = FB9603A9D7FC7DF25AF0A1F9D46428D8 /* PBXContainerItemProxy */;
 		};
-		B2D4BD5D978E7D73AF559A00391AD908 /* PBXTargetDependency */ = {
+		BE5F9CE69C2EB7BA94E88208163A9B2F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = SCRSidewaysBarGraph;
-			target = 239CA89C292075949B64533C7065050A /* SCRSidewaysBarGraph */;
-			targetProxy = AD7D7196D2AD23B077AC84F3ECFD829D /* PBXContainerItemProxy */;
+			name = "Pods-OkidsCafeProvider";
+			target = 5ED7E5E1766F897889AAEAE12F1953AB /* Pods-OkidsCafeProvider */;
+			targetProxy = FB2E289A13C21082652DB752DFF5622C /* PBXContainerItemProxy */;
 		};
-		C7ADB40A2DEDDF96F1C4FA95097765A0 /* PBXTargetDependency */ = {
+		E7787BF9985FC6F906F3156D554C7B5E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "Pods-BiryaniPot";
-			target = 16F09DB4BBCFEEF164D4421F7CF69486 /* Pods-BiryaniPot */;
-			targetProxy = 0A5DB52444678A2CCC84ABEAB5BC579F /* PBXContainerItemProxy */;
+			name = IQKeyboardManager;
+			target = BB996730DE20C255F904B9738A34F11D /* IQKeyboardManager */;
+			targetProxy = 714D44D3442B25F7A434D6FC0C950646 /* PBXContainerItemProxy */;
+		};
+		F39C3C5050905BEE42ADE5FA443EA5B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MKDropdownMenu;
+			target = 1DE1B132B9924C9AA4070842F2F895E1 /* MKDropdownMenu */;
+			targetProxy = F0BBF95A5DDA593BFB3193281A8E3AB4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1584A084ABBB0A7D727F609CB635A3C5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E8247B08E230DAA865AD7F5FFAE0237A /* Pods-BiryaniPotUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		3A40DB0835FD9B1B04EBA3977F000A3C /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BBB828EFF55F45ADF2AB30CE72EC77C7 /* IQKeyboardManager.xcconfig */;
@@ -1774,9 +1752,9 @@
 			};
 			name = Release;
 		};
-		430F018E90E479C0CB9B527BF8781C53 /* Release */ = {
+		3E93104ADE40308C8A08DCBF342A4D4D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2F39B897644D1B56BB4CDA4F2D025BF /* Pods-BiryaniPotUITests.release.xcconfig */;
+			baseConfigurationReference = 42A415BB492207CE9473CB1A27A0C693 /* Pods-OkidsCafeProviderTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1797,9 +1775,9 @@
 			};
 			name = Release;
 		};
-		5ABD5D6C75255B8E06A1B35A5078C415 /* Debug */ = {
+		5BEC0E8AB6869AABB0A0B347E3452D3C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 930FD29B8F50066717532BFF59DC9687 /* Pods-BiryaniPotTests.debug.xcconfig */;
+			baseConfigurationReference = 97A78A7FDEA10742F0743817AA0973C3 /* Pods-OkidsCafeProviderTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1818,30 +1796,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
-		};
-		5D075D70D09D22D2A0E575C950BD4213 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD0C5219FC217D77BA6DDD12D304EC85 /* SCRSidewaysBarGraph.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/SCRSidewaysBarGraph/SCRSidewaysBarGraph-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = SCRSidewaysBarGraph;
-				PRODUCT_NAME = SCRSidewaysBarGraph;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
 		};
 		62C6FB4C68D1C7117B9E2F3E7E79A2A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2020,31 +1974,9 @@
 			};
 			name = Debug;
 		};
-		9271404AF709CFA0630D4F0301212262 /* Debug */ = {
+		93E1C067182B3E983E998691B1734419 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CC280C0A9A28B5AA5AFF79DF24EDB32 /* Pods-BiryaniPot.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		985FB2E74D918B3BF51E526078A989AA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4BE321420F13F5D9A0FD1493465922E /* Pods-BiryaniPot.release.xcconfig */;
+			baseConfigurationReference = 59E0DA53BA116270DD7D2F0585B6B1AC /* Pods-OkidsCafeProvider.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -2064,6 +1996,28 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+		};
+		97A1583C3EFD855DBA94367AD00E2AF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73B45C71116F25755C8184ECE334DA77 /* Pods-OkidsCafeProvider.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		B4A339C5C9837FC180FD2D276CBB365A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2126,52 +2080,6 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Debug;
-		};
-		BB7CA4A55C35571C047F3C8243B319D9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D85543EEA60A7A123C43986E8DC6559D /* Pods-BiryaniPotTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		BC97E812BC8413E4E9B6E438C3642013 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD0C5219FC217D77BA6DDD12D304EC85 /* SCRSidewaysBarGraph.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/SCRSidewaysBarGraph/SCRSidewaysBarGraph-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = SCRSidewaysBarGraph;
-				PRODUCT_NAME = SCRSidewaysBarGraph;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -2269,6 +2177,28 @@
 			};
 			name = Debug;
 		};
+		D12975767B201BC589B32460D39CB66D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC5D28E46738024DD78F2FFACB533976 /* Pods-OkidsCafeProviderUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		D3404AAA551388FA7E2CA7524496F5AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6604DB143F7C82F2BF8FE0956D0CF7AA /* MKDropdownMenu.xcconfig */;
@@ -2291,6 +2221,29 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		D53436D1077153DB9D8C35778B536947 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 297ACBABAE713C8E49AE1BE50ED6E9C6 /* Pods-OkidsCafeProviderUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		F65009BDCE0DD4405CC3BA526102CF6A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2315,23 +2268,70 @@
 			};
 			name = Debug;
 		};
+		F7A46DFD4390A9FB183BC1FD5E029B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD0C5219FC217D77BA6DDD12D304EC85 /* SCRSidewaysBarGraph.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SCRSidewaysBarGraph/SCRSidewaysBarGraph-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SCRSidewaysBarGraph;
+				PRODUCT_NAME = SCRSidewaysBarGraph;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F9546E9634CC6243C8925963151CD1E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD0C5219FC217D77BA6DDD12D304EC85 /* SCRSidewaysBarGraph.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SCRSidewaysBarGraph/SCRSidewaysBarGraph-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SCRSidewaysBarGraph;
+				PRODUCT_NAME = SCRSidewaysBarGraph;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		05F4E288DB83F188351F87605730DA3F /* Build configuration list for PBXNativeTarget "Pods-BiryaniPotUITests" */ = {
+		049E526899AC10E69642FCEA8D0F1B47 /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProviderUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1584A084ABBB0A7D727F609CB635A3C5 /* Debug */,
-				430F018E90E479C0CB9B527BF8781C53 /* Release */,
+				D12975767B201BC589B32460D39CB66D /* Debug */,
+				D53436D1077153DB9D8C35778B536947 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0905F99238008A0DF652F683F2AC79AD /* Build configuration list for PBXNativeTarget "Pods-BiryaniPotTests" */ = {
+		0C1BF0815FAA4B7B6F247933610CB060 /* Build configuration list for PBXNativeTarget "SCRSidewaysBarGraph" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5ABD5D6C75255B8E06A1B35A5078C415 /* Debug */,
-				BB7CA4A55C35571C047F3C8243B319D9 /* Release */,
+				F9546E9634CC6243C8925963151CD1E5 /* Debug */,
+				F7A46DFD4390A9FB183BC1FD5E029B28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2345,20 +2345,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		28BCDBA45806F3E57D1843347A7484F4 /* Build configuration list for PBXNativeTarget "Pods-BiryaniPot" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9271404AF709CFA0630D4F0301212262 /* Debug */,
-				985FB2E74D918B3BF51E526078A989AA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B4A339C5C9837FC180FD2D276CBB365A /* Debug */,
 				7FC7B8135FDED1560A80CA98EC6F7207 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2FEDCF574B9E9CD20972EF06F9423F2B /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProviderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BEC0E8AB6869AABB0A0B347E3452D3C /* Debug */,
+				3E93104ADE40308C8A08DCBF342A4D4D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2390,6 +2390,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		43AE9AC81A652BD09CF4226FE5B09E59 /* Build configuration list for PBXNativeTarget "Pods-OkidsCafeProvider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97A1583C3EFD855DBA94367AD00E2AF1 /* Debug */,
+				93E1C067182B3E983E998691B1734419 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6A595D5451C4727C98D601C7189A04F2 /* Build configuration list for PBXNativeTarget "IQKeyboardManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2404,15 +2413,6 @@
 			buildConfigurations = (
 				C96ABB7450CDF955D20C2543F2EF2648 /* Debug */,
 				C3E4310299079381E7760957EE655308 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FE5C7121E51167CBC1783DAA7AD6829F /* Build configuration list for PBXNativeTarget "SCRSidewaysBarGraph" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BC97E812BC8413E4E9B6E438C3642013 /* Debug */,
-				5D075D70D09D22D2A0E575C950BD4213 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

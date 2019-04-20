@@ -29,17 +29,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-BiryaniPot.xcscheme</key>
+		<key>Pods-OkidsCafeProvider.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-BiryaniPotTests.xcscheme</key>
+		<key>Pods-OkidsCafeProviderTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-BiryaniPotUITests.xcscheme</key>
+		<key>Pods-OkidsCafeProviderUITests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

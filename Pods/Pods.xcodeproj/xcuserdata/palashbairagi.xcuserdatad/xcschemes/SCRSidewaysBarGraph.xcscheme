@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "239CA89C292075949B64533C7065050A"
+               BlueprintIdentifier = "99FBDAF6ACBE9F0C8A5CCE2A1C3EE983"
                BlueprintName = "SCRSidewaysBarGraph"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "libSCRSidewaysBarGraph.a">

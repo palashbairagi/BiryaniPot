@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5F358E81FEDCEC700470842"
-               BuildableName = "BiryaniPot.app"
-               BlueprintName = "BiryaniPot"
-               ReferencedContainer = "container:BiryaniPot.xcodeproj">
+               BuildableName = "OkidsCafeProvider.app"
+               BlueprintName = "OkidsCafeProvider"
+               ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5F359001FEDCEC700470842"
-               BuildableName = "BiryaniPotTests.xctest"
-               BlueprintName = "BiryaniPotTests"
-               ReferencedContainer = "container:BiryaniPot.xcodeproj">
+               BuildableName = "OkidsCafeProviderTests.xctest"
+               BlueprintName = "OkidsCafeProviderTests"
+               ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E5F3590B1FEDCEC700470842"
-               BuildableName = "BiryaniPotUITests.xctest"
-               BlueprintName = "BiryaniPotUITests"
-               ReferencedContainer = "container:BiryaniPot.xcodeproj">
+               BuildableName = "OkidsCafeProviderUITests.xctest"
+               BlueprintName = "OkidsCafeProviderUITests"
+               ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5F358E81FEDCEC700470842"
-            BuildableName = "BiryaniPot.app"
-            BlueprintName = "BiryaniPot"
-            ReferencedContainer = "container:BiryaniPot.xcodeproj">
+            BuildableName = "OkidsCafeProvider.app"
+            BlueprintName = "OkidsCafeProvider"
+            ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5F358E81FEDCEC700470842"
-            BuildableName = "BiryaniPot.app"
-            BlueprintName = "BiryaniPot"
-            ReferencedContainer = "container:BiryaniPot.xcodeproj">
+            BuildableName = "OkidsCafeProvider.app"
+            BlueprintName = "OkidsCafeProvider"
+            ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E5F358E81FEDCEC700470842"
-            BuildableName = "BiryaniPot.app"
-            BlueprintName = "BiryaniPot"
-            ReferencedContainer = "container:BiryaniPot.xcodeproj">
+            BuildableName = "OkidsCafeProvider.app"
+            BlueprintName = "OkidsCafeProvider"
+            ReferencedContainer = "container:OkidsCafeProvider.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

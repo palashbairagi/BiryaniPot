@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		6FE0D955F06CA87698C5C6CB /* libPods-BiryaniPotUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */; };
-		9812951444C8E936B3B8F9BB /* libPods-BiryaniPot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */; };
+		82F8D0964782D9B2E47441D8 /* libPods-OkidsCafeProviderTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D25D9FA4CF0DDC3F4323742F /* libPods-OkidsCafeProviderTests.a */; };
+		AE012F9D37C57E8AC523AF2D /* libPods-OkidsCafeProviderUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82ABB71E21E718137FE8A9F7 /* libPods-OkidsCafeProviderUITests.a */; };
 		B684B215079974EA3A338769 /* libPods-BiryaniPotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */; };
+		C1A7E6A4F4D16F98B6C89A78 /* libPods-OkidsCafeProvider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 517DB8CE731CCA99F13189C0 /* libPods-OkidsCafeProvider.a */; };
 		E50227B62030F93C00A51792 /* Validation.m in Sources */ = {isa = PBXBuildFile; fileRef = E50227B52030F93C00A51792 /* Validation.m */; };
 		E508247320BCA46C002A729C /* EditCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E508247120BCA46C002A729C /* EditCategoryViewController.m */; };
 		E508247420BCA46C002A729C /* EditCategoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E508247220BCA46C002A729C /* EditCategoryViewController.xib */; };
@@ -146,15 +148,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15619077CFB25DF5C9568BB4 /* Pods-OkidsCafeProvider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProvider.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProvider/Pods-OkidsCafeProvider.debug.xcconfig"; sourceTree = "<group>"; };
 		26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		48A2D750FF30B58F4DC4E0B4 /* Pods-BiryaniPotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests.debug.xcconfig"; sourceTree = "<group>"; };
-		52E282B6E0C7C09177DDCE37 /* Pods-BiryaniPot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPot.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot.release.xcconfig"; sourceTree = "<group>"; };
+		517DB8CE731CCA99F13189C0 /* libPods-OkidsCafeProvider.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OkidsCafeProvider.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPotUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		785E7FA2BADF820F6BF58AE7 /* Pods-BiryaniPotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		63920ECC46EBB3FC7744B68B /* Pods-OkidsCafeProviderUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProviderUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProviderUITests/Pods-OkidsCafeProviderUITests.release.xcconfig"; sourceTree = "<group>"; };
+		72AF3679DE9AF111BF573612 /* Pods-OkidsCafeProviderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProviderTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProviderTests/Pods-OkidsCafeProviderTests.release.xcconfig"; sourceTree = "<group>"; };
+		72D4F8563E3C46787F2702A1 /* Pods-OkidsCafeProviderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProviderTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProviderTests/Pods-OkidsCafeProviderTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiryaniPot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		829953D56D5899FF0095148F /* Pods-BiryaniPotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotUITests/Pods-BiryaniPotUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		96977D5B06ECB734EB6E26B1 /* Pods-BiryaniPotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPotTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPotTests/Pods-BiryaniPotTests.release.xcconfig"; sourceTree = "<group>"; };
-		D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiryaniPot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot.debug.xcconfig"; sourceTree = "<group>"; };
+		82ABB71E21E718137FE8A9F7 /* libPods-OkidsCafeProviderUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OkidsCafeProviderUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9BBA7DE4DA8DD76AC9E4E97 /* Pods-OkidsCafeProvider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProvider.release.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProvider/Pods-OkidsCafeProvider.release.xcconfig"; sourceTree = "<group>"; };
+		B783F8E7E149ECDA7FC39BCC /* Pods-OkidsCafeProviderUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OkidsCafeProviderUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OkidsCafeProviderUITests/Pods-OkidsCafeProviderUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		D25D9FA4CF0DDC3F4323742F /* libPods-OkidsCafeProviderTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OkidsCafeProviderTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E50227B42030F93C00A51792 /* Validation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Validation.h; sourceTree = "<group>"; };
 		E50227B52030F93C00A51792 /* Validation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Validation.m; sourceTree = "<group>"; };
 		E508247020BCA46C002A729C /* EditCategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditCategoryViewController.h; sourceTree = "<group>"; };
@@ -301,16 +306,16 @@
 		E5EFC02E201C3DF20017128A /* MyProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyProfileViewController.h; sourceTree = "<group>"; };
 		E5EFC02F201C3DF20017128A /* MyProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyProfileViewController.m; sourceTree = "<group>"; };
 		E5EFC030201C3DF20017128A /* MyProfileViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyProfileViewController.xib; sourceTree = "<group>"; };
-		E5F358E91FEDCEC700470842 /* BiryaniPot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BiryaniPot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5F358E91FEDCEC700470842 /* OkidsCafeProvider.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OkidsCafeProvider.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F358EC1FEDCEC700470842 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E5F358ED1FEDCEC700470842 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E5F358F51FEDCEC700470842 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E5F358FA1FEDCEC700470842 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5F358FB1FEDCEC700470842 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E5F359011FEDCEC700470842 /* BiryaniPotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BiryaniPotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5F359011FEDCEC700470842 /* OkidsCafeProviderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OkidsCafeProviderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F359051FEDCEC700470842 /* BiryaniPotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BiryaniPotTests.m; sourceTree = "<group>"; };
 		E5F359071FEDCEC700470842 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E5F3590C1FEDCEC700470842 /* BiryaniPotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BiryaniPotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5F3590C1FEDCEC700470842 /* OkidsCafeProviderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OkidsCafeProviderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F359101FEDCEC700470842 /* BiryaniPotUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BiryaniPotUITests.m; sourceTree = "<group>"; };
 		E5F359121FEDCEC700470842 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5F359221FEDDF6500470842 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -349,7 +354,7 @@
 			files = (
 				E5D5C82020AEAB92000E0DEE /* AssetsLibrary.framework in Frameworks */,
 				E5D5C81E20AEA965000E0DEE /* Photos.framework in Frameworks */,
-				9812951444C8E936B3B8F9BB /* libPods-BiryaniPot.a in Frameworks */,
+				C1A7E6A4F4D16F98B6C89A78 /* libPods-OkidsCafeProvider.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +363,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B684B215079974EA3A338769 /* libPods-BiryaniPotTests.a in Frameworks */,
+				82F8D0964782D9B2E47441D8 /* libPods-OkidsCafeProviderTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +372,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FE0D955F06CA87698C5C6CB /* libPods-BiryaniPotUITests.a in Frameworks */,
+				AE012F9D37C57E8AC523AF2D /* libPods-OkidsCafeProviderUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,12 +382,12 @@
 		51EFA200D3255B68E61DBB3D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */,
-				52E282B6E0C7C09177DDCE37 /* Pods-BiryaniPot.release.xcconfig */,
-				48A2D750FF30B58F4DC4E0B4 /* Pods-BiryaniPotTests.debug.xcconfig */,
-				96977D5B06ECB734EB6E26B1 /* Pods-BiryaniPotTests.release.xcconfig */,
-				829953D56D5899FF0095148F /* Pods-BiryaniPotUITests.debug.xcconfig */,
-				785E7FA2BADF820F6BF58AE7 /* Pods-BiryaniPotUITests.release.xcconfig */,
+				15619077CFB25DF5C9568BB4 /* Pods-OkidsCafeProvider.debug.xcconfig */,
+				A9BBA7DE4DA8DD76AC9E4E97 /* Pods-OkidsCafeProvider.release.xcconfig */,
+				72D4F8563E3C46787F2702A1 /* Pods-OkidsCafeProviderTests.debug.xcconfig */,
+				72AF3679DE9AF111BF573612 /* Pods-OkidsCafeProviderTests.release.xcconfig */,
+				B783F8E7E149ECDA7FC39BCC /* Pods-OkidsCafeProviderUITests.debug.xcconfig */,
+				63920ECC46EBB3FC7744B68B /* Pods-OkidsCafeProviderUITests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -393,6 +400,9 @@
 				7EF45414DD3592889C3F0C7F /* libPods-BiryaniPot.a */,
 				26BFB2E183F5375DDDCD07EE /* libPods-BiryaniPotTests.a */,
 				5D72484C0B68F8351305DD1B /* libPods-BiryaniPotUITests.a */,
+				517DB8CE731CCA99F13189C0 /* libPods-OkidsCafeProvider.a */,
+				D25D9FA4CF0DDC3F4323742F /* libPods-OkidsCafeProviderTests.a */,
+				82ABB71E21E718137FE8A9F7 /* libPods-OkidsCafeProviderUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -861,9 +871,9 @@
 		E5F358E01FEDCEC700470842 = {
 			isa = PBXGroup;
 			children = (
-				E5F358EB1FEDCEC700470842 /* BiryaniPot */,
-				E5F359041FEDCEC700470842 /* BiryaniPotTests */,
-				E5F3590F1FEDCEC700470842 /* BiryaniPotUITests */,
+				E5F358EB1FEDCEC700470842 /* OkidsCafeProvider */,
+				E5F359041FEDCEC700470842 /* OkidsCafeProvider Tests */,
+				E5F3590F1FEDCEC700470842 /* OkidsCafeProviderUITests */,
 				E5F358EA1FEDCEC700470842 /* Products */,
 				51EFA200D3255B68E61DBB3D /* Pods */,
 				CAB7CFF63208160BBA05AA98 /* Frameworks */,
@@ -873,14 +883,14 @@
 		E5F358EA1FEDCEC700470842 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E5F358E91FEDCEC700470842 /* BiryaniPot.app */,
-				E5F359011FEDCEC700470842 /* BiryaniPotTests.xctest */,
-				E5F3590C1FEDCEC700470842 /* BiryaniPotUITests.xctest */,
+				E5F358E91FEDCEC700470842 /* OkidsCafeProvider.app */,
+				E5F359011FEDCEC700470842 /* OkidsCafeProviderTests.xctest */,
+				E5F3590C1FEDCEC700470842 /* OkidsCafeProviderUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E5F358EB1FEDCEC700470842 /* BiryaniPot */ = {
+		E5F358EB1FEDCEC700470842 /* OkidsCafeProvider */ = {
 			isa = PBXGroup;
 			children = (
 				E5D425A11FEF93DB002003D2 /* Fonts */,
@@ -889,25 +899,25 @@
 				E5F3591F1FEDD97C00470842 /* Views */,
 				E5F3591E1FEDD96700470842 /* Controllers */,
 			);
-			path = BiryaniPot;
+			path = OkidsCafeProvider;
 			sourceTree = "<group>";
 		};
-		E5F359041FEDCEC700470842 /* BiryaniPotTests */ = {
+		E5F359041FEDCEC700470842 /* OkidsCafeProvider Tests */ = {
 			isa = PBXGroup;
 			children = (
 				E5F359051FEDCEC700470842 /* BiryaniPotTests.m */,
 				E5F359071FEDCEC700470842 /* Info.plist */,
 			);
-			path = BiryaniPotTests;
+			path = "OkidsCafeProvider Tests";
 			sourceTree = "<group>";
 		};
-		E5F3590F1FEDCEC700470842 /* BiryaniPotUITests */ = {
+		E5F3590F1FEDCEC700470842 /* OkidsCafeProviderUITests */ = {
 			isa = PBXGroup;
 			children = (
 				E5F359101FEDCEC700470842 /* BiryaniPotUITests.m */,
 				E5F359121FEDCEC700470842 /* Info.plist */,
 			);
-			path = BiryaniPotUITests;
+			path = OkidsCafeProviderUITests;
 			sourceTree = "<group>";
 		};
 		E5F3591E1FEDD96700470842 /* Controllers */ = {
@@ -1007,9 +1017,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E5F358E81FEDCEC700470842 /* BiryaniPot */ = {
+		E5F358E81FEDCEC700470842 /* OkidsCafeProvider */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E5F359151FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPot" */;
+			buildConfigurationList = E5F359151FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProvider" */;
 			buildPhases = (
 				02176D68E7217622A6926136 /* [CP] Check Pods Manifest.lock */,
 				E5F358E51FEDCEC700470842 /* Sources */,
@@ -1021,14 +1031,14 @@
 			);
 			dependencies = (
 			);
-			name = BiryaniPot;
+			name = OkidsCafeProvider;
 			productName = BiryaniPot;
-			productReference = E5F358E91FEDCEC700470842 /* BiryaniPot.app */;
+			productReference = E5F358E91FEDCEC700470842 /* OkidsCafeProvider.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E5F359001FEDCEC700470842 /* BiryaniPotTests */ = {
+		E5F359001FEDCEC700470842 /* OkidsCafeProviderTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E5F359181FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPotTests" */;
+			buildConfigurationList = E5F359181FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProviderTests" */;
 			buildPhases = (
 				3015FAB0B8DC3633AA50DA69 /* [CP] Check Pods Manifest.lock */,
 				E5F358FD1FEDCEC700470842 /* Sources */,
@@ -1040,14 +1050,14 @@
 			dependencies = (
 				E5F359031FEDCEC700470842 /* PBXTargetDependency */,
 			);
-			name = BiryaniPotTests;
+			name = OkidsCafeProviderTests;
 			productName = BiryaniPotTests;
-			productReference = E5F359011FEDCEC700470842 /* BiryaniPotTests.xctest */;
+			productReference = E5F359011FEDCEC700470842 /* OkidsCafeProviderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E5F3590B1FEDCEC700470842 /* BiryaniPotUITests */ = {
+		E5F3590B1FEDCEC700470842 /* OkidsCafeProviderUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E5F3591B1FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPotUITests" */;
+			buildConfigurationList = E5F3591B1FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProviderUITests" */;
 			buildPhases = (
 				BBE794C8BCB412DC6CDF1648 /* [CP] Check Pods Manifest.lock */,
 				E5F359081FEDCEC700470842 /* Sources */,
@@ -1059,9 +1069,9 @@
 			dependencies = (
 				E5F3590E1FEDCEC700470842 /* PBXTargetDependency */,
 			);
-			name = BiryaniPotUITests;
+			name = OkidsCafeProviderUITests;
 			productName = BiryaniPotUITests;
-			productReference = E5F3590C1FEDCEC700470842 /* BiryaniPotUITests.xctest */;
+			productReference = E5F3590C1FEDCEC700470842 /* OkidsCafeProviderUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -1089,7 +1099,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E5F358E41FEDCEC700470842 /* Build configuration list for PBXProject "BiryaniPot" */;
+			buildConfigurationList = E5F358E41FEDCEC700470842 /* Build configuration list for PBXProject "OkidsCafeProvider" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1102,9 +1112,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E5F358E81FEDCEC700470842 /* BiryaniPot */,
-				E5F359001FEDCEC700470842 /* BiryaniPotTests */,
-				E5F3590B1FEDCEC700470842 /* BiryaniPotUITests */,
+				E5F358E81FEDCEC700470842 /* OkidsCafeProvider */,
+				E5F359001FEDCEC700470842 /* OkidsCafeProviderTests */,
+				E5F3590B1FEDCEC700470842 /* OkidsCafeProviderUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1193,7 +1203,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BiryaniPot-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OkidsCafeProvider-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1206,7 +1216,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-OkidsCafeProvider/Pods-OkidsCafeProvider-resources.sh",
 				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1215,7 +1225,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BiryaniPot/Pods-BiryaniPot-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OkidsCafeProvider/Pods-OkidsCafeProvider-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3015FAB0B8DC3633AA50DA69 /* [CP] Check Pods Manifest.lock */ = {
@@ -1229,7 +1239,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BiryaniPotTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OkidsCafeProviderTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1247,7 +1257,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BiryaniPotUITests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OkidsCafeProviderUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1349,12 +1359,12 @@
 /* Begin PBXTargetDependency section */
 		E5F359031FEDCEC700470842 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E5F358E81FEDCEC700470842 /* BiryaniPot */;
+			target = E5F358E81FEDCEC700470842 /* OkidsCafeProvider */;
 			targetProxy = E5F359021FEDCEC700470842 /* PBXContainerItemProxy */;
 		};
 		E5F3590E1FEDCEC700470842 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E5F358E81FEDCEC700470842 /* BiryaniPot */;
+			target = E5F358E81FEDCEC700470842 /* OkidsCafeProvider */;
 			targetProxy = E5F3590D1FEDCEC700470842 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1470,16 +1480,16 @@
 		};
 		E5F359161FEDCEC700470842 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D695EFB344AAA71424AED049 /* Pods-BiryaniPot.debug.xcconfig */;
+			baseConfigurationReference = 15619077CFB25DF5C9568BB4 /* Pods-OkidsCafeProvider.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Z2K44HC2K;
 				IBC_WARNINGS = YES;
-				INFOPLIST_FILE = BiryaniPot/SupportFiles/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OkidsCafeProvider/SupportFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = BiryaniPot;
+				PRODUCT_BUNDLE_IDENTIFIER = OkidsCafeProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -1488,16 +1498,16 @@
 		};
 		E5F359171FEDCEC700470842 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52E282B6E0C7C09177DDCE37 /* Pods-BiryaniPot.release.xcconfig */;
+			baseConfigurationReference = A9BBA7DE4DA8DD76AC9E4E97 /* Pods-OkidsCafeProvider.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Z2K44HC2K;
 				IBC_WARNINGS = YES;
-				INFOPLIST_FILE = BiryaniPot/SupportFiles/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OkidsCafeProvider/SupportFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = BiryaniPot;
+				PRODUCT_BUNDLE_IDENTIFIER = OkidsCafeProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -1506,7 +1516,7 @@
 		};
 		E5F359191FEDCEC700470842 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48A2D750FF30B58F4DC4E0B4 /* Pods-BiryaniPotTests.debug.xcconfig */;
+			baseConfigurationReference = 72D4F8563E3C46787F2702A1 /* Pods-OkidsCafeProviderTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1515,13 +1525,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.palashbairagi.BiryaniPotTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BiryaniPot.app/BiryaniPot";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OkidsCafeProvider.app/OkidsCafeProvider";
 			};
 			name = Debug;
 		};
 		E5F3591A1FEDCEC700470842 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 96977D5B06ECB734EB6E26B1 /* Pods-BiryaniPotTests.release.xcconfig */;
+			baseConfigurationReference = 72AF3679DE9AF111BF573612 /* Pods-OkidsCafeProviderTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1530,13 +1540,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.palashbairagi.BiryaniPotTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BiryaniPot.app/BiryaniPot";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OkidsCafeProvider.app/OkidsCafeProvider";
 			};
 			name = Release;
 		};
 		E5F3591C1FEDCEC700470842 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 829953D56D5899FF0095148F /* Pods-BiryaniPotUITests.debug.xcconfig */;
+			baseConfigurationReference = B783F8E7E149ECDA7FC39BCC /* Pods-OkidsCafeProviderUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = BiryaniPotUITests/Info.plist;
@@ -1550,7 +1560,7 @@
 		};
 		E5F3591D1FEDCEC700470842 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 785E7FA2BADF820F6BF58AE7 /* Pods-BiryaniPotUITests.release.xcconfig */;
+			baseConfigurationReference = 63920ECC46EBB3FC7744B68B /* Pods-OkidsCafeProviderUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = BiryaniPotUITests/Info.plist;
@@ -1565,7 +1575,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E5F358E41FEDCEC700470842 /* Build configuration list for PBXProject "BiryaniPot" */ = {
+		E5F358E41FEDCEC700470842 /* Build configuration list for PBXProject "OkidsCafeProvider" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5F359131FEDCEC700470842 /* Debug */,
@@ -1574,7 +1584,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E5F359151FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPot" */ = {
+		E5F359151FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProvider" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5F359161FEDCEC700470842 /* Debug */,
@@ -1583,7 +1593,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E5F359181FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPotTests" */ = {
+		E5F359181FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProviderTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5F359191FEDCEC700470842 /* Debug */,
@@ -1592,7 +1602,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E5F3591B1FEDCEC700470842 /* Build configuration list for PBXNativeTarget "BiryaniPotUITests" */ = {
+		E5F3591B1FEDCEC700470842 /* Build configuration list for PBXNativeTarget "OkidsCafeProviderUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5F3591C1FEDCEC700470842 /* Debug */,
