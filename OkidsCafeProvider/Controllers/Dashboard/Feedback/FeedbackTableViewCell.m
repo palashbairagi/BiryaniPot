@@ -7,6 +7,7 @@
 //
 
 #import "FeedbackTableViewCell.h"
+#import "AppConfig.h"
 
 @implementation FeedbackTableViewCell
 
@@ -32,7 +33,11 @@
     
     self.isPaid.text = feedback.paymentType;
     
-    if (feedback.amount != (id)[NSNull null])self.amount.text = feedback.amount;
+    if (feedback.amount != (id)[NSNull null])
+    {
+        double amount = [feedback.amount doubleValue];
+        self.amount.text = [NSString stringWithFormat:@"%@%.2f", AppConfig.currencySymbol, amount];
+    }
     else self.amount.text = @"";
     
     if (feedback.smiley == (id)[NSNull null])
