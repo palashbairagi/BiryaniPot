@@ -1,6 +1,6 @@
 //
 //  PreparingTableViewCell.m
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 12/27/17.
 //  Copyright © 2017 Palash Bairagi. All rights reserved.

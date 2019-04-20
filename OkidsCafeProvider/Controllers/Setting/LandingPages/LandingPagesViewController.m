@@ -1,6 +1,6 @@
 //
 //  LandingPagesViewController.m
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 1/10/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.
@@ -91,7 +91,7 @@
             
             if (imgData == NULL)
             {
-                UIImage * image = [UIImage imageNamed:@"biryanipotusa"];
+                UIImage * image = [UIImage imageNamed:@"logo"];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     landingImage.image = image;

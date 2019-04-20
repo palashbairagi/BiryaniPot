@@ -1,6 +1,6 @@
 //
-//  BiryaniPotTests.m
-//  BiryaniPotTests
+// OkidsCafeProviderTests.m
+// OkidsCafeProviderTests
 //
 //  Created by Palash Bairagi on 12/22/17.
 //  Copyright © 2017 Palash Bairagi. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface BiryaniPotTests : XCTestCase
+@interface OkidsCafeProviderTests : XCTestCase
 
 @end
 
-@implementation BiryaniPotTests
+@implementation OkidsCafeProviderTests
 
 - (void)setUp {
     [super setUp];

@@ -1,6 +1,6 @@
 //
 //  AddCategoryViewController.h
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 2/10/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.

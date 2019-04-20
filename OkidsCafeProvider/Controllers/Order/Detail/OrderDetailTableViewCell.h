@@ -1,6 +1,6 @@
 //
 //  OrderDetailTableViewCell.h
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 12/29/17.
 //  Copyright © 2017 Palash Bairagi. All rights reserved.

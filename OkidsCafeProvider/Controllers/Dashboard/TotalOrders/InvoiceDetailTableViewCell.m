@@ -1,6 +1,6 @@
 //
 //  InvoiceDetailTableViewCell.m
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 3/20/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.

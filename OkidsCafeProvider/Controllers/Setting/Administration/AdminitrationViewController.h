@@ -1,6 +1,6 @@
 //
 //  AdminitrationViewController.h
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 1/6/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.

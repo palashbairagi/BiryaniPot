@@ -1,6 +1,6 @@
 //
 //  RangePickerCell.h
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 5/13/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.

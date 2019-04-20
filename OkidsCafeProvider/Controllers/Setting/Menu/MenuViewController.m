@@ -1,6 +1,6 @@
 //
 //  MenuViewController.m
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 1/10/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.
@@ -849,7 +849,7 @@
         _veg = FALSE;
         _spiceSupportButton.backgroundColor = [UIColor whiteColor];
         _spice = FALSE;
-        _image.image = [UIImage imageNamed:@"biryanipot"];
+        _image.image = [UIImage imageNamed:@"logo"];
         [_type selectRow:0 inComponent:0];
         
         _recommendedItemView.hidden = TRUE;
@@ -880,7 +880,7 @@
         _veg = FALSE;
         _spiceSupportButton.backgroundColor = [UIColor whiteColor];
         _spice = FALSE;
-        _image.image = [UIImage imageNamed:@"biryanipot"];
+        _image.image = [UIImage imageNamed:@"logo"];
         
         _recommendedItemView.hidden = TRUE;
     }
@@ -928,7 +928,7 @@
                 }
                 else
                 {
-                    image = [UIImage imageNamed:@"biryanipot"];
+                    image = [UIImage imageNamed:@"logo"];
                 }
                 
                 category.image = image;
@@ -1165,7 +1165,7 @@
             }
             else
             {
-                image = [UIImage imageNamed:@"biryanipot"];
+                image = [UIImage imageNamed:@"logo"];
             }
             
             item.image = image;

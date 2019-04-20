@@ -1,6 +1,6 @@
 //
 //  EditCategoryViewController.m
-//  BiryaniPot
+// OkidsCafeProvider
 //
 //  Created by Palash Bairagi on 5/28/18.
 //  Copyright © 2018 Palash Bairagi. All rights reserved.
@@ -164,7 +164,7 @@
     
     if (imgData == NULL)
     {
-        UIImage * image = [UIImage imageNamed:@"biryanipot"];
+        UIImage * image = [UIImage imageNamed:@"logo"];
         _image.image = image;
     }
     else

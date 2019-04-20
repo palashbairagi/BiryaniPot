@@ -5,7 +5,7 @@ target 'OkidsCafeProvider' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  # Pods for BiryaniPot
+  # Pods for OkidsCafeProvider
   
   target 'OkidsCafeProviderTests' do
     inherit! :search_paths
