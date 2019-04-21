@@ -126,7 +126,7 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) APP_SETTING_URL
 {
-    return [NSString stringWithFormat:@"%@rest/services/application/appsettings?appkey=D7AwuC2qhqOmodKvQfUndIm6OK3A728c", BASE_URL];
+    return [NSString stringWithFormat:@"%@rest/services/application/appsettings?appkey=%@", BASE_URL, AppConfig.APP_KEY];
 }
 
 +(NSString *)LOGIN_URL
@@ -189,7 +189,6 @@ static NSString *PROVIDER_BASE_URL = @"http://74.208.161.174/Provider-WS/";
 
 +(NSString *) OFFER_STATISTICS_URL
 {
-    //return [NSString stringWithFormat:@"http://www.mocky.io/v2/5b3ef54e3000003a06abc7f3"];
     return [NSString stringWithFormat:@"%@rest/services/dashboard/dashboardofferstatistics", BASE_URL];
 }
 

@@ -17,4 +17,11 @@
     return @"\u20B9";
 }
 
+@dynamic APP_KEY;
+
++ (NSString *)APP_KEY
+{
+    return @"Lav1n6fhvbd234gsj36";
+}
+
 @end

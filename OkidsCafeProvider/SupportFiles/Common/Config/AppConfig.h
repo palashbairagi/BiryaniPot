@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AppConfig : NSObject
 
 @property (class) NSString *const currencySymbol;
+@property (class) NSString *const APP_KEY;
 
 @end
 
