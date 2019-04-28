@@ -37,6 +37,8 @@
 @property (copy, nonatomic) NSMutableArray *itemArray;
 @property (copy, nonatomic) NSMutableArray *updatedItemArray;
 
+@property (weak, nonatomic) IBOutlet UILabel *scrollMessageLabel;
+
 @property (nonatomic, retain) Order *order;
 @property int noOfItems;
 

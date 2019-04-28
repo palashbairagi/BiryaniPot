@@ -615,6 +615,15 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (_updatedItemArray.count > 6)
+    {
+        _scrollMessageLabel.hidden = FALSE;
+    }
+    else
+    {
+        _scrollMessageLabel.hidden = TRUE;
+    }
+    
     return _updatedItemArray.count;
 }
 
