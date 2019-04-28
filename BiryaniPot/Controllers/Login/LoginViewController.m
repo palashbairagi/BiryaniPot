@@ -31,6 +31,8 @@ NSMutableData *mutableData;
     
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
+    [self getAppSetting];
+    
     if ([_appDelegate.userDefaults objectForKey:@"loginStatus"] != NULL && [[_appDelegate.userDefaults objectForKey:@"loginStatus"] intValue] == 1)
     {
         [self authenticateWithUsername:[_appDelegate.userDefaults objectForKey:@"userName"] andPassword:[_appDelegate.userDefaults objectForKey:@"password"]];
@@ -116,7 +118,6 @@ NSMutableData *mutableData;
             if (isLoginValid == 1)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self getAppSetting];
                     [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"locationId"] forKey:@"locationId"];
                     [_appDelegate.userDefaults setObject:[loginDictionary objectForKey:@"userId"] forKey:@"userId"];
                     [_appDelegate.userDefaults setObject:username forKey:@"userName"];
