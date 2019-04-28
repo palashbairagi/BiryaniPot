@@ -67,7 +67,7 @@ NSMutableData *mutableData;
 
 -(void)authenticateWithUsername: (NSString *)username andPassword : (NSString *)password
 {
-    NSString *organizationId = @"102";
+    NSString *organizationId = [Constants ORGANIZATION_ID];
     MRProgressOverlayView *overlayView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     
     @try
