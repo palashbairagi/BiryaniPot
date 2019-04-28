@@ -1350,7 +1350,7 @@
 
 - (IBAction)deleteButtonClicked:(id)sender
 {
-    [self deleteItem];
+    [self alert];
 }
 
 - (IBAction)categorySearchStringChanged:(id)sender
@@ -1425,6 +1425,26 @@
     }
     
     [_itemTableView reloadData];
+}
+
+- (void) alert
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Confirm" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        return;
+    }];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self deleteItem];
+        });
+        
+    }];
+    
+    [alert addAction:yes];
+    [alert addAction:no];
+    [self presentViewController:alert animated:YES completion:nil];
+
 }
 
 -(BOOL)isValidate

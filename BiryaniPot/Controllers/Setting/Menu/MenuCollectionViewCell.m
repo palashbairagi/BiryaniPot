@@ -117,7 +117,7 @@
         return;
     }
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Do you really want to delete?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Confirm" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
         return;
     }];

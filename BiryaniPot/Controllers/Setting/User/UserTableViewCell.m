@@ -61,19 +61,47 @@
 - (IBAction)deleteButtonClicked:(UIButton *)sender
 {
     User *user = _delegate.userArray[sender.tag];
+
+    [self alert:user];
+}
+
+-(void) alert: (User *) user
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Confirm" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
     
-    if ([user.role isEqualToString:@"Delivery Person"])
-    {
-        [self deleteDeliveryPerson:user];
-    }
-    else if([user.role isEqualToString:@"Manager"] || [user.role isEqualToString:@"Partner"] || [user.role isEqualToString:@"Receptionist"])
-    {
-        [self deleteManager:user];
-    }
-    else
-    {
-        [Validation showSimpleAlertOnViewController:_delegate withTitle:@"Alert" andMessage:@"Unable to Delete"];
-    }
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self delete: user];
+            });
+   
+    }];
+    
+    [alertController addAction:yes];
+    
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        [alertController dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
+    [alertController addAction:no];
+    
+    [_delegate presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void) delete:(User *) user
+{
+        if ([user.role isEqualToString:@"Delivery Person"])
+        {
+            [self deleteDeliveryPerson:user];
+        }
+        else if([user.role isEqualToString:@"Manager"] || [user.role isEqualToString:@"Partner"] || [user.role isEqualToString:@"Receptionist"])
+        {
+            [self deleteManager:user];
+        }
+        else
+        {
+            [Validation showSimpleAlertOnViewController:self->_delegate withTitle:@"Alert" andMessage:@"Unable to Delete"];
+        }
 }
 
 -(void)deleteDeliveryPerson:(User *)user
@@ -108,17 +136,6 @@
             [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
         }];
         
-//        NSData *imageData = UIImageJPEGRepresentation(_profilePicture.image, 1.0);
-//        NSString *fieldName = @"file";
-//        NSString *mimetype  = [NSString stringWithFormat:@"image/jpg"];
-//        NSString *imgName = [NSString stringWithFormat:@"%@.jpg",name];
-//
-//        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, imgName] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:imageData];
-//        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//
         [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         request.HTTPBody = body;
